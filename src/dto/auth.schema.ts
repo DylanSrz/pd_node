@@ -10,19 +10,19 @@ import { ROLES_USUARIO } from "../types/enums.js";
  */
 export const registerSchema = z.object({
     first_name: z
-        .string()
+        .string({ error: "El nombre es obligatorio y debe ser texto." })
         .min(3, "El nombre debe tener al menos 3 caracteres.")
         .max(100, "El nombre no puede superar los 100 caracteres."),
 
     last_name: z
-        .string()
+        .string({ error: "El apellido es obligatorio y debe ser texto." })
         .min(3, "El apellido debe tener al menos 3 caracteres.")
         .max(100, "El apellido no puede superar los 100 caracteres."),
 
     email: z.email("El correo electrónico no tiene un formato válido."),
 
     password: z
-        .string()
+        .string({ error: "La contraseña es obligatoria y debe ser texto." })
         .min(8, "La contraseña debe tener al menos 8 caracteres.")
         .max(64, "La contraseña no puede superar los 64 caracteres."),
 
@@ -38,7 +38,9 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
     email: z.email("El correo electrónico no tiene un formato válido."),
 
-    password: z.string().min(1, "La contraseña es obligatoria."),
+    password: z
+        .string({ error: "La contraseña es obligatoria y debe ser texto." })
+        .min(1, "La contraseña es obligatoria."),
 });
 
 // Tipos que salen de los esquemas, para usarlos en los services

@@ -10,6 +10,9 @@ import "./models/index.js";
 import { errorHandler } from "./middlewares/error-handler.js";
 import routerAuth from "./routes/auth.routes.js";
 import routerClinicas from "./routes/clinica.routes.js";
+import routerAlmacenes from "./routes/almacen.routes.js";
+import routerMedicamentos from "./routes/medicamento.routes.js";
+import routerInventario from "./routes/inventario.routes.js";
 
 const { PORT } = process.env;
 
@@ -26,6 +29,9 @@ app.get("/", (_req, res) => {
 // ENDPOINTS DE LA API
 app.use("/api/auth", routerAuth);
 app.use("/api/clinicas", routerClinicas);
+app.use("/api/almacenes", routerAlmacenes);
+app.use("/api/medicamentos", routerMedicamentos);
+app.use("/api/inventario", routerInventario);
 
 // Si ninguna ruta coincidió, se responde un 404 claro.
 app.use((_req, res) => {
