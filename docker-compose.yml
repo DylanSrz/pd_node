@@ -1,0 +1,57 @@
+name: container_pd_nodejs
+
+services:
+  api:
+    build:
+      context: .
+      target: development
+
+    env_file:
+      - .env
+
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+
+    ports:
+      - "${PORT}:${PORT}"
+
+    volumes:
+      - .:/app
+      - api_node_modules:/app/node_modules
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    container_name: db_pd_nodejs
+    restart: unless-stopped
+    
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+
+    environment:
+      POSTGRES_USER: "${DATABASE_USER}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
+      POSTGRES_DB: "${DATABASE_NAME}"
+
+
+    volumes:
+      - db_pd_nodejs:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  db_pd_nodejs:
+  api_node_modules:
