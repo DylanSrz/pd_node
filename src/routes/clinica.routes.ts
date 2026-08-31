@@ -7,6 +7,7 @@ import {
     postClinica,
     putClinica,
 } from "../controllers/clinica.controller.js";
+import { getSolicitudesPorClinica } from "../controllers/solicitud.controller.js";
 import { checkRole, verifyToken } from "../middlewares/verifyToken.js";
 import { validateParams, validateRequest } from "../middlewares/validate_request.js";
 import { verificarNitUnico } from "../middlewares/verificar-nit-unico.js";
@@ -29,6 +30,11 @@ router.get("/", getClinicas);
 
 // GET /api/clinicas/:id
 router.get("/:id", validateParams(idSchema), getClinicaPorId);
+
+// GET /api/clinicas/:id/solicitudes
+// Historial de solicitudes de una clínica. El enunciado pide que
+// cualquier usuario autenticado pueda consultarlo.
+router.get("/:id/solicitudes", validateParams(idSchema), getSolicitudesPorClinica);
 
 // POST /api/clinicas
 // Solo el administrador. Antes de crear se revisa que el NIT no exista.

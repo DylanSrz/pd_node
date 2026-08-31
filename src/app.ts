@@ -13,6 +13,7 @@ import routerClinicas from "./routes/clinica.routes.js";
 import routerAlmacenes from "./routes/almacen.routes.js";
 import routerMedicamentos from "./routes/medicamento.routes.js";
 import routerInventario from "./routes/inventario.routes.js";
+import routerSolicitudes from "./routes/solicitud.routes.js";
 
 const { PORT } = process.env;
 
@@ -32,6 +33,7 @@ app.use("/api/clinicas", routerClinicas);
 app.use("/api/almacenes", routerAlmacenes);
 app.use("/api/medicamentos", routerMedicamentos);
 app.use("/api/inventario", routerInventario);
+app.use("/api/solicitudes", routerSolicitudes);
 
 // Si ninguna ruta coincidió, se responde un 404 claro.
 app.use((_req, res) => {
