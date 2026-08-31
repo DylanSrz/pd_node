@@ -3,6 +3,13 @@ import "dotenv/config";
 
 import db from "./config/db.js";
 
+// Importar este archivo deja registradas todas las asociaciones
+// entre los modelos antes de que la API empiece a atender peticiones.
+import "./models/index.js";
+
+import { errorHandler } from "./middlewares/error-handler.js";
+import routerAuth from "./routes/auth.routes.js";
+
 const { PORT } = process.env;
 
 const app = express();
@@ -14,6 +21,18 @@ app.use(express.json());
 app.get("/", (_req, res) => {
     res.status(200).json({ message: "API RiwiMediCare Plus funcionando." });
 });
+
+// ENDPOINTS DE LA API
+app.use("/api/auth", routerAuth);
+
+// Si ninguna ruta coincidió, se responde un 404 claro.
+app.use((_req, res) => {
+    res.status(404).json({ message: "La ruta solicitada no existe." });
+});
+
+// El manejador de errores va de último, después de las rutas,
+// porque atrapa lo que ellas le pasen con next(error).
+app.use(errorHandler);
 
 /**
  * Conecta con la base de datos y levanta el servidor.
