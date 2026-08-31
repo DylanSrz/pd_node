@@ -1,7 +1,9 @@
 import express from "express";
+import swaggerUi from "swagger-ui-express";
 import "dotenv/config";
 
 import db from "./config/db.js";
+import { especificacionSwagger } from "./config/swagger.js";
 
 // Importar este archivo deja registradas todas las asociaciones
 // entre los modelos antes de que la API empiece a atender peticiones.
@@ -24,8 +26,15 @@ app.use(express.json());
 
 // Ruta de prueba para comprobar que la API está viva.
 app.get("/", (_req, res) => {
-    res.status(200).json({ message: "API RiwiMediCare Plus funcionando." });
+    res.status(200).json({
+        message: "API RiwiMediCare Plus funcionando.",
+        documentacion: "/api-docs",
+    });
 });
+
+// DOCUMENTACIÓN
+// Swagger UI queda disponible en http://localhost:PORT/api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(especificacionSwagger));
 
 // ENDPOINTS DE LA API
 app.use("/api/auth", routerAuth);
@@ -57,6 +66,7 @@ async function start(): Promise<void> {
 
         app.listen(PORT, () => {
             console.log(`Servidor corriendo en el puerto: ${PORT}`);
+            console.log(`Documentación disponible en: http://localhost:${PORT}/api-docs`);
         });
     } catch (error) {
         console.error("Error al iniciar la aplicación:", error);
