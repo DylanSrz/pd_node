@@ -9,6 +9,7 @@ import "./models/index.js";
 
 import { errorHandler } from "./middlewares/error-handler.js";
 import routerAuth from "./routes/auth.routes.js";
+import routerClinicas from "./routes/clinica.routes.js";
 
 const { PORT } = process.env;
 
@@ -24,6 +25,7 @@ app.get("/", (_req, res) => {
 
 // ENDPOINTS DE LA API
 app.use("/api/auth", routerAuth);
+app.use("/api/clinicas", routerClinicas);
 
 // Si ninguna ruta coincidió, se responde un 404 claro.
 app.use((_req, res) => {
