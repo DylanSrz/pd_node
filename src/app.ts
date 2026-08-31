@@ -1,40 +1,37 @@
 import express from "express";
-import 'dotenv/config';
-import db from "./config/db.js";
+import "dotenv/config";
 
-// import routerRoles from './routes/role.routes.js'
-// import routerTypeIdentification from './routes/type_identification.routes.js'
-// import routerCities from './routes/cities.routes.js'
-// import routerSchedule from './routes/schedule.routes.js'
+import db from "./config/db.js";
 
 const { PORT } = process.env;
 
 const app = express();
 
+// Permite que Express lea el body de las peticiones en formato JSON.
 app.use(express.json());
 
-// ENDPOINTS DE MI API
-// app.use('/roles', routerRoles)
-// app.use('/type_identification', routerTypeIdentification)
-// app.use('/cities', routerCities)
-// app.use('/schedule', routerSchedule)
+// Ruta de prueba para comprobar que la API está viva.
+app.get("/", (_req, res) => {
+    res.status(200).json({ message: "API RiwiMediCare Plus funcionando." });
+});
 
-start()
-
-async function start() {
-
+/**
+ * Conecta con la base de datos y levanta el servidor.
+ * Si la conexión falla, muestra el error y no arranca.
+ */
+async function start(): Promise<void> {
     try {
-
-        await db.authenticate()
-
-        // await db.sync({alter: true})
+        // Comprueba que las credenciales del .env sirven
+        // para conectarse a PostgreSQL.
+        await db.authenticate();
+        console.log("Conexión con la base de datos establecida.");
 
         app.listen(PORT, () => {
-            console.log(`Server running in PORT: ${PORT}`)
-            // console.log(`Docs disponibles en: http://localhost:${PORT}/api-docs`)
-        })
+            console.log(`Servidor corriendo en el puerto: ${PORT}`);
+        });
     } catch (error) {
-        console.log(error)
-        console.log('Error en APP')
+        console.error("Error al iniciar la aplicación:", error);
     }
 }
+
+start();

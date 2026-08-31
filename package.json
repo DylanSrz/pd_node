@@ -2,9 +2,11 @@
   "name": "pd_node",
   "version": "1.0.0",
   "description": "repositorio para la prueba de desempeño de la ruta avanzada Node.js",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "dev": "npx tsx watch src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
     "migrate": "tsx src/config/migrate-up.ts",
     "migrate:reverse": "tsx src/config/migrate-down.ts",
     "migrate:reset": "tsx src/config/migrate-reset.ts",
