@@ -9,6 +9,9 @@ services:
     env_file:
       - .env
 
+    # Estas dos variables sobrescriben las del .env: dentro de la red
+    # de Docker la base de datos no está en localhost, sino en el
+    # servicio llamado "db" y en su puerto interno 5432.
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432

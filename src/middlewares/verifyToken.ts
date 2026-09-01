@@ -1,40 +1,82 @@
-
 import type { NextFunction, Request, Response } from "express";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
+import type { RolUsuario } from "../types/enums.js";
+import type { PayloadToken } from "../types/payload-token.js";
 
-    const header = req.headers.authorization
+/**
+ * Revisa que la petición traiga un JSON Web Token válido.
+ *
+ * El token se manda en la cabecera Authorization con el formato:
+ *   Authorization: Bearer <token>
+ *
+ * Si el token sirve, guarda los datos del usuario en req.user
+ * para que los siguientes middlewares y el controlador puedan usarlos.
+ */
+export function verifyToken(req: Request, res: Response, next: NextFunction): void {
+    const cabecera = req.headers.authorization;
 
-    if (!header || !header.startsWith("Bearer ")) {
-        return res.status(401).json({ message: ' Token no proporcionado' })
+    // Sin cabecera Authorization no hay nada que validar.
+    if (!cabecera || !cabecera.startsWith("Bearer ")) {
+        res.status(401).json({ message: "Token no proporcionado." });
+        return;
     }
 
-    const token = header.split(" ")[1];
+    // La cabecera viene como "Bearer abc.def.ghi",
+    // así que nos quedamos con la segunda parte.
+    const token = cabecera.split(" ")[1];
 
     if (!token) {
-        return res.status(401).json({ message: 'Token not provied' });
+        res.status(401).json({ message: "Token no proporcionado." });
+        return;
+    }
+
+    const secreto = process.env.JWT_SECRET;
+
+    if (!secreto) {
+        res.status(500).json({ message: "Falta configurar JWT_SECRET." });
+        return;
     }
 
     try {
-        const secretKey = process.env.JWT_SECRET
-        const payload = jwt.verify(token, secretKey!);
-        (req as any).user = payload
+        // jwt.verify revisa la firma y que el token no esté vencido.
+        const payload = jwt.verify(token, secreto) as PayloadToken;
+
+        // Se guarda el usuario en la petición para reutilizarlo después.
+        req.user = payload;
+
         next();
-    } catch (error) {
-        return res.status(403).json({ message: 'Token not valid or expired' });
+    } catch {
+        res.status(401).json({ message: "Token inválido o expirado." });
     }
 }
 
-// validar que el token tiene el rol solicitado.
-export const checkRole = (...Roles: string[]) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        const user = (req as any).user
+/**
+ * Revisa que el usuario del token tenga alguno de los roles permitidos.
+ *
+ * Se usa siempre después de verifyToken, por ejemplo:
+ *   router.post("/", verifyToken, checkRole("administrador"), crearClinica)
+ *
+ * @param rolesPermitidos Roles que sí pueden ejecutar la acción.
+ */
+export function checkRole(...rolesPermitidos: RolUsuario[]) {
+    return (req: Request, res: Response, next: NextFunction): void => {
+        const usuario = req.user;
 
-        if (!user || !Roles.includes(user.role)) {
-            return res.status(403).json({ message: 'No tiene permiso para esta acción.' })
+        // Si no hay usuario es porque no pasó por verifyToken.
+        if (!usuario) {
+            res.status(401).json({ message: "Usuario no autenticado." });
+            return;
         }
 
-        next()
-    }
+        // Se compara el rol del token contra la lista de roles permitidos.
+        if (!rolesPermitidos.includes(usuario.role)) {
+            res.status(403).json({
+                message: "No tiene permisos para realizar esta acción.",
+            });
+            return;
+        }
+
+        next();
+    };
 }

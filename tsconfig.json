@@ -1,39 +1,46 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
+    // Carpeta donde está el código fuente en TypeScript.
     "rootDir": "./src",
+
+    // Carpeta donde queda el código compilado a JavaScript.
     "outDir": "./dist",
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
+
+    // Sistema de módulos de Node moderno (import / export).
     "module": "nodenext",
+
+    // Versión de JavaScript que se genera.
     "target": "esnext",
-    "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-    // and npm install -D @types/node
-    // Other Outputs
+
+    // Tipos globales que se cargan. Necesitamos los de Node
+    // para poder usar process.env, __dirname, etc.
+    "types": ["node"],
+
+    // Genera los archivos .map para poder depurar.
     "sourceMap": true,
+
+    // Genera los archivos de declaración .d.ts.
     "declaration": true,
     "declarationMap": true,
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-    // Recommended Options
+
+    // Activa todas las comprobaciones estrictas de TypeScript.
     "strict": true,
-    "jsx": "react-jsx",
+
+    // Obliga a escribir "import type" cuando solo se importa un tipo.
     "verbatimModuleSyntax": true,
+
+    // Cada archivo se compila por separado.
     "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
+
+    // Trata todos los archivos como módulos.
     "moduleDetection": "force",
+
+    // No revisa los tipos de las librerías de node_modules
+    // (compila mucho más rápido).
     "skipLibCheck": true,
-  }
+
+    // Avisa si un import solo por su efecto secundario no existe.
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src/**/*.ts"]
 }
