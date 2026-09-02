@@ -1,78 +1,78 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-import type { RolUsuario } from "../types/enums.js";
+import type { UserRole } from "../types/enums.js";
 import type { PayloadToken } from "../types/payload-token.js";
 
 /**
- * Revisa que la petición traiga un JSON Web Token válido.
+ * Checks that the request carries a valid JSON Web Token.
  *
- * El token se manda en la cabecera Authorization con el formato:
+ * The token is sent in the Authorization header with the format:
  *   Authorization: Bearer <token>
  *
- * Si el token sirve, guarda los datos del usuario en req.user
- * para que los siguientes middlewares y el controlador puedan usarlos.
+ * If the token is good, it stores the user data in req.user
+ * so the next middlewares and the controller can use it.
  */
 export function verifyToken(req: Request, res: Response, next: NextFunction): void {
-    const cabecera = req.headers.authorization;
+    const header = req.headers.authorization;
 
-    // Sin cabecera Authorization no hay nada que validar.
-    if (!cabecera || !cabecera.startsWith("Bearer ")) {
-        res.status(401).json({ message: "Token no proporcionado." });
+    // Without an Authorization header there is nothing to validate.
+    if (!header || !header.startsWith("Bearer ")) {
+        res.status(401).json({ message: "Token not provided." });
         return;
     }
 
-    // La cabecera viene como "Bearer abc.def.ghi",
-    // así que nos quedamos con la segunda parte.
-    const token = cabecera.split(" ")[1];
+    // The header comes as "Bearer abc.def.ghi",
+    // so we keep the second part.
+    const token = header.split(" ")[1];
 
     if (!token) {
-        res.status(401).json({ message: "Token no proporcionado." });
+        res.status(401).json({ message: "Token not provided." });
         return;
     }
 
-    const secreto = process.env.JWT_SECRET;
+    const secret = process.env.JWT_SECRET;
 
-    if (!secreto) {
-        res.status(500).json({ message: "Falta configurar JWT_SECRET." });
+    if (!secret) {
+        res.status(500).json({ message: "JWT_SECRET is not configured." });
         return;
     }
 
     try {
-        // jwt.verify revisa la firma y que el token no esté vencido.
-        const payload = jwt.verify(token, secreto) as PayloadToken;
+        // jwt.verify checks the signature and that the token is not expired.
+        const payload = jwt.verify(token, secret) as PayloadToken;
 
-        // Se guarda el usuario en la petición para reutilizarlo después.
+        // The user is stored in the request to reuse it later.
         req.user = payload;
 
         next();
     } catch {
-        res.status(401).json({ message: "Token inválido o expirado." });
+        res.status(401).json({ message: "Invalid or expired token." });
     }
 }
 
 /**
- * Revisa que el usuario del token tenga alguno de los roles permitidos.
+ * Checks that the user of the token has one of the allowed roles.
  *
- * Se usa siempre después de verifyToken, por ejemplo:
- *   router.post("/", verifyToken, checkRole("administrador"), crearClinica)
+ * It is always used after verifyToken, for example:
+ *   router.post("/", verifyToken, checkRole("admin"), postClinic)
  *
- * @param rolesPermitidos Roles que sí pueden ejecutar la acción.
+ * @param allowedRoles Roles that are allowed to run the action.
  */
-export function checkRole(...rolesPermitidos: RolUsuario[]) {
+export function checkRole(...allowedRoles: UserRole[]) {
     return (req: Request, res: Response, next: NextFunction): void => {
-        const usuario = req.user;
+        const user = req.user;
 
-        // Si no hay usuario es porque no pasó por verifyToken.
-        if (!usuario) {
-            res.status(401).json({ message: "Usuario no autenticado." });
+        // If there is no user it is because it did not go through verifyToken.
+        if (!user) {
+            res.status(401).json({ message: "User not authenticated." });
             return;
         }
 
-        // Se compara el rol del token contra la lista de roles permitidos.
-        if (!rolesPermitidos.includes(usuario.role)) {
+        // The role of the token is compared against the list of allowed roles.
+        if (!allowedRoles.includes(user.role)) {
             res.status(403).json({
-                message: "No tiene permisos para realizar esta acción.",
+                message: "You do not have permission to perform this action.",
             });
             return;
         }

@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { login, register } from "../controllers/auth.controller.js";
-import { validateRequest } from "../middlewares/validate_request.js";
+import { validateRequest } from "../middlewares/validate-request.js";
 import { loginSchema, registerSchema } from "../dto/auth.schema.js";
 
 const router = Router();
@@ -10,12 +10,12 @@ const router = Router();
  * @swagger
  * /api/auth/register:
  *   post:
- *     tags: [Autenticación]
- *     summary: Registrar un usuario nuevo
+ *     tags: [Authentication]
+ *     summary: Register a new user
  *     description: >
- *       Crea un usuario y devuelve sus datos sin la contraseña.
- *       Es el único endpoint que no exige token, y el propio usuario
- *       elige con qué rol se registra.
+ *       Creates a user and returns their data without the password.
+ *       It is the only endpoint that does not require a token, and the
+ *       user chooses which role to sign up with.
  *     security: []
  *     requestBody:
  *       required: true
@@ -40,11 +40,11 @@ const router = Router();
  *                 example: admin1234
  *               role:
  *                 type: string
- *                 enum: [administrador, gestor]
- *                 example: administrador
+ *                 enum: [admin, manager]
+ *                 example: admin
  *     responses:
  *       201:
- *         description: Usuario registrado correctamente
+ *         description: User registered successfully
  *         content:
  *           application/json:
  *             schema:
@@ -52,36 +52,36 @@ const router = Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Usuario registrado correctamente.
- *                 usuario:
- *                   $ref: '#/components/schemas/Usuario'
+ *                   example: User registered successfully.
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
  *       400:
- *         description: Datos inválidos o incompletos
+ *         description: Invalid or incomplete data
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorValidacion'
+ *               $ref: '#/components/schemas/ValidationError'
  *       409:
- *         description: Ya existe un usuario con ese correo
+ *         description: A user with that email already exists
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-// Ruta pública: no lleva verifyToken porque todavía no existe
-// el usuario que pediría el token.
+// Public route: it does not carry verifyToken because the user who
+// would ask for the token does not exist yet.
 router.post("/register", validateRequest(registerSchema), register);
 
 /**
  * @swagger
  * /api/auth/login:
  *   post:
- *     tags: [Autenticación]
- *     summary: Iniciar sesión y obtener el token
+ *     tags: [Authentication]
+ *     summary: Sign in and get the token
  *     description: >
- *       Valida el correo y la contraseña y devuelve el JSON Web Token
- *       con el que se accede al resto de endpoints. Copie el valor de
- *       "token" y péguelo en el botón Authorize.
+ *       Validates the email and the password and returns the JSON Web
+ *       Token used to access the rest of the endpoints. Copy the value
+ *       of "token" and paste it into the Authorize button.
  *     security: []
  *     requestBody:
  *       required: true
@@ -99,7 +99,7 @@ router.post("/register", validateRequest(registerSchema), register);
  *                 example: admin1234
  *     responses:
  *       200:
- *         description: Inicio de sesión exitoso
+ *         description: Sign in successful
  *         content:
  *           application/json:
  *             schema:
@@ -107,26 +107,26 @@ router.post("/register", validateRequest(registerSchema), register);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Inicio de sesión exitoso.
+ *                   example: Sign in successful.
  *                 token:
  *                   type: string
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *                 usuario:
- *                   $ref: '#/components/schemas/Usuario'
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
  *       400:
- *         description: Datos inválidos o incompletos
+ *         description: Invalid or incomplete data
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorValidacion'
+ *               $ref: '#/components/schemas/ValidationError'
  *       401:
- *         description: Correo o contraseña incorrectos
+ *         description: Wrong email or password
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-// También es pública: es justamente la ruta que entrega el token.
+// It is public too: it is precisely the route that hands out the token.
 router.post("/login", validateRequest(loginSchema), login);
 
 export default router;

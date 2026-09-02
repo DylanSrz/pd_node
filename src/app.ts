@@ -3,73 +3,73 @@ import swaggerUi from "swagger-ui-express";
 import "dotenv/config";
 
 import db from "./config/db.js";
-import { especificacionSwagger } from "./config/swagger.js";
+import { swaggerSpecification } from "./config/swagger.js";
 
-// Importar este archivo deja registradas todas las asociaciones
-// entre los modelos antes de que la API empiece a atender peticiones.
+// Importing this file leaves every association between the models
+// registered before the API starts serving requests.
 import "./models/index.js";
 
 import { errorHandler } from "./middlewares/error-handler.js";
 import routerAuth from "./routes/auth.routes.js";
-import routerClinicas from "./routes/clinica.routes.js";
-import routerAlmacenes from "./routes/almacen.routes.js";
-import routerMedicamentos from "./routes/medicamento.routes.js";
-import routerInventario from "./routes/inventario.routes.js";
-import routerSolicitudes from "./routes/solicitud.routes.js";
+import routerClinics from "./routes/clinic.routes.js";
+import routerWarehouses from "./routes/warehouse.routes.js";
+import routerMedications from "./routes/medication.routes.js";
+import routerInventory from "./routes/inventory.routes.js";
+import routerRequests from "./routes/request.routes.js";
 
 const { PORT } = process.env;
 
 const app = express();
 
-// Permite que Express lea el body de las peticiones en formato JSON.
+// Allows Express to read the body of the requests in JSON format.
 app.use(express.json());
 
-// Ruta de prueba para comprobar que la API está viva.
+// Test route to check that the API is alive.
 app.get("/", (_req, res) => {
     res.status(200).json({
-        message: "API RiwiMediCare Plus funcionando.",
-        documentacion: "/api-docs",
+        message: "RiwiMediCare Plus API up and running.",
+        documentation: "/api-docs",
     });
 });
 
-// DOCUMENTACIÓN
-// Swagger UI queda disponible en http://localhost:PORT/api-docs
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(especificacionSwagger));
+// DOCUMENTATION
+// Swagger UI is available at http://localhost:PORT/api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
 
-// ENDPOINTS DE LA API
+// API ENDPOINTS
 app.use("/api/auth", routerAuth);
-app.use("/api/clinicas", routerClinicas);
-app.use("/api/almacenes", routerAlmacenes);
-app.use("/api/medicamentos", routerMedicamentos);
-app.use("/api/inventario", routerInventario);
-app.use("/api/solicitudes", routerSolicitudes);
+app.use("/api/clinics", routerClinics);
+app.use("/api/warehouses", routerWarehouses);
+app.use("/api/medications", routerMedications);
+app.use("/api/inventory", routerInventory);
+app.use("/api/requests", routerRequests);
 
-// Si ninguna ruta coincidió, se responde un 404 claro.
+// If no route matched, a clear 404 is returned.
 app.use((_req, res) => {
-    res.status(404).json({ message: "La ruta solicitada no existe." });
+    res.status(404).json({ message: "The requested route does not exist." });
 });
 
-// El manejador de errores va de último, después de las rutas,
-// porque atrapa lo que ellas le pasen con next(error).
+// The error handler goes last, after the routes,
+// because it catches what they pass to it with next(error).
 app.use(errorHandler);
 
 /**
- * Conecta con la base de datos y levanta el servidor.
- * Si la conexión falla, muestra el error y no arranca.
+ * Connects to the database and starts the server.
+ * If the connection fails, it prints the error and does not start.
  */
 async function start(): Promise<void> {
     try {
-        // Comprueba que las credenciales del .env sirven
-        // para conectarse a PostgreSQL.
+        // Checks that the credentials from the .env work
+        // to connect to PostgreSQL.
         await db.authenticate();
-        console.log("Conexión con la base de datos establecida.");
+        console.log("Database connection established.");
 
         app.listen(PORT, () => {
-            console.log(`Servidor corriendo en el puerto: ${PORT}`);
-            console.log(`Documentación disponible en: http://localhost:${PORT}/api-docs`);
+            console.log(`Server running on port: ${PORT}`);
+            console.log(`Documentation available at: http://localhost:${PORT}/api-docs`);
         });
     } catch (error) {
-        console.error("Error al iniciar la aplicación:", error);
+        console.error("Error starting the application:", error);
     }
 }
 

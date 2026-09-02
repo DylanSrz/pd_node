@@ -1,10 +1,10 @@
 import { DataTypes, type QueryInterface } from "sequelize";
 
-import { ROLES_USUARIO } from "../types/enums.js";
+import { USER_ROLES } from "../types/enums.js";
 
 /**
- * Crea la tabla "users", donde se guardan las personas
- * que pueden entrar a la API (administradores y gestores).
+ * Creates the "users" table, where the people who can access
+ * the API are stored (admins and managers).
  */
 export async function up({ context }: { context: QueryInterface }): Promise<void> {
     await context.createTable("users", {
@@ -25,7 +25,7 @@ export async function up({ context }: { context: QueryInterface }): Promise<void
             type: DataTypes.STRING(150),
             allowNull: false,
 
-            // No pueden existir dos usuarios con el mismo correo.
+            // Two users cannot share the same email.
             unique: true,
         },
         password_hash: {
@@ -33,13 +33,13 @@ export async function up({ context }: { context: QueryInterface }): Promise<void
             allowNull: false,
         },
         role: {
-            // ENUM solo acepta los valores de la lista ROLES_USUARIO.
-            type: DataTypes.ENUM(...ROLES_USUARIO),
+            // ENUM only accepts the values of the USER_ROLES list.
+            type: DataTypes.ENUM(...USER_ROLES),
             allowNull: false,
         },
         is_active: {
-            // Se usa para la eliminación lógica: en vez de borrar
-            // el registro, se pone en false.
+            // Used for the logical deletion: instead of removing
+            // the record, it is set to false.
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: true,
@@ -58,13 +58,13 @@ export async function up({ context }: { context: QueryInterface }): Promise<void
 }
 
 /**
- * Deshace la migración: borra la tabla "users" y el tipo ENUM
- * que PostgreSQL creó para la columna role.
+ * Undoes the migration: drops the "users" table and the ENUM type
+ * that PostgreSQL created for the role column.
  */
 export async function down({ context }: { context: QueryInterface }): Promise<void> {
     await context.dropTable("users");
 
-    // PostgreSQL guarda los ENUM como un tipo aparte,
-    // por eso hay que eliminarlo a mano.
+    // PostgreSQL stores the ENUM as a separate type,
+    // that is why it has to be removed by hand.
     await context.sequelize.query('DROP TYPE IF EXISTS "enum_users_role";');
 }

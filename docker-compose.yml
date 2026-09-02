@@ -9,9 +9,9 @@ services:
     env_file:
       - .env
 
-    # Estas dos variables sobrescriben las del .env: dentro de la red
-    # de Docker la base de datos no está en localhost, sino en el
-    # servicio llamado "db" y en su puerto interno 5432.
+    # These two variables override the ones in the .env: inside the
+    # Docker network the database is not on localhost, but on the
+    # service called "db" and on its internal port 5432.
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
@@ -31,7 +31,7 @@ services:
     image: postgres:16
     container_name: db_pd_nodejs
     restart: unless-stopped
-    
+
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
 

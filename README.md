@@ -1,165 +1,165 @@
-# API RiwiMediCare Plus
+# RiwiMediCare Plus API
 
-API REST para gestionar el ciclo de vida de las solicitudes de abastecimiento de medicamentos e insumos médicos de la empresa **RiwiMediCare Plus**.
+REST API to manage the life cycle of the supply requests of medications and medical supplies of the company **RiwiMediCare Plus**.
 
-Permite registrar clínicas y sus responsables, administrar el inventario de medicamentos de cada almacén, crear solicitudes de abastecimiento, asignarlas a un almacén, controlar su estado y consultar el historial de solicitudes de cada clínica.
+It allows registering clinics and their managers, administering the medication inventory of each warehouse, creating supply requests, assigning them to a warehouse, controlling their status and querying the request history of each clinic.
 
 ---
 
-## Datos del proyecto
+## Project details
 
 | | |
 |---|---|
 | **Coder** | Dylan Alberto Suárez Laverde |
 | **Clan** | centurion |
-| **Prueba** | Prueba de desempeño – Node.js |
-| **Repositorio** | https://github.com/DylanSrz/pd_node |
+| **Test** | Performance test – Node.js |
+| **Repository** | https://github.com/DylanSrz/pd_node |
 
 ---
 
-## Tecnologías utilizadas
+## Technologies used
 
-| Tecnología | Uso |
+| Technology | Purpose |
 |---|---|
-| **Node.js 18+** | Entorno de ejecución |
-| **TypeScript** | Tipado estático en todo el proyecto |
-| **Express 5** | Framework del servidor HTTP |
-| **PostgreSQL 16** | Base de datos relacional |
-| **Sequelize 6** | ORM para hablar con la base de datos |
-| **Umzug** | Ejecuta las migraciones y los seeders por comando |
-| **JSON Web Token** | Autenticación y protección de las rutas |
-| **bcrypt** | Cifrado de las contraseñas |
-| **Zod** | Validación de los datos que entran a la API |
-| **Swagger (swagger-jsdoc + swagger-ui-express)** | Documentación de los endpoints |
-| **Docker y Docker Compose** | Levantar la API y la base de datos en contenedores |
-| **tsx** | Ejecutar TypeScript en desarrollo con recarga automática |
+| **Node.js 18+** | Runtime environment |
+| **TypeScript** | Static typing across the whole project |
+| **Express 5** | HTTP server framework |
+| **PostgreSQL 16** | Relational database |
+| **Sequelize 6** | ORM used to talk to the database |
+| **Umzug** | Runs the migrations and the seeders by command |
+| **JSON Web Token** | Authentication and route protection |
+| **bcrypt** | Password hashing |
+| **Zod** | Validation of the data coming into the API |
+| **Swagger (swagger-jsdoc + swagger-ui-express)** | Endpoint documentation |
+| **Docker and Docker Compose** | Running the API and the database in containers |
+| **tsx** | Running TypeScript in development with hot reload |
 
 ---
 
-## Instalación
+## Installation
 
-### Requisitos previos
+### Prerequisites
 
-- Node.js 18 o superior
-- PostgreSQL 16 (o Docker, si se prefiere la opción con contenedores)
+- Node.js 18 or higher
+- PostgreSQL 16 (or Docker, if the container option is preferred)
 - Git
 
-### Pasos
+### Steps
 
 ```bash
-# 1. Clonar el repositorio
+# 1. Clone the repository
 git clone https://github.com/DylanSrz/pd_node.git
 cd pd_node
 
-# 2. Instalar las dependencias
+# 2. Install the dependencies
 npm install
 
-# 3. Crear el archivo de variables de entorno
+# 3. Create the environment variables file
 cp .env.example .env
-#    Editar el .env con los datos de la base de datos propia
+#    Edit the .env with your own database details
 
-# 4. Crear las tablas
+# 4. Create the tables
 npm run migrate
 
-# 5. Cargar los datos de prueba
+# 5. Load the test data
 npm run seed
 
-# 6. Levantar el servidor
+# 6. Start the server
 npm run dev
 ```
 
-La API queda disponible en `http://localhost:3000` y la documentación en `http://localhost:3000/api-docs`.
+The API becomes available at `http://localhost:3000` and the documentation at `http://localhost:3000/api-docs`.
 
 ---
 
-## Variables de entorno
+## Environment variables
 
-El archivo `.env` no se sube al repositorio. Se crea a partir de `.env.example`:
+The `.env` file is not pushed to the repository. It is created from `.env.example`:
 
 ```env
-# Puerto en el que se levanta la API
+# Port the API is served on
 PORT=3000
 
-# Datos de conexión a PostgreSQL
+# PostgreSQL connection details
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=admin
 DATABASE_PASSWORD=admin1234
 DATABASE_NAME=db_nodejs
 
-# Clave secreta para firmar los JSON Web Token
+# Secret key used to sign the JSON Web Token
 JWT_SECRET=a3sd21m16uio87ft62mp4i0ok6j8b24sdfc6sd
 
-# Tiempo de vida del token (ejemplos: 1h, 8h, 7d)
+# Token lifetime (examples: 1h, 8h, 7d)
 JWT_EXPIRES_IN=8h
 ```
 
 ---
 
-## Ejecución del proyecto
+## Running the project
 
-### Modo desarrollo
+### Development mode
 
-Levanta el servidor y lo recarga solo cada vez que se guarda un archivo:
+Starts the server and reloads it on its own every time a file is saved:
 
 ```bash
 npm run dev
 ```
 
-### Modo producción
+### Production mode
 
-Compila el TypeScript a JavaScript en la carpeta `dist` y ejecuta el resultado:
+Compiles the TypeScript into JavaScript inside the `dist` folder and runs the result:
 
 ```bash
 npm run build
 npm start
 ```
 
-### Con Docker
+### With Docker
 
-Levanta dos contenedores: la API y PostgreSQL, conectados por una red interna y con un volumen para que los datos sobrevivan al apagado.
+Starts two containers: the API and PostgreSQL, connected through an internal network and with a volume so the data survives a shutdown.
 
 ```bash
-# Levantar todo
+# Start everything
 docker compose up -d
 
-# Ver los logs de la API
+# Watch the API logs
 docker compose logs -f api
 
-# Crear las tablas y cargar los datos dentro del contenedor
+# Create the tables and load the data inside the container
 docker compose exec api npm run migrate
 docker compose exec api npm run seed
 
-# Apagar todo
+# Shut everything down
 docker compose down
 ```
 
 ---
 
-## Migraciones y seeders
+## Migrations and seeders
 
-Las tablas **no** se crean con `sequelize.sync()`, sino con migraciones versionadas que se ejecutan por comando. Los seeders funcionan igual y cargan los datos de prueba.
+The tables are **not** created with `sequelize.sync()`, but with versioned migrations that are run by command. The seeders work the same way and load the test data.
 
-| Comando | Qué hace |
+| Command | What it does |
 |---|---|
-| `npm run migrate` | Crea todas las tablas que falten |
-| `npm run migrate:reverse` | Deshace la última migración |
-| `npm run migrate:reset` | Deshace todas las migraciones |
-| `npm run seed` | Carga todos los datos de prueba |
-| `npm run seed:down` | Deshace el último seeder |
-| `npm run seed:reset` | Deshace todos los seeders |
+| `npm run migrate` | Creates every missing table |
+| `npm run migrate:reverse` | Undoes the last migration |
+| `npm run migrate:reset` | Undoes every migration |
+| `npm run seed` | Loads all the test data |
+| `npm run seed:down` | Undoes the last seeder |
+| `npm run seed:reset` | Undoes every seeder |
 
-### Cómo ejecutar los seeders
+### How to run the seeders
 
 ```bash
-# 1. Primero las tablas
+# 1. The tables first
 npm run migrate
 
-# 2. Después los datos
+# 2. The data afterwards
 npm run seed
 ```
 
-Salida esperada:
+Expected output:
 
 ```
 { event: 'migrating', name: '010-users.seed.ts' }
@@ -168,187 +168,187 @@ Salida esperada:
 Seeders executed successfully
 ```
 
-Los seeders se ejecutan **en orden numérico**, porque cada uno depende del anterior: el inventario necesita que ya existan los almacenes y los medicamentos, y las solicitudes necesitan que existan las clínicas, los usuarios y el inventario.
+The seeders run **in numeric order**, because each one depends on the previous: the inventory needs the warehouses and the medications to already exist, and the requests need the clinics, the users and the inventory to exist.
 
-Como los identificadores son UUID generados al azar en cada ejecución, los seeders no los escriben a mano: consultan las tablas anteriores y buscan los registros por su nombre (o por el correo, en el caso de los usuarios).
+Since the identifiers are UUIDs generated at random on every run, the seeders do not write them by hand: they query the previous tables and look the records up by their name (or by their email, in the case of the users).
 
-### Datos que se cargan
+### Data that is loaded
 
-| Tabla | Registros |
+| Table | Records |
 |---|---|
-| `users` | 4 (2 administradores y 2 gestores) |
-| `clinicas` | 3 |
-| `almacenes` | 2 |
-| `medicamentos` | 6 |
-| `inventario` | 9 |
-| `solicitudes` | 6 (una por cada estado) |
+| `users` | 4 (2 admins and 2 managers) |
+| `clinics` | 3 |
+| `warehouses` | 2 |
+| `medications` | 6 |
+| `inventory` | 9 |
+| `requests` | 6 (one for each status) |
 
-Para revertirlo todo y volver a empezar de cero:
+To revert everything and start from scratch:
 
 ```bash
-npm run seed:reset      # 1. limpia el registro de los seeders
-npm run migrate:reset   # 2. borra las tablas
-npm run migrate         # 3. las vuelve a crear
-npm run seed            # 4. carga los datos otra vez
+npm run seed:reset      # 1. cleans the seeder log
+npm run migrate:reset   # 2. drops the tables
+npm run migrate         # 3. creates them again
+npm run seed            # 4. loads the data once more
 ```
 
-> **El orden importa.** `migrate:reset` borra las tablas del dominio, pero el
-> registro que Umzug lleva de los seeders sobrevive en la tabla `SequelizeData`.
-> Si no se ejecuta `seed:reset` primero, `npm run seed` cree que los seeders ya
-> se ejecutaron, no vuelve a cargar nada y las tablas quedan vacías.
+> **The order matters.** `migrate:reset` drops the domain tables, but the
+> log Umzug keeps of the seeders survives in the `SequelizeData` table.
+> If `seed:reset` is not run first, `npm run seed` believes the seeders already
+> ran, does not load anything again and the tables end up empty.
 
-### Usuarios de prueba
+### Test users
 
-| Correo | Contraseña | Rol |
+| Email | Password | Role |
 |---|---|---|
-| dylan.suarez@riwimedicare.com | `admin1234` | administrador |
-| camilo.delvalle@riwimedicare.com | `admin1234` | administrador |
-| abrahan.villa@riwimedicare.com | `gestor1234` | gestor |
-| laura.restrepo@riwimedicare.com | `gestor1234` | gestor |
+| dylan.suarez@riwimedicare.com | `admin1234` | admin |
+| camilo.delvalle@riwimedicare.com | `admin1234` | admin |
+| abrahan.villa@riwimedicare.com | `gestor1234` | manager |
+| laura.restrepo@riwimedicare.com | `gestor1234` | manager |
 
 ---
 
-## Documentación de la API
+## API documentation
 
-Con el servidor arriba, la documentación interactiva queda en:
+With the server up, the interactive documentation lives at:
 
 **http://localhost:3000/api-docs**
 
-Para probar los endpoints protegidos:
+To try the protected endpoints:
 
-1. Ejecutar `POST /api/auth/login` con uno de los usuarios de prueba.
-2. Copiar el valor de `token` de la respuesta.
-3. Pulsar el botón **Authorize** y pegar el token (sin escribir la palabra `Bearer`).
-4. Ya se pueden ejecutar todos los demás endpoints.
+1. Run `POST /api/auth/login` with one of the test users.
+2. Copy the `token` value from the response.
+3. Press the **Authorize** button and paste the token (without typing the word `Bearer`).
+4. Every other endpoint can now be executed.
 
 ---
 
 ## Endpoints
 
-Todas las rutas exigen token, **salvo el registro y el inicio de sesión**.
+Every route requires a token, **except sign up and sign in**.
 
-### Autenticación
+### Authentication
 
-| Método | Ruta | Acceso |
+| Method | Route | Access |
 |---|---|---|
-| `POST` | `/api/auth/register` | Público |
-| `POST` | `/api/auth/login` | Público |
+| `POST` | `/api/auth/register` | Public |
+| `POST` | `/api/auth/login` | Public |
 
-### Clínicas
+### Clinics
 
-| Método | Ruta | Acceso |
+| Method | Route | Access |
 |---|---|---|
-| `GET` | `/api/clinicas` | Autenticado |
-| `GET` | `/api/clinicas/:id` | Autenticado |
-| `GET` | `/api/clinicas/:id/solicitudes` | Autenticado |
-| `POST` | `/api/clinicas` | Administrador |
-| `PUT` | `/api/clinicas/:id` | Administrador |
-| `DELETE` | `/api/clinicas/:id` | Administrador |
+| `GET` | `/api/clinics` | Authenticated |
+| `GET` | `/api/clinics/:id` | Authenticated |
+| `GET` | `/api/clinics/:id/requests` | Authenticated |
+| `POST` | `/api/clinics` | Admin |
+| `PUT` | `/api/clinics/:id` | Admin |
+| `DELETE` | `/api/clinics/:id` | Admin |
 
-### Almacenes, medicamentos e inventario
+### Warehouses, medications and inventory
 
-| Método | Ruta | Acceso |
+| Method | Route | Access |
 |---|---|---|
-| `GET` | `/api/almacenes` · `/api/medicamentos` · `/api/inventario` | Autenticado |
-| `GET` | `/api/almacenes/:id` · `/api/medicamentos/:id` · `/api/inventario/:id` | Autenticado |
-| `POST` | `/api/almacenes` · `/api/medicamentos` · `/api/inventario` | Administrador |
-| `PUT` | `/api/almacenes/:id` · `/api/medicamentos/:id` · `/api/inventario/:id` | Administrador |
-| `DELETE` | `/api/almacenes/:id` · `/api/medicamentos/:id` · `/api/inventario/:id` | Administrador |
+| `GET` | `/api/warehouses` · `/api/medications` · `/api/inventory` | Authenticated |
+| `GET` | `/api/warehouses/:id` · `/api/medications/:id` · `/api/inventory/:id` | Authenticated |
+| `POST` | `/api/warehouses` · `/api/medications` · `/api/inventory` | Admin |
+| `PUT` | `/api/warehouses/:id` · `/api/medications/:id` · `/api/inventory/:id` | Admin |
+| `DELETE` | `/api/warehouses/:id` · `/api/medications/:id` · `/api/inventory/:id` | Admin |
 
-### Solicitudes
+### Requests
 
-| Método | Ruta | Acceso |
+| Method | Route | Access |
 |---|---|---|
-| `GET` | `/api/solicitudes` | Autenticado |
-| `GET` | `/api/solicitudes/historial` | Autenticado |
-| `GET` | `/api/solicitudes/:id` | Autenticado |
-| `POST` | `/api/solicitudes` | Gestor y administrador |
-| `PATCH` | `/api/solicitudes/:id/estado` | Gestor y administrador |
-| `PUT` | `/api/solicitudes/:id` | Administrador |
-| `DELETE` | `/api/solicitudes/:id` | Administrador |
+| `GET` | `/api/requests` | Authenticated |
+| `GET` | `/api/requests/history` | Authenticated |
+| `GET` | `/api/requests/:id` | Authenticated |
+| `POST` | `/api/requests` | Manager and admin |
+| `PATCH` | `/api/requests/:id/status` | Manager and admin |
+| `PUT` | `/api/requests/:id` | Admin |
+| `DELETE` | `/api/requests/:id` | Admin |
 
 ---
 
-## Reglas de negocio
+## Business rules
 
-### Estados de una solicitud
+### Statuses of a request
 
 ```
-pendiente ──> aprobada ──> entregada   (final)
-    │             └──────> cancelada   (final)
-    ├──────> rechazada                 (final)
-    └──────> cancelada                 (final)
+pending ──> approved ──> delivered   (final)
+   │            └──────> cancelled   (final)
+   ├─────> rejected                  (final)
+   └─────> cancelled                 (final)
 ```
 
-Cualquier otro salto se rechaza con un `400` que indica el estado actual y a cuáles sí se puede pasar.
+Any other jump is rejected with a `400` that states the current status and which ones it can actually move to.
 
-### Manejo del inventario
+### Inventory handling
 
-- Al **crear** una solicitud se revisa que haya existencias suficientes, pero **no se descuenta** nada todavía.
-- Al pasar la solicitud a **aprobada** se descuentan las unidades del almacén.
-- Al **cancelar** una solicitud que estaba aprobada, las unidades se devuelven.
-- Al **eliminar lógicamente** una solicitud aprobada, las unidades también se devuelven.
+- When **creating** a request it is checked that there is enough stock, but **nothing is discounted** yet.
+- When moving the request to **approved** the units are discounted from the warehouse.
+- When **cancelling** a request that was approved, the units are given back.
+- When **logically deleting** an approved request, the units are given back too.
 
-Todo esto ocurre dentro de una transacción de Sequelize que bloquea la fila del inventario, para que dos aprobaciones simultáneas no descuenten las mismas unidades.
+All of this happens inside a Sequelize transaction that locks the inventory row, so that two simultaneous approvals do not discount the same units.
 
-### Validaciones
+### Validations
 
-| Regla | Respuesta |
+| Rule | Response |
 |---|---|
-| Cantidad solicitada menor o igual a cero | `400` |
-| Dos clínicas con el mismo NIT | `409` |
-| Clínica, medicamento o almacén inexistente | `404` indicando cuál |
-| El almacén no maneja ese medicamento | `400` |
-| Inventario insuficiente | `400` con lo pedido y lo disponible |
-| Cambio de estado no permitido | `400` con los estados válidos |
-| Usuario sin el rol necesario | `403` |
-| Sin token, o token inválido o vencido | `401` |
+| Requested quantity lower than or equal to zero | `400` |
+| Two clinics with the same tax id | `409` |
+| Non-existent clinic, medication or warehouse | `404` stating which one |
+| The warehouse does not handle that medication | `400` |
+| Not enough inventory | `400` with what was requested and what is available |
+| Status change not allowed | `400` with the valid statuses |
+| User without the required role | `403` |
+| No token, or invalid or expired token | `401` |
 
-### Eliminación lógica
+### Logical deletion
 
-Ninguna entidad se borra de la base de datos. El `DELETE` pone el campo `is_active` en `false`, de modo que el registro desaparece de los listados pero sigue existiendo y el historial de solicitudes que lo referencia se conserva intacto.
+No entity is removed from the database. The `DELETE` sets the `is_active` field to `false`, so the record disappears from the listings but keeps existing and the request history that references it is preserved intact.
 
 ---
 
-## Estructura del proyecto
+## Project structure
 
 ```
 src/
-├── app.ts                  Punto de entrada: monta los middlewares y las rutas
+├── app.ts                  Entry point: mounts the middlewares and the routes
 ├── config/
-│   ├── db.ts               Conexión con PostgreSQL
-│   ├── migrator.ts         Configuración de Umzug para las migraciones
-│   ├── seeders.ts          Configuración de Umzug para los seeders
-│   ├── migrate-*.ts        Comandos de migración
-│   ├── seeders-*.ts        Comandos de seeders
-│   └── swagger.ts          Configuración de la documentación
-├── migrations/             Creación de las tablas, en orden numérico
-├── seeders/                Datos de prueba, en el mismo orden
-├── models/                 Modelos de Sequelize y sus asociaciones
-├── dto/                    Esquemas de validación con Zod
-├── middlewares/            Autenticación, roles y reglas de negocio
-├── services/               Lógica de negocio
-├── controllers/            Traducción entre HTTP y los services
-├── routes/                 Definición de rutas y documentación Swagger
-├── types/                  Tipos e interfaces propias
-└── utils/                  Utilidades: errores HTTP y estados de solicitud
+│   ├── db.ts               PostgreSQL connection
+│   ├── migrator.ts         Umzug configuration for the migrations
+│   ├── seeders.ts          Umzug configuration for the seeders
+│   ├── migrate-*.ts        Migration commands
+│   ├── seeders-*.ts        Seeder commands
+│   └── swagger.ts          Documentation configuration
+├── migrations/             Table creation, in numeric order
+├── seeders/                Test data, in the same order
+├── models/                 Sequelize models and their associations
+├── dto/                    Validation schemas with Zod
+├── middlewares/            Authentication, roles and business rules
+├── services/               Business logic
+├── controllers/            Translation between HTTP and the services
+├── routes/                 Route definition and Swagger documentation
+├── types/                  Own types and interfaces
+└── utils/                  Utilities: HTTP errors and request statuses
 ```
 
-El flujo de una petición es siempre el mismo:
+The flow of a request is always the same:
 
 ```
-ruta → middlewares de validación → controlador → service → modelo → base de datos
+route → validation middlewares → controller → service → model → database
 ```
 
-Los controladores solo se ocupan de lo relacionado con HTTP: leer la petición, elegir el código de estado y responder. Toda la lógica de negocio vive en los *services*.
+The controllers only deal with what is related to HTTP: reading the request, choosing the status code and answering. All the business logic lives in the *services*.
 
 ---
 
-## Base de datos
+## Database
 
-El archivo `backup.sql` en la raíz del repositorio contiene un respaldo completo de la base de datos, con su estructura y los datos de prueba ya cargados.
+The `backup.sql` file at the root of the repository contains a full backup of the database, with its structure and the test data already loaded.
 
-Para restaurarlo:
+To restore it:
 
 ```bash
 createdb -h localhost -U admin db_nodejs

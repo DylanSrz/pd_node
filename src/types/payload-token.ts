@@ -1,18 +1,18 @@
-import type { RolUsuario } from "./enums.js";
+import type { UserRole } from "./enums.js";
 
 /**
- * Información que viaja dentro del JSON Web Token.
+ * Information carried inside the JSON Web Token.
  *
- * Es lo que guardamos al hacer login y lo que leemos
- * al validar el token en cada petición protegida.
+ * It is what we store when logging in and what we read
+ * when validating the token on every protected request.
  */
 export interface PayloadToken {
-    // Id del usuario dueño del token.
+    // Id of the user who owns the token.
     id: string;
 
-    // Correo del usuario.
+    // Email of the user.
     email: string;
 
-    // Rol del usuario, para saber qué acciones puede ejecutar.
-    role: RolUsuario;
+    // Role of the user, used to know which actions they can run.
+    role: UserRole;
 }

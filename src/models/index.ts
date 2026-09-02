@@ -1,95 +1,95 @@
 import User from "./user.model.js";
-import Clinica from "./clinica.model.js";
-import Almacen from "./almacen.model.js";
-import Medicamento from "./medicamento.model.js";
-import Inventario from "./inventario.model.js";
-import Solicitud from "./solicitud.model.js";
+import Clinic from "./clinic.model.js";
+import Warehouse from "./warehouse.model.js";
+import Medication from "./medication.model.js";
+import Inventory from "./inventory.model.js";
+import Request from "./request.model.js";
 
 // ======================================================
-// ASOCIACIONES ENTRE LOS MODELOS
+// ASSOCIATIONS BETWEEN THE MODELS
 // ======================================================
 //
-// Todas las relaciones se declaran aquí, en un solo lugar,
-// para que ningún modelo tenga que importar a otro y así
-// evitar imports circulares.
+// Every relation is declared here, in a single place,
+// so that no model has to import another one and thus
+// circular imports are avoided.
 
 // ------------------------------------------------------
-// INVENTARIO
-// ------------------------------------------------------
-//
-// Un registro de inventario pertenece a un almacén
-// y a un medicamento.
-//
-//   Almacen 1 ──── N Inventario N ──── 1 Medicamento
-
-Inventario.belongsTo(Almacen, {
-    foreignKey: "almacen_id",
-    as: "almacen",
-});
-
-Almacen.hasMany(Inventario, {
-    foreignKey: "almacen_id",
-    as: "inventario",
-});
-
-Inventario.belongsTo(Medicamento, {
-    foreignKey: "medicamento_id",
-    as: "medicamento",
-});
-
-Medicamento.hasMany(Inventario, {
-    foreignKey: "medicamento_id",
-    as: "inventario",
-});
-
-// ------------------------------------------------------
-// SOLICITUDES
+// INVENTORY
 // ------------------------------------------------------
 //
-// Una solicitud apunta a cuatro tablas: la clínica que pide,
-// el medicamento pedido, el almacén asignado y el usuario
-// que la registró.
+// An inventory record belongs to a warehouse
+// and to a medication.
+//
+//   Warehouse 1 ──── N Inventory N ──── 1 Medication
 
-Solicitud.belongsTo(Clinica, {
-    foreignKey: "clinica_id",
-    as: "clinica",
+Inventory.belongsTo(Warehouse, {
+    foreignKey: "warehouse_id",
+    as: "warehouse",
 });
 
-Clinica.hasMany(Solicitud, {
-    foreignKey: "clinica_id",
-    as: "solicitudes",
+Warehouse.hasMany(Inventory, {
+    foreignKey: "warehouse_id",
+    as: "inventory",
 });
 
-Solicitud.belongsTo(Medicamento, {
-    foreignKey: "medicamento_id",
-    as: "medicamento",
+Inventory.belongsTo(Medication, {
+    foreignKey: "medication_id",
+    as: "medication",
 });
 
-Medicamento.hasMany(Solicitud, {
-    foreignKey: "medicamento_id",
-    as: "solicitudes",
+Medication.hasMany(Inventory, {
+    foreignKey: "medication_id",
+    as: "inventory",
 });
 
-Solicitud.belongsTo(Almacen, {
-    foreignKey: "almacen_id",
-    as: "almacen",
+// ------------------------------------------------------
+// REQUESTS
+// ------------------------------------------------------
+//
+// A request points to four tables: the clinic that asks,
+// the requested medication, the assigned warehouse and the user
+// who registered it.
+
+Request.belongsTo(Clinic, {
+    foreignKey: "clinic_id",
+    as: "clinic",
 });
 
-Almacen.hasMany(Solicitud, {
-    foreignKey: "almacen_id",
-    as: "solicitudes",
+Clinic.hasMany(Request, {
+    foreignKey: "clinic_id",
+    as: "requests",
 });
 
-Solicitud.belongsTo(User, {
-    foreignKey: "usuario_id",
-    as: "usuario",
+Request.belongsTo(Medication, {
+    foreignKey: "medication_id",
+    as: "medication",
 });
 
-User.hasMany(Solicitud, {
-    foreignKey: "usuario_id",
-    as: "solicitudes",
+Medication.hasMany(Request, {
+    foreignKey: "medication_id",
+    as: "requests",
 });
 
-// Se exportan todos juntos para importarlos cómodamente
-// desde los services.
-export { User, Clinica, Almacen, Medicamento, Inventario, Solicitud };
+Request.belongsTo(Warehouse, {
+    foreignKey: "warehouse_id",
+    as: "warehouse",
+});
+
+Warehouse.hasMany(Request, {
+    foreignKey: "warehouse_id",
+    as: "requests",
+});
+
+Request.belongsTo(User, {
+    foreignKey: "user_id",
+    as: "user",
+});
+
+User.hasMany(Request, {
+    foreignKey: "user_id",
+    as: "requests",
+});
+
+// They are exported all together so they can be imported
+// comfortably from the services.
+export { User, Clinic, Warehouse, Medication, Inventory, Request };

@@ -1,18 +1,18 @@
 import { seeder } from "./seeders.js";
 
-// El "to: 0" le indica a Umzug que revierta todos los seeders,
-// no solo el último, y que limpie su tabla de control.
+// The "to: 0" tells Umzug to revert every seeder, not only the
+// last one, and to clean up its control table.
 //
-// Hace falta después de un migrate:reset: ese comando borra las
-// tablas del dominio, pero el registro de los seeders sobrevive,
-// y sin limpiarlo "npm run seed" cree que ya se ejecutaron todos
-// y no vuelve a cargar los datos.
+// It is needed after a migrate:reset: that command drops the domain
+// tables, but the seeder log survives, and without cleaning it
+// "npm run seed" believes every seeder already ran and does not
+// load the data again.
 try {
     await seeder.down({ to: 0 });
 
-    console.log("Todos los seeders fueron revertidos correctamente.");
+    console.log("All seeders were reverted successfully.");
 } catch (error) {
-    console.error("Error revirtiendo los seeders:", error);
+    console.error("Error reverting the seeders:", error);
 
     process.exit(1);
 }

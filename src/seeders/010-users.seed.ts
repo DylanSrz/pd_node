@@ -3,20 +3,20 @@ import type { QueryInterface } from "sequelize";
 import bcrypt from "bcrypt";
 
 /**
- * Carga los usuarios de prueba: dos administradores y dos gestores.
+ * Loads the test users: two admins and two managers.
  *
- * Las contraseñas se guardan cifradas con bcrypt, igual que cuando
- * un usuario se registra por el endpoint. El hook del modelo no se
- * ejecuta aquí porque bulkInsert escribe directo en la tabla, así
- * que hay que cifrarlas a mano.
+ * The passwords are stored hashed with bcrypt, just like when
+ * a user signs up through the endpoint. The model hook does not
+ * run here because bulkInsert writes straight into the table, so
+ * they have to be hashed by hand.
  */
 export async function up({ context }: { context: QueryInterface }): Promise<void> {
-    // El 10 es el "costo": cuántas vueltas da bcrypt al cifrar.
-    // A mayor número, más seguro pero más lento.
-    const claveAdmin = await bcrypt.hash("admin1234", 10);
-    const claveGestor = await bcrypt.hash("gestor1234", 10);
+    // The 10 is the "cost": how many rounds bcrypt takes when hashing.
+    // The higher the number, the safer but the slower.
+    const adminPassword = await bcrypt.hash("admin1234", 10);
+    const managerPassword = await bcrypt.hash("gestor1234", 10);
 
-    const ahora = new Date();
+    const now = new Date();
 
     await context.bulkInsert("users", [
         {
@@ -24,50 +24,50 @@ export async function up({ context }: { context: QueryInterface }): Promise<void
             first_name: "dylan alberto",
             last_name: "suárez laverde",
             email: "dylan.suarez@riwimedicare.com",
-            password_hash: claveAdmin,
-            role: "administrador",
+            password_hash: adminPassword,
+            role: "admin",
             is_active: true,
-            createdAt: ahora,
-            updatedAt: ahora,
+            createdAt: now,
+            updatedAt: now,
         },
         {
             id: randomUUID(),
             first_name: "camilo",
             last_name: "del valle",
             email: "camilo.delvalle@riwimedicare.com",
-            password_hash: claveAdmin,
-            role: "administrador",
+            password_hash: adminPassword,
+            role: "admin",
             is_active: true,
-            createdAt: ahora,
-            updatedAt: ahora,
+            createdAt: now,
+            updatedAt: now,
         },
         {
             id: randomUUID(),
             first_name: "abrahan",
             last_name: "villa",
             email: "abrahan.villa@riwimedicare.com",
-            password_hash: claveGestor,
-            role: "gestor",
+            password_hash: managerPassword,
+            role: "manager",
             is_active: true,
-            createdAt: ahora,
-            updatedAt: ahora,
+            createdAt: now,
+            updatedAt: now,
         },
         {
             id: randomUUID(),
             first_name: "laura",
             last_name: "restrepo",
             email: "laura.restrepo@riwimedicare.com",
-            password_hash: claveGestor,
-            role: "gestor",
+            password_hash: managerPassword,
+            role: "manager",
             is_active: true,
-            createdAt: ahora,
-            updatedAt: ahora,
+            createdAt: now,
+            updatedAt: now,
         },
     ]);
 }
 
 /**
- * Deshace el seeder borrando todos los usuarios.
+ * Undoes the seeder by deleting every user.
  */
 export async function down({ context }: { context: QueryInterface }): Promise<void> {
     await context.bulkDelete("users", {});
