@@ -1,49 +1,49 @@
 import { z } from "zod";
 
-import { ROLES_USUARIO } from "../types/enums.js";
+import { USER_ROLES } from "../types/enums.js";
 
 /**
- * Reglas que debe cumplir el body de POST /api/auth/register.
+ * Rules the body of POST /api/auth/register must meet.
  *
- * Este endpoint no pide token: el enunciado indica que el usuario
- * elige con qué rol se registra, y aquí solo se validan los datos.
+ * This endpoint does not ask for a token: the statement says the user
+ * chooses which role to sign up with, and here only the data is validated.
  */
 export const registerSchema = z.object({
     first_name: z
-        .string({ error: "El nombre es obligatorio y debe ser texto." })
-        .min(3, "El nombre debe tener al menos 3 caracteres.")
-        .max(100, "El nombre no puede superar los 100 caracteres."),
+        .string({ error: "The first name is required and must be text." })
+        .min(3, "The first name must have at least 3 characters.")
+        .max(100, "The first name cannot exceed 100 characters."),
 
     last_name: z
-        .string({ error: "El apellido es obligatorio y debe ser texto." })
-        .min(3, "El apellido debe tener al menos 3 caracteres.")
-        .max(100, "El apellido no puede superar los 100 caracteres."),
+        .string({ error: "The last name is required and must be text." })
+        .min(3, "The last name must have at least 3 characters.")
+        .max(100, "The last name cannot exceed 100 characters."),
 
-    email: z.email("El correo electrónico no tiene un formato válido."),
+    email: z.email("The email address does not have a valid format."),
 
     password: z
-        .string({ error: "La contraseña es obligatoria y debe ser texto." })
-        .min(8, "La contraseña debe tener al menos 8 caracteres.")
-        .max(64, "La contraseña no puede superar los 64 caracteres."),
+        .string({ error: "The password is required and must be text." })
+        .min(8, "The password must have at least 8 characters.")
+        .max(64, "The password cannot exceed 64 characters."),
 
-    // Solo se aceptan los roles definidos en ROLES_USUARIO.
-    role: z.enum(ROLES_USUARIO, {
-        message: "El rol debe ser 'administrador' o 'gestor'.",
+    // Only the roles defined in USER_ROLES are accepted.
+    role: z.enum(USER_ROLES, {
+        message: "The role must be 'admin' or 'manager'.",
     }),
 });
 
 /**
- * Reglas que debe cumplir el body de POST /api/auth/login.
+ * Rules the body of POST /api/auth/login must meet.
  */
 export const loginSchema = z.object({
-    email: z.email("El correo electrónico no tiene un formato válido."),
+    email: z.email("The email address does not have a valid format."),
 
     password: z
-        .string({ error: "La contraseña es obligatoria y debe ser texto." })
-        .min(1, "La contraseña es obligatoria."),
+        .string({ error: "The password is required and must be text." })
+        .min(1, "The password is required."),
 });
 
-// Tipos que salen de los esquemas, para usarlos en los services
-// sin tener que escribir los campos otra vez.
+// Types coming out of the schemas, to use them in the services
+// without having to write the fields again.
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;

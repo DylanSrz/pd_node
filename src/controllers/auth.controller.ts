@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { iniciarSesion, registrarUsuario } from "../services/auth.service.js";
+import { loginUser, registerUser } from "../services/auth.service.js";
 
 /**
  * POST /api/auth/register
  *
- * Registra un usuario nuevo. Es el único endpoint que no pide token,
- * y el usuario elige con qué rol se registra.
+ * Registers a new user. It is the only endpoint that does not ask for
+ * a token, and the user chooses which role to sign up with.
  */
 export async function register(
     req: Request,
@@ -14,16 +14,16 @@ export async function register(
     next: NextFunction
 ): Promise<void> {
     try {
-        // req.body ya viene validado por el middleware validateRequest.
-        const usuario = await registrarUsuario(req.body);
+        // req.body already comes validated by the validateRequest middleware.
+        const user = await registerUser(req.body);
 
         res.status(201).json({
-            message: "Usuario registrado correctamente.",
-            usuario,
+            message: "User registered successfully.",
+            user,
         });
     } catch (error) {
-        // next(error) manda el error al middleware errorHandler,
-        // que se encarga de armar la respuesta.
+        // next(error) sends the error to the errorHandler middleware,
+        // which takes care of building the response.
         next(error);
     }
 }
@@ -31,8 +31,8 @@ export async function register(
 /**
  * POST /api/auth/login
  *
- * Valida el correo y la contraseña y devuelve el token
- * con el que se acceden al resto de rutas.
+ * Validates the email and the password and returns the token
+ * used to access the rest of the routes.
  */
 export async function login(
     req: Request,
@@ -40,12 +40,12 @@ export async function login(
     next: NextFunction
 ): Promise<void> {
     try {
-        const resultado = await iniciarSesion(req.body);
+        const result = await loginUser(req.body);
 
         res.status(200).json({
-            message: "Inicio de sesión exitoso.",
-            token: resultado.token,
-            usuario: resultado.usuario,
+            message: "Sign in successful.",
+            token: result.token,
+            user: result.user,
         });
     } catch (error) {
         next(error);

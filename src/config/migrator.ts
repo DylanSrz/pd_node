@@ -1,10 +1,10 @@
 import { SequelizeStorage, Umzug } from "umzug";
 import db from "./db.js";
 
-// En desarrollo este archivo se ejecuta como .ts con tsx;
-// compilado, como .js dentro de dist.
+// In development this file runs as .ts through tsx;
+// once compiled, as .js inside dist.
 //
-// El glob tiene que apuntar al mismo formato en cada caso.
+// The glob has to point to the matching format in each case.
 const isCompiled = import.meta.url.endsWith('.js')
 
 export const migrator = new Umzug({

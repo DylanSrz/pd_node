@@ -1,30 +1,30 @@
 /**
- * Roles que puede tener un usuario dentro del sistema.
+ * Roles a user can have inside the system.
  *
- * - administrador: puede hacer el CRUD completo de todas las entidades.
- * - gestor: solo puede registrar solicitudes y cambiarles el estado.
+ * - admin: can perform the full CRUD on every entity.
+ * - manager: can only register requests and change their status.
  */
-export const ROLES_USUARIO = ["administrador", "gestor"] as const;
+export const USER_ROLES = ["admin", "manager"] as const;
 
-// Crea el tipo "administrador" | "gestor" a partir del arreglo de arriba,
-// para no tener que escribir los roles dos veces.
-export type RolUsuario = (typeof ROLES_USUARIO)[number];
+// Builds the type "admin" | "manager" out of the array above,
+// so the roles do not have to be written twice.
+export type UserRole = (typeof USER_ROLES)[number];
 
 /**
- * Estados por los que puede pasar una solicitud de abastecimiento.
+ * Statuses a supply request can go through.
  *
- * - pendiente: estado inicial, apenas la crea el gestor.
- * - aprobada: el administrador la aprobó y ya se descontó el inventario.
- * - rechazada: el administrador la rechazó.
- * - entregada: el medicamento llegó a la clínica.
- * - cancelada: se anuló la solicitud.
+ * - pending: initial status, right after the manager creates it.
+ * - approved: the admin approved it and the inventory was already discounted.
+ * - rejected: the admin rejected it.
+ * - delivered: the medication reached the clinic.
+ * - cancelled: the request was voided.
  */
-export const ESTADOS_SOLICITUD = [
-    "pendiente",
-    "aprobada",
-    "rechazada",
-    "entregada",
-    "cancelada",
+export const REQUEST_STATUSES = [
+    "pending",
+    "approved",
+    "rejected",
+    "delivered",
+    "cancelled",
 ] as const;
 
-export type EstadoSolicitud = (typeof ESTADOS_SOLICITUD)[number];
+export type RequestStatus = (typeof REQUEST_STATUSES)[number];

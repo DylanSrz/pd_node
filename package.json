@@ -1,7 +1,7 @@
 {
   "name": "pd_node",
   "version": "1.0.0",
-  "description": "repositorio para la prueba de desempeño de la ruta avanzada Node.js",
+  "description": "Repository for the performance test of the Node.js advanced track",
   "main": "dist/app.js",
   "scripts": {
     "dev": "npx tsx watch src/app.ts",

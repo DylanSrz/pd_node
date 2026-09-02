@@ -1,45 +1,45 @@
 {
   "compilerOptions": {
-    // Carpeta donde está el código fuente en TypeScript.
+    // Folder where the TypeScript source code lives.
     "rootDir": "./src",
 
-    // Carpeta donde queda el código compilado a JavaScript.
+    // Folder where the code compiled to JavaScript ends up.
     "outDir": "./dist",
 
-    // Sistema de módulos de Node moderno (import / export).
+    // Modern Node module system (import / export).
     "module": "nodenext",
 
-    // Versión de JavaScript que se genera.
+    // JavaScript version that is generated.
     "target": "esnext",
 
-    // Tipos globales que se cargan. Necesitamos los de Node
-    // para poder usar process.env, __dirname, etc.
+    // Global types that are loaded. We need the Node ones
+    // in order to use process.env, __dirname, etc.
     "types": ["node"],
 
-    // Genera los archivos .map para poder depurar.
+    // Generates the .map files so debugging is possible.
     "sourceMap": true,
 
-    // Genera los archivos de declaración .d.ts.
+    // Generates the .d.ts declaration files.
     "declaration": true,
     "declarationMap": true,
 
-    // Activa todas las comprobaciones estrictas de TypeScript.
+    // Turns on every strict check of TypeScript.
     "strict": true,
 
-    // Obliga a escribir "import type" cuando solo se importa un tipo.
+    // Forces writing "import type" when only a type is imported.
     "verbatimModuleSyntax": true,
 
-    // Cada archivo se compila por separado.
+    // Each file is compiled separately.
     "isolatedModules": true,
 
-    // Trata todos los archivos como módulos.
+    // Treats every file as a module.
     "moduleDetection": "force",
 
-    // No revisa los tipos de las librerías de node_modules
-    // (compila mucho más rápido).
+    // Does not check the types of the node_modules libraries
+    // (it compiles much faster).
     "skipLibCheck": true,
 
-    // Avisa si un import solo por su efecto secundario no existe.
+    // Warns if a side-effect-only import does not exist.
     "noUncheckedSideEffectImports": true
   },
   "include": ["src/**/*.ts"]

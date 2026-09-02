@@ -2,35 +2,35 @@ import { DataTypes, Model } from "sequelize";
 import bcrypt from "bcrypt";
 
 import db from "../config/db.js";
-import { ROLES_USUARIO, type RolUsuario } from "../types/enums.js";
+import { USER_ROLES, type UserRole } from "../types/enums.js";
 
 /**
- * Usuario que puede autenticarse en la API.
- * Puede ser administrador o gestor de solicitudes.
+ * User who can authenticate against the API.
+ * Can be an admin or a request manager.
  */
 class User extends Model {
-    // Identificador único del usuario.
+    // Unique identifier of the user.
     declare id: string;
 
-    // Nombre del usuario.
+    // First name of the user.
     declare first_name: string;
 
-    // Apellido del usuario.
+    // Last name of the user.
     declare last_name: string;
 
-    // Correo con el que inicia sesión. No se repite.
+    // Email used to sign in. It cannot be repeated.
     declare email: string;
 
-    // Contraseña guardada cifrada con bcrypt, nunca en texto plano.
+    // Password stored hashed with bcrypt, never in plain text.
     declare password_hash: string;
 
-    // Rol que define qué puede hacer dentro del sistema.
-    declare role: RolUsuario;
+    // Role that defines what they can do inside the system.
+    declare role: UserRole;
 
-    // Se pone en false cuando el usuario se elimina lógicamente.
+    // Set to false when the user is logically deleted.
     declare is_active: boolean;
 
-    // Fechas que Sequelize administra solo.
+    // Dates that Sequelize manages on its own.
     declare createdAt: Date;
     declare updatedAt: Date;
 }
@@ -55,7 +55,7 @@ User.init(
             allowNull: false,
             unique: true,
 
-            // Revisa que el texto tenga forma de correo electrónico.
+            // Checks that the text has the shape of an email address.
             validate: {
                 isEmail: true,
             },
@@ -65,7 +65,7 @@ User.init(
             allowNull: false,
         },
         role: {
-            type: DataTypes.ENUM(...ROLES_USUARIO),
+            type: DataTypes.ENUM(...USER_ROLES),
             allowNull: false,
         },
         is_active: {
@@ -81,14 +81,14 @@ User.init(
     }
 );
 
-// Antes de guardar un usuario nuevo:
-// se pasan los textos a minúsculas y se cifra la contraseña.
+// Before saving a new user:
+// the texts are lowercased and the password is hashed.
 User.beforeCreate(async (user: User) => {
     user.first_name = user.first_name.toLowerCase();
     user.last_name = user.last_name.toLowerCase();
     user.email = user.email.toLowerCase();
 
-    // bcrypt convierte la contraseña en un hash que no se puede revertir.
+    // bcrypt turns the password into a hash that cannot be reversed.
     user.password_hash = await bcrypt.hash(user.password_hash, 10);
 });
 

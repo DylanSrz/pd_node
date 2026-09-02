@@ -1,20 +1,20 @@
 /**
- * Error de negocio con el código HTTP que le corresponde.
+ * Business error carrying the HTTP code that matches it.
  *
- * Los services lanzan este error cuando algo no cumple una regla,
- * por ejemplo: throw new HttpError(404, "La clínica no existe").
+ * The services throw this error when something breaks a rule,
+ * for example: throw new HttpError(404, "The clinic does not exist").
  *
- * El middleware error-handler lo atrapa y arma la respuesta JSON,
- * así no hay que repetir el mismo res.status(...).json(...)
- * en cada controlador.
+ * The error-handler middleware catches it and builds the JSON response,
+ * so the same res.status(...).json(...) does not have to be repeated
+ * in every controller.
  */
 export class HttpError extends Error {
-    // Código de estado HTTP que se le va a responder al cliente.
+    // HTTP status code that will be returned to the client.
     public statusCode: number;
 
     constructor(statusCode: number, message: string) {
-        // super(message) guarda el mensaje en la propiedad "message"
-        // que ya trae la clase Error de JavaScript.
+        // super(message) stores the message in the "message" property
+        // that the JavaScript Error class already provides.
         super(message);
 
         this.statusCode = statusCode;

@@ -1,21 +1,21 @@
 import { SequelizeStorage, Umzug } from "umzug";
 import db from "./db.js";
 
-// En desarrollo este archivo se ejecuta como .ts con tsx;
-// compilado, como .js dentro de dist.
+// In development this file runs as .ts through tsx;
+// once compiled, as .js inside dist.
 //
-// El glob tiene que apuntar al mismo formato en cada caso.
+// The glob has to point to the matching format in each case.
 const isCompiled = import.meta.url.endsWith(".js");
 
-// Umzug se encarga de ejecutar los seeders en orden y de
-// guardar en la tabla SequelizeData cuáles ya se ejecutaron.
+// Umzug takes care of running the seeders in order and of
+// storing in the SequelizeData table which ones already ran.
 export const seeder = new Umzug({
     migrations: {
         glob: isCompiled ? "dist/seeders/*.js" : "src/seeders/*.ts",
     },
 
-    // El "context" es lo que reciben los seeders para hablar
-    // con la base de datos.
+    // The "context" is what the seeders receive in order to talk
+    // to the database.
     context: db.getQueryInterface(),
 
     storage: new SequelizeStorage({

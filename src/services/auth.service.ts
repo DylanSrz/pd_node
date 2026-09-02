@@ -7,10 +7,10 @@ import type { PayloadToken } from "../types/payload-token.js";
 import { HttpError } from "../utils/http-error.js";
 
 /**
- * Datos públicos de un usuario.
- * Se usa para responder sin exponer nunca el password_hash.
+ * Public data of a user.
+ * It is used to answer without ever exposing the password_hash.
  */
-interface UsuarioPublico {
+interface PublicUser {
     id: string;
     first_name: string;
     last_name: string;
@@ -20,110 +20,111 @@ interface UsuarioPublico {
 }
 
 /**
- * Arma el objeto que se le devuelve al cliente a partir de un usuario,
- * dejando por fuera la contraseña.
+ * Builds the object returned to the client out of a user,
+ * leaving the password out.
  *
- * @param usuario Usuario tal como viene de la base de datos.
+ * @param user User as it comes from the database.
  */
-function armarUsuarioPublico(usuario: User): UsuarioPublico {
+function buildPublicUser(user: User): PublicUser {
     return {
-        id: usuario.id,
-        first_name: usuario.first_name,
-        last_name: usuario.last_name,
-        email: usuario.email,
-        role: usuario.role,
-        is_active: usuario.is_active,
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        role: user.role,
+        is_active: user.is_active,
     };
 }
 
 /**
- * Registra un usuario nuevo.
+ * Registers a new user.
  *
- * La contraseña no se cifra aquí: el hook beforeCreate del modelo User
- * la convierte en hash con bcrypt justo antes de guardarla.
+ * The password is not hashed here: the beforeCreate hook of the User
+ * model turns it into a bcrypt hash right before saving it.
  *
- * @param datos Datos ya validados por registerSchema.
- * @returns El usuario creado, sin la contraseña.
+ * @param data Data already validated by registerSchema.
+ * @returns The created user, without the password.
  */
-export async function registrarUsuario(datos: RegisterInput): Promise<UsuarioPublico> {
-    // El correo se guarda en minúsculas, así que se busca en minúsculas
-    // para no permitir dos cuentas con el mismo correo escrito distinto.
-    const correo = datos.email.toLowerCase();
+export async function registerUser(data: RegisterInput): Promise<PublicUser> {
+    // The email is stored lowercased, so it is looked up lowercased
+    // in order not to allow two accounts with the same email written
+    // differently.
+    const email = data.email.toLowerCase();
 
-    const usuarioExistente = await User.findOne({ where: { email: correo } });
+    const existingUser = await User.findOne({ where: { email } });
 
-    if (usuarioExistente) {
-        throw new HttpError(409, "Ya existe un usuario registrado con ese correo.");
+    if (existingUser) {
+        throw new HttpError(409, "A user registered with that email already exists.");
     }
 
-    const nuevoUsuario = await User.create({
-        first_name: datos.first_name,
-        last_name: datos.last_name,
-        email: correo,
-        password_hash: datos.password,
-        role: datos.role,
+    const newUser = await User.create({
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email,
+        password_hash: data.password,
+        role: data.role,
     });
 
-    return armarUsuarioPublico(nuevoUsuario);
+    return buildPublicUser(newUser);
 }
 
 /**
- * Valida las credenciales de un usuario y le entrega un token.
+ * Validates the credentials of a user and hands them a token.
  *
- * @param datos Correo y contraseña ya validados por loginSchema.
- * @returns El token firmado y los datos públicos del usuario.
+ * @param data Email and password already validated by loginSchema.
+ * @returns The signed token and the public data of the user.
  */
-export async function iniciarSesion(
-    datos: LoginInput
-): Promise<{ token: string; usuario: UsuarioPublico }> {
-    const correo = datos.email.toLowerCase();
+export async function loginUser(
+    data: LoginInput
+): Promise<{ token: string; user: PublicUser }> {
+    const email = data.email.toLowerCase();
 
-    const usuario = await User.findOne({ where: { email: correo } });
+    const user = await User.findOne({ where: { email } });
 
-    // Se responde el mismo mensaje si el correo no existe o si la
-    // contraseña está mala, para no dar pistas de cuál cuenta existe.
-    if (!usuario) {
-        throw new HttpError(401, "Correo o contraseña incorrectos.");
+    // The same message is returned whether the email does not exist or
+    // the password is wrong, so as not to hint which account exists.
+    if (!user) {
+        throw new HttpError(401, "Wrong email or password.");
     }
 
-    // Un usuario eliminado lógicamente no puede entrar.
-    if (!usuario.is_active) {
-        throw new HttpError(401, "El usuario se encuentra inactivo.");
+    // A logically deleted user cannot get in.
+    if (!user.is_active) {
+        throw new HttpError(401, "The user is inactive.");
     }
 
-    // bcrypt.compare cifra la contraseña recibida y la compara
-    // con el hash guardado. Nunca se descifra el hash.
-    const contrasenaCorrecta = await bcrypt.compare(datos.password, usuario.password_hash);
+    // bcrypt.compare hashes the received password and compares it
+    // with the stored hash. The hash is never decrypted.
+    const isPasswordCorrect = await bcrypt.compare(data.password, user.password_hash);
 
-    if (!contrasenaCorrecta) {
-        throw new HttpError(401, "Correo o contraseña incorrectos.");
+    if (!isPasswordCorrect) {
+        throw new HttpError(401, "Wrong email or password.");
     }
 
-    const secreto = process.env.JWT_SECRET;
+    const secret = process.env.JWT_SECRET;
 
-    if (!secreto) {
-        throw new HttpError(500, "Falta configurar JWT_SECRET en el archivo .env.");
+    if (!secret) {
+        throw new HttpError(500, "JWT_SECRET is not configured in the .env file.");
     }
 
-    // Lo que se guarda dentro del token. No se incluye la contraseña
-    // porque el token se puede leer con cualquier herramienta.
+    // What is stored inside the token. The password is not included
+    // because the token can be read with any tool.
     const payload: PayloadToken = {
-        id: usuario.id,
-        email: usuario.email,
-        role: usuario.role,
+        id: user.id,
+        email: user.email,
+        role: user.role,
     };
 
-    // Si no se configuró el tiempo de vida, el token dura 8 horas.
-    const tiempoDeVida = process.env.JWT_EXPIRES_IN ?? "8h";
+    // If the lifetime was not configured, the token lasts 8 hours.
+    const lifetime = process.env.JWT_EXPIRES_IN ?? "8h";
 
-    const opciones: SignOptions = {
-        expiresIn: tiempoDeVida as SignOptions["expiresIn"],
+    const options: SignOptions = {
+        expiresIn: lifetime as SignOptions["expiresIn"],
     };
 
-    const token = jwt.sign(payload, secreto, opciones);
+    const token = jwt.sign(payload, secret, options);
 
     return {
         token,
-        usuario: armarUsuarioPublico(usuario),
+        user: buildPublicUser(user),
     };
 }

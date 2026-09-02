@@ -1,9 +1,9 @@
 import type { PayloadToken } from "./payload-token.js";
 
-// Le agregamos la propiedad "user" al Request de Express.
+// We add the "user" property to the Express Request.
 //
-// Así, después de pasar por el middleware verifyToken,
-// podemos escribir req.user con tipado correcto y sin usar "any".
+// That way, after going through the verifyToken middleware,
+// we can write req.user with proper typing and without using "any".
 declare global {
     namespace Express {
         interface Request {
@@ -12,6 +12,6 @@ declare global {
     }
 }
 
-// Esta línea le indica a TypeScript que el archivo es un módulo,
-// requisito para poder usar "declare global".
+// This line tells TypeScript that the file is a module,
+// a requirement in order to use "declare global".
 export {};

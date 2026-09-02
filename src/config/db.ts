@@ -14,22 +14,22 @@ const db = new Sequelize(
     DATABASE_USER || "",
     DATABASE_PASSWORD || "",
     {
-        // Host donde está PostgreSQL.
+        // Host where PostgreSQL lives.
         host: DATABASE_HOST || "localhost",
 
-        // Puerto de PostgreSQL.
+        // PostgreSQL port.
         //
-        // Dentro del contenedor de la API, docker-compose
-        // fija DATABASE_PORT en 5432.
+        // Inside the API container, docker-compose
+        // pins DATABASE_PORT to 5432.
         //
-        // Fuera de Docker se usa el valor del .env, y 5432
-        // como último recurso.
+        // Outside Docker the value from the .env is used, with 5432
+        // as the last resort.
         port: Number(DATABASE_PORT) || 5432,
 
-        // Motor de base de datos.
+        // Database engine.
         dialect: "postgres",
 
-        // Mostrar las consultas SQL de Sequelize.
+        // Show the SQL queries built by Sequelize.
         logging: console.log,
     }
 );

@@ -1,91 +1,91 @@
 import swaggerJsdoc from "swagger-jsdoc";
 
-// En desarrollo las rutas se leen desde los archivos .ts;
-// compilado, desde los .js de la carpeta dist.
+// In development the routes are read from the .ts files;
+// once compiled, from the .js files inside the dist folder.
 //
-// swagger-jsdoc lee los comentarios @swagger de esos archivos,
-// y TypeScript conserva los comentarios al compilar.
+// swagger-jsdoc reads the @swagger comments of those files,
+// and TypeScript keeps the comments when compiling.
 const isCompiled = import.meta.url.endsWith(".js");
 
-const rutasADocumentar = isCompiled ? ["dist/routes/*.js"] : ["src/routes/*.ts"];
+const filesToDocument = isCompiled ? ["dist/routes/*.js"] : ["src/routes/*.ts"];
 
 /**
- * Configuración de la documentación de la API.
+ * Configuration of the API documentation.
  *
- * La parte "definition" describe la API en general: título, versión,
- * servidor y cómo se autentica. La parte "apis" le dice a swagger-jsdoc
- * en qué archivos buscar los comentarios de cada endpoint.
+ * The "definition" part describes the API in general: title, version,
+ * server and how it is authenticated. The "apis" part tells swagger-jsdoc
+ * in which files to look for the comments of each endpoint.
  */
-const opcionesSwagger: swaggerJsdoc.Options = {
+const swaggerOptions: swaggerJsdoc.Options = {
     definition: {
         openapi: "3.0.0",
 
         info: {
-            title: "API RiwiMediCare Plus",
+            title: "RiwiMediCare Plus API",
             version: "1.0.0",
             description:
-                "API REST para gestionar el ciclo de vida de las solicitudes de abastecimiento de medicamentos de la empresa RiwiMediCare Plus. Permite administrar clínicas, almacenes, medicamentos, inventario y solicitudes, con autenticación por JSON Web Token y dos roles: administrador y gestor de solicitudes.",
+                "REST API to manage the life cycle of the medication supply requests of the company RiwiMediCare Plus. It allows managing clinics, warehouses, medications, inventory and requests, with JSON Web Token authentication and two roles: admin and request manager.",
         },
 
         servers: [
             {
                 url: `http://localhost:${process.env.PORT ?? 3000}`,
-                description: "Servidor local de desarrollo",
+                description: "Local development server",
             },
         ],
 
-        // Agrupa los endpoints por módulo en la interfaz de Swagger.
+        // Groups the endpoints by module in the Swagger interface.
         tags: [
-            { name: "Autenticación", description: "Registro e inicio de sesión" },
-            { name: "Clínicas", description: "Clínicas y centros de atención" },
-            { name: "Almacenes", description: "Almacenes de distribución" },
-            { name: "Medicamentos", description: "Catálogo de medicamentos e insumos" },
-            { name: "Inventario", description: "Existencias por almacén y medicamento" },
-            { name: "Solicitudes", description: "Solicitudes de abastecimiento" },
+            { name: "Authentication", description: "Sign up and sign in" },
+            { name: "Clinics", description: "Clinics and care centers" },
+            { name: "Warehouses", description: "Distribution warehouses" },
+            { name: "Medications", description: "Catalog of medications and supplies" },
+            { name: "Inventory", description: "Stock per warehouse and medication" },
+            { name: "Requests", description: "Supply requests" },
         ],
 
         components: {
-            // Define el candado de Swagger: se envía el token en la
-            // cabecera Authorization con el formato "Bearer <token>".
+            // Defines the Swagger padlock: the token is sent in the
+            // Authorization header with the "Bearer <token>" format.
             securitySchemes: {
                 bearerAuth: {
                     type: "http",
                     scheme: "bearer",
                     bearerFormat: "JWT",
                     description:
-                        "Pegue aquí el token que devuelve POST /api/auth/login. No hace falta escribir la palabra Bearer.",
+                        "Paste here the token returned by POST /api/auth/login. There is no need to type the word Bearer.",
                 },
             },
 
-            // Modelos de datos que las rutas referencian con $ref,
-            // para no repetir la misma estructura en cada endpoint.
+            // Data models the routes reference with $ref,
+            // so the same structure is not repeated in every endpoint.
             schemas: {
                 Error: {
                     type: "object",
                     properties: {
                         message: {
                             type: "string",
-                            example: "La clínica no existe o fue eliminada.",
+                            example: "The clinic does not exist or was deleted.",
                         },
                     },
                 },
 
-                ErrorValidacion: {
+                ValidationError: {
                     type: "object",
                     properties: {
                         message: {
                             type: "string",
-                            example: "Datos inválidos o incompletos.",
+                            example: "Invalid or incomplete data.",
                         },
                         errors: {
                             type: "array",
                             items: {
                                 type: "object",
                                 properties: {
-                                    campo: { type: "string", example: "nit" },
-                                    detalle: {
+                                    field: { type: "string", example: "tax_id" },
+                                    detail: {
                                         type: "string",
-                                        example: "El NIT debe tener al menos 5 caracteres.",
+                                        example: "The tax id must have at least 5 characters.",
                                     },
                                 },
                             },
@@ -93,7 +93,7 @@ const opcionesSwagger: swaggerJsdoc.Options = {
                     },
                 },
 
-                Usuario: {
+                User: {
                     type: "object",
                     properties: {
                         id: { type: "string", format: "uuid" },
@@ -105,122 +105,122 @@ const opcionesSwagger: swaggerJsdoc.Options = {
                         },
                         role: {
                             type: "string",
-                            enum: ["administrador", "gestor"],
-                            example: "administrador",
+                            enum: ["admin", "manager"],
+                            example: "admin",
                         },
                         is_active: { type: "boolean", example: true },
                     },
                 },
 
-                Clinica: {
+                Clinic: {
                     type: "object",
                     properties: {
                         id: { type: "string", format: "uuid" },
-                        nombre: { type: "string", example: "Clínica Las Américas" },
-                        nit: { type: "string", example: "890900123-1" },
-                        direccion: {
+                        name: { type: "string", example: "Clínica Las Américas" },
+                        tax_id: { type: "string", example: "890900123-1" },
+                        address: {
                             type: "string",
                             example: "Diagonal 75B No 2A-80, Medellín",
                         },
-                        telefono: { type: "string", example: "6043421010" },
+                        phone: { type: "string", example: "6043421010" },
                         email: { type: "string", example: "contacto@lasamericas.com" },
-                        responsable_nombre: { type: "string", example: "Ana Gómez Ruiz" },
-                        responsable_email: {
+                        manager_name: { type: "string", example: "Ana Gómez Ruiz" },
+                        manager_email: {
                             type: "string",
                             example: "ana.gomez@lasamericas.com",
                         },
-                        responsable_telefono: { type: "string", example: "3001112233" },
+                        manager_phone: { type: "string", example: "3001112233" },
                         is_active: { type: "boolean", example: true },
                     },
                 },
 
-                Almacen: {
+                Warehouse: {
                     type: "object",
                     properties: {
                         id: { type: "string", format: "uuid" },
-                        nombre: { type: "string", example: "Almacén Central Medellín" },
-                        direccion: {
+                        name: { type: "string", example: "Almacén Central Medellín" },
+                        address: {
                             type: "string",
                             example: "Carrera 50 No 20-30, Medellín",
                         },
-                        telefono: { type: "string", example: "6044441111" },
+                        phone: { type: "string", example: "6044441111" },
                         is_active: { type: "boolean", example: true },
                     },
                 },
 
-                Medicamento: {
+                Medication: {
                     type: "object",
                     properties: {
                         id: { type: "string", format: "uuid" },
-                        nombre: { type: "string", example: "Acetaminofén 500mg" },
-                        descripcion: {
+                        name: { type: "string", example: "Acetaminofén 500mg" },
+                        description: {
                             type: "string",
                             example: "Analgésico y antipirético de uso general.",
                         },
-                        presentacion: { type: "string", example: "Caja x 30 tabletas" },
-                        laboratorio: { type: "string", example: "Genfar" },
+                        presentation: { type: "string", example: "Caja x 30 tabletas" },
+                        laboratory: { type: "string", example: "Genfar" },
                         is_active: { type: "boolean", example: true },
                     },
                 },
 
-                Inventario: {
+                Inventory: {
                     type: "object",
                     properties: {
                         id: { type: "string", format: "uuid" },
-                        almacen_id: { type: "string", format: "uuid" },
-                        medicamento_id: { type: "string", format: "uuid" },
-                        cantidad: { type: "integer", example: 500 },
+                        warehouse_id: { type: "string", format: "uuid" },
+                        medication_id: { type: "string", format: "uuid" },
+                        quantity: { type: "integer", example: 500 },
                         is_active: { type: "boolean", example: true },
-                        almacen: { $ref: "#/components/schemas/Almacen" },
-                        medicamento: { $ref: "#/components/schemas/Medicamento" },
+                        warehouse: { $ref: "#/components/schemas/Warehouse" },
+                        medication: { $ref: "#/components/schemas/Medication" },
                     },
                 },
 
-                Solicitud: {
+                Request: {
                     type: "object",
                     properties: {
                         id: { type: "string", format: "uuid" },
-                        clinica_id: { type: "string", format: "uuid" },
-                        medicamento_id: { type: "string", format: "uuid" },
-                        almacen_id: { type: "string", format: "uuid" },
-                        usuario_id: { type: "string", format: "uuid" },
-                        cantidad_solicitada: { type: "integer", example: 100 },
-                        estado: {
+                        clinic_id: { type: "string", format: "uuid" },
+                        medication_id: { type: "string", format: "uuid" },
+                        warehouse_id: { type: "string", format: "uuid" },
+                        user_id: { type: "string", format: "uuid" },
+                        requested_quantity: { type: "integer", example: 100 },
+                        status: {
                             type: "string",
                             enum: [
-                                "pendiente",
-                                "aprobada",
-                                "rechazada",
-                                "entregada",
-                                "cancelada",
+                                "pending",
+                                "approved",
+                                "rejected",
+                                "delivered",
+                                "cancelled",
                             ],
-                            example: "pendiente",
+                            example: "pending",
                         },
-                        observaciones: {
+                        notes: {
                             type: "string",
                             nullable: true,
                             example: "Pedido mensual de analgésicos.",
                         },
                         is_active: { type: "boolean", example: true },
-                        clinica: { $ref: "#/components/schemas/Clinica" },
-                        medicamento: { $ref: "#/components/schemas/Medicamento" },
-                        almacen: { $ref: "#/components/schemas/Almacen" },
-                        usuario: { $ref: "#/components/schemas/Usuario" },
+                        clinic: { $ref: "#/components/schemas/Clinic" },
+                        medication: { $ref: "#/components/schemas/Medication" },
+                        warehouse: { $ref: "#/components/schemas/Warehouse" },
+                        user: { $ref: "#/components/schemas/User" },
                     },
                 },
             },
         },
 
-        // Por defecto todos los endpoints piden token. Los dos de
-        // autenticación lo desactivan con "security: []" en su propio
-        // comentario, porque son públicos.
+        // By default every endpoint asks for a token. The two
+        // authentication ones disable it with "security: []" in their own
+        // comment, because they are public.
         security: [{ bearerAuth: [] }],
     },
 
-    apis: rutasADocumentar,
+    apis: filesToDocument,
 };
 
 /**
- * Documento OpenAPI ya armado, listo para entregárselo a Swagger UI.
+ * OpenAPI document already built, ready to hand over to Swagger UI.
  */
-export const especificacionSwagger = swaggerJsdoc(opcionesSwagger);
+export const swaggerSpecification = swaggerJsdoc(swaggerOptions);
