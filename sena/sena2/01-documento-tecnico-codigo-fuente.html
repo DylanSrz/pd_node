@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documento Tecnico de Codigo Fuente - API RiwiMediCare Plus</title>
+<style>
+:root{
+  --verde:#39A900; --verde-osc:#2d8400; --verde-claro:#eaf6e3;
+  --tinta:#1a1f1c; --gris:#5a635c; --linea:#d8ddd6; --fondo-alt:#f6f8f5;
+  --naranja:#c25e00; --azul:#0b5b8a; --rojo:#b3261e;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--tinta); background:#fff; line-height:1.65; font-size:11pt;
+  margin:0; padding:0;
+}
+.hoja{max-width:19cm; margin:0 auto; padding:1.5cm 1.6cm 2cm;}
+
+/* ---------- PORTADA ---------- */
+.portada{
+  min-height:26cm; display:flex; flex-direction:column;
+  justify-content:space-between; text-align:center;
+  padding:2.5cm 1.6cm; page-break-after:always;
+}
+.portada .marca{font-size:9pt;letter-spacing:.22em;text-transform:uppercase;color:var(--verde-osc);font-weight:700;}
+.portada .logo{width:96px;height:96px;margin:0 auto 1.2rem;}
+.portada h1{font-size:26pt;line-height:1.2;margin:.6rem 0;color:var(--tinta);border:0;}
+.portada .sub{font-size:13pt;color:var(--gris);margin:0 0 1.4rem;font-weight:400;}
+.portada .norma{
+  display:inline-block;border:2px solid var(--verde);border-radius:8px;
+  padding:.7rem 1.4rem;font-size:10.5pt;color:var(--verde-osc);font-weight:600;
+  background:var(--verde-claro);
+}
+.portada .datos{
+  margin:2rem auto 0;text-align:left;max-width:13cm;
+  border-top:1px solid var(--linea);padding-top:1.2rem;
+}
+.portada .datos dl{display:grid;grid-template-columns:auto 1fr;gap:.45rem 1.2rem;margin:0;font-size:10.5pt;}
+.portada .datos dt{color:var(--gris);font-weight:600;}
+.portada .datos dd{margin:0;}
+.portada .pie{font-size:9.5pt;color:var(--gris);border-top:1px solid var(--linea);padding-top:1rem;}
+.rellenar{background:#fff6d9;border-bottom:1px dashed #c9a227;padding:0 .2rem;}
+
+/* ---------- TIPOGRAFÍA ---------- */
+h1{
+  font-size:19pt;color:var(--tinta);margin:0 0 1.2rem;padding-bottom:.5rem;
+  border-bottom:3px solid var(--verde);page-break-after:avoid;
+}
+h2{font-size:14pt;margin:2rem 0 .7rem;color:var(--verde-osc);page-break-after:avoid;}
+h3{font-size:12pt;margin:1.4rem 0 .5rem;color:var(--tinta);page-break-after:avoid;}
+h4{font-size:11pt;margin:1.1rem 0 .4rem;color:var(--gris);text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid;}
+p{margin:.7rem 0;text-align:justify;}
+ul,ol{margin:.6rem 0 .9rem;padding-left:1.4rem;}
+li{margin:.3rem 0;}
+a{color:var(--azul);}
+code{
+  font-family:Consolas,"Courier New",monospace;font-size:.9em;
+  background:var(--fondo-alt);border:1px solid var(--linea);
+  border-radius:3px;padding:.08em .35em;
+}
+pre{
+  background:#1e2420;color:#e8ede8;border-radius:6px;padding:.9rem 1.1rem;
+  overflow-x:auto;font-family:Consolas,"Courier New",monospace;
+  font-size:9pt;line-height:1.55;page-break-inside:avoid;
+}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit;}
+pre .c{color:#8fae86;}      /* comentario */
+pre .k{color:#7fc9ff;}      /* keyword   */
+pre .s{color:#f3c98b;}      /* string    */
+pre .f{color:#c6a0f6;}      /* función   */
+
+/* ---------- SECCIÓN ---------- */
+.seccion{page-break-before:always;}
+.seccion:first-of-type{page-break-before:avoid;}
+
+/* ---------- TABLAS ---------- */
+table{
+  width:100%;border-collapse:collapse;margin:1rem 0 1.4rem;
+  font-size:9.5pt;page-break-inside:avoid;
+}
+caption{
+  caption-side:bottom;text-align:left;font-size:9pt;color:var(--gris);
+  padding-top:.45rem;font-style:italic;
+}
+th{
+  background:var(--verde-claro);color:var(--verde-osc);text-align:left;
+  padding:.5rem .6rem;border:1px solid var(--linea);font-weight:700;
+}
+td{padding:.45rem .6rem;border:1px solid var(--linea);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--fondo-alt);}
+td.id,th.id{white-space:nowrap;font-family:Consolas,monospace;font-size:9pt;}
+td.c,th.c{text-align:center;}
+
+/* ---------- COMPONENTES ---------- */
+.nota,.aviso,.ok{
+  border-left:4px solid var(--azul);background:#f0f6fa;
+  padding:.8rem 1rem;margin:1rem 0;border-radius:0 6px 6px 0;
+  font-size:10pt;page-break-inside:avoid;
+}
+.aviso{border-color:var(--naranja);background:#fdf4ea;}
+.ok{border-color:var(--verde);background:var(--verde-claro);}
+.nota strong:first-child,.aviso strong:first-child,.ok strong:first-child{display:block;margin-bottom:.25rem;}
+
+.toc{background:var(--fondo-alt);border:1px solid var(--linea);border-radius:8px;padding:1.2rem 1.6rem;}
+.toc h2{margin-top:0;}
+.toc ol{list-style:none;padding-left:0;counter-reset:s;}
+.toc > ol > li{counter-increment:s;margin:.4rem 0;font-weight:600;}
+.toc > ol > li::before{content:counter(s) ". ";color:var(--verde-osc);}
+.toc ol ol{padding-left:1.6rem;counter-reset:ss;}
+.toc ol ol li{counter-increment:ss;font-weight:400;font-size:10pt;margin:.15rem 0;}
+.toc ol ol li::before{content:counter(s) "." counter(ss) " ";color:var(--gris);}
+.toc a{text-decoration:none;color:var(--tinta);}
+
+.badge{
+  display:inline-block;padding:.12em .55em;border-radius:99px;
+  font-size:8.5pt;font-weight:700;letter-spacing:.03em;
+}
+.b-get{background:#e3f0fb;color:#0b5b8a;}
+.b-post{background:#e4f5df;color:#2d8400;}
+.b-put{background:#fdf0e0;color:#c25e00;}
+.b-patch{background:#f3e9fb;color:#6b34a8;}
+.b-del{background:#fbe6e5;color:#b3261e;}
+.b-pub{background:#eceff0;color:#5a635c;}
+.b-adm{background:#fbe6e5;color:#b3261e;}
+.b-ges{background:#fdf0e0;color:#c25e00;}
+.b-aut{background:#e3f0fb;color:#0b5b8a;}
+
+.figura{
+  border:1px solid var(--linea);border-radius:8px;padding:1rem;
+  margin:1.2rem 0;background:#fff;text-align:center;page-break-inside:avoid;
+}
+.figura svg{max-width:100%;height:auto;}
+.figura figcaption{
+  font-size:9pt;color:var(--gris);margin-top:.6rem;
+  font-style:italic;text-align:center;
+}
+.ascii{
+  background:var(--fondo-alt);border:1px solid var(--linea);border-radius:6px;
+  padding:1rem;font-family:Consolas,"Courier New",monospace;font-size:9pt;
+  line-height:1.5;white-space:pre;overflow-x:auto;text-align:left;
+  page-break-inside:avoid;
+}
+.hueco-captura{
+  border:2px dashed var(--verde);border-radius:8px;background:var(--verde-claro);
+  padding:2.4rem 1rem;text-align:center;color:var(--verde-osc);
+  margin:1rem 0 .3rem;font-size:10pt;page-break-inside:avoid;
+}
+.hueco-captura strong{display:block;font-size:11pt;margin-bottom:.3rem;}
+.hueco-captura em{font-style:normal;color:var(--gris);font-size:9.5pt;}
+
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.tarjeta{
+  border:1px solid var(--linea);border-left:4px solid var(--verde);
+  border-radius:0 8px 8px 0;padding:.9rem 1.1rem;background:var(--fondo-alt);
+  page-break-inside:avoid;
+}
+.tarjeta h4{margin-top:0;color:var(--verde-osc);}
+.tarjeta p{margin:.3rem 0;font-size:10pt;text-align:left;}
+
+.firma{
+  margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;
+  page-break-inside:avoid;
+}
+.firma div{border-top:1px solid var(--tinta);padding-top:.5rem;text-align:center;font-size:9.5pt;}
+
+/* ---------- IMPRESIÓN ---------- */
+@page{size:A4;margin:1.6cm 1.5cm;}
+@media print{
+  body{font-size:10.5pt;}
+  .hoja{max-width:none;padding:0;margin:0;}
+  .portada{min-height:24cm;padding:1cm 0;}
+  .no-print{display:none !important;}
+  a{color:var(--tinta);text-decoration:none;}
+  pre{border:1px solid var(--linea);}
+}
+.barra-print{
+  position:sticky;top:0;z-index:9;background:var(--verde);color:#fff;
+  padding:.55rem 1rem;font-size:9.5pt;text-align:center;
+}
+.barra-print kbd{
+  background:#fff;color:var(--verde-osc);border-radius:4px;
+  padding:.05em .4em;font-family:inherit;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="barra-print no-print">Para generar el PDF: <kbd>Ctrl</kbd> + <kbd>P</kbd> &rarr; Destino: <kbd>Guardar como PDF</kbd> &rarr; Margenes: <kbd>Predeterminado</kbd> &rarr; activar <kbd>Graficos de fondo</kbd></div>
+<section class="portada">
+  <div>
+    <div class="logo">
+      <svg viewBox="0 0 96 96" role="img" aria-label="Espacio para el logo institucional">
+        <rect x="2" y="2" width="92" height="92" rx="10" fill="#eaf6e3" stroke="#39A900" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="48" y="44" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">LOGO</text>
+        <text x="48" y="60" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">SENA</text>
+      </svg>
+    </div>
+    <div class="marca">Servicio Nacional de Aprendizaje &middot; SENA</div>
+  </div>
+  <div>
+    <div class="norma">EVIDENCIA DE PRODUCTO &middot; NORMA 220501096</div>
+    <h1>Documento T&eacute;cnico de C&oacute;digo Fuente</h1>
+    <p class="sub">Estructura, m&oacute;dulos y funcionamiento del c&oacute;digo implementado<br><strong>API RiwiMediCare Plus</strong></p>
+    <div class="datos">
+      <dl>
+        <dt>Aprendiz</dt><dd>Dylan Alberto Su&aacute;rez Laverde</dd>
+        <dt>Programa</dt><dd><span class="rellenar">[ Nombre del programa de formaci&oacute;n ]</span></dd>
+        <dt>Ficha</dt><dd><span class="rellenar">[ N&uacute;mero de ficha ]</span></dd>
+        <dt>Instructor</dt><dd><span class="rellenar">[ Nombre del instructor ]</span></dd>
+        <dt>Centro</dt><dd><span class="rellenar">[ Centro de formaci&oacute;n ]</span></dd>
+        <dt>Competencia</dt><dd>220501096 &mdash; Desarrollar soluci&oacute;n de software de acuerdo con especificaciones de dise&ntilde;o y marcos de referencia</dd>
+        <dt>Repositorio</dt><dd>https://github.com/DylanSrz/pd_node</dd>
+        <dt>Versi&oacute;n</dt><dd>1.0</dd>
+        <dt>Fecha</dt><dd><span class="rellenar">[ Fecha de entrega ]</span></dd>
+      </dl>
+    </div>
+  </div>
+  <div class="pie">
+    Producto 1 de la evidencia: <strong>Documento t&eacute;cnico de c&oacute;digo fuente</strong><br>
+    Organizaci&oacute;n del proyecto &middot; Capas y m&oacute;dulos &middot; Tecnolog&iacute;as &middot; Clases y servicios &middot; Buenas pr&aacute;cticas
+  </div>
+</section>
+
+<div class="hoja">
+
+<section class="toc seccion">
+  <h2>Tabla de contenido</h2>
+  <ol>
+    <li><a href="#t1">Organizaci&oacute;n del proyecto</a>
+      <ol><li>Estructura de directorios</li><li>Descripci&oacute;n de cada carpeta</li><li>Archivos de la ra&iacute;z</li></ol></li>
+    <li><a href="#t2">Tecnolog&iacute;as y frameworks utilizados</a>
+      <ol><li>Dependencias de producci&oacute;n</li><li>Dependencias de desarrollo</li><li>Configuraci&oacute;n de TypeScript</li></ol></li>
+    <li><a href="#t3">Explicaci&oacute;n de las capas</a>
+      <ol><li>Regla de dependencia</li><li>Recorrido completo de una petici&oacute;n</li></ol></li>
+    <li><a href="#t4">Capa de configuraci&oacute;n</a></li>
+    <li><a href="#t5">Capa de modelos</a></li>
+    <li><a href="#t6">Capa de validaci&oacute;n</a></li>
+    <li><a href="#t7">Capa de middlewares</a></li>
+    <li><a href="#t8">Capa de servicios</a></li>
+    <li><a href="#t9">Capa de controladores y rutas</a></li>
+    <li><a href="#t10">Migraciones y seeders</a></li>
+    <li><a href="#t11">Buenas pr&aacute;cticas aplicadas</a></li>
+    <li><a href="#t12">M&eacute;tricas del c&oacute;digo</a></li>
+  </ol>
+</section>
+
+<section class="seccion" id="t1">
+<h1>1. Organizaci&oacute;n del proyecto</h1>
+
+<h2>1.1 Estructura de directorios</h2>
+<p>El proyecto agrupa los archivos por <strong>responsabilidad t&eacute;cnica</strong> y no por entidad de negocio. Es decir, existe una carpeta <code>services</code> con los servicios de todas las entidades, y no una carpeta <code>clinicas</code> que contenga su modelo, su servicio y su controlador. Esta decisi&oacute;n hace visible la arquitectura por capas desde el propio &aacute;rbol de archivos.</p>
+
+<pre><code>pd_node/
+<span class="c">│</span>
+<span class="c">├──</span> src/
+<span class="c">│   ├──</span> app.ts                    <span class="c">Punto de entrada de la aplicacion</span>
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> config/                   <span class="c">Configuracion e infraestructura</span>
+<span class="c">│   │   ├──</span> db.ts                 <span class="c">Conexion con PostgreSQL</span>
+<span class="c">│   │   ├──</span> migrator.ts           <span class="c">Umzug para las migraciones</span>
+<span class="c">│   │   ├──</span> seeders.ts            <span class="c">Umzug para los seeders</span>
+<span class="c">│   │   ├──</span> migrate-up.ts         <span class="c">Comando: aplicar migraciones</span>
+<span class="c">│   │   ├──</span> migrate-down.ts       <span class="c">Comando: revertir la ultima</span>
+<span class="c">│   │   ├──</span> migrate-reset.ts      <span class="c">Comando: revertir todas</span>
+<span class="c">│   │   ├──</span> seeders-up.ts         <span class="c">Comando: cargar datos</span>
+<span class="c">│   │   ├──</span> seeders-down.ts       <span class="c">Comando: revertir el ultimo</span>
+<span class="c">│   │   ├──</span> seeders-reset.ts      <span class="c">Comando: revertir todos</span>
+<span class="c">│   │   └──</span> swagger.ts            <span class="c">Especificacion OpenAPI</span>
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> migrations/               <span class="c">Estructura de la base de datos</span>
+<span class="c">│   │   ├──</span> 010-users.migration.ts
+<span class="c">│   │   ├──</span> 020-clinicas.migration.ts
+<span class="c">│   │   ├──</span> 030-almacenes.migration.ts
+<span class="c">│   │   ├──</span> 040-medicamentos.migration.ts
+<span class="c">│   │   ├──</span> 050-inventario.migration.ts
+<span class="c">│   │   └──</span> 060-solicitudes.migration.ts
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> seeders/                  <span class="c">Datos de prueba, mismo orden</span>
+<span class="c">│   │   ├──</span> 010-users.seed.ts
+<span class="c">│   │   ├──</span> 020-clinicas.seed.ts
+<span class="c">│   │   ├──</span> 030-almacenes.seed.ts
+<span class="c">│   │   ├──</span> 040-medicamentos.seed.ts
+<span class="c">│   │   ├──</span> 050-inventario.seed.ts
+<span class="c">│   │   └──</span> 060-solicitudes.seed.ts
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> models/                   <span class="c">Modelos de Sequelize</span>
+<span class="c">│   │   ├──</span> index.ts              <span class="c">Asociaciones entre modelos</span>
+<span class="c">│   │   ├──</span> user.model.ts
+<span class="c">│   │   ├──</span> clinica.model.ts
+<span class="c">│   │   ├──</span> almacen.model.ts
+<span class="c">│   │   ├──</span> medicamento.model.ts
+<span class="c">│   │   ├──</span> inventario.model.ts
+<span class="c">│   │   └──</span> solicitud.model.ts
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> dto/                      <span class="c">Esquemas de validacion Zod</span>
+<span class="c">│   │   ├──</span> auth.schema.ts
+<span class="c">│   │   ├──</span> clinica.schema.ts
+<span class="c">│   │   ├──</span> almacen.schema.ts
+<span class="c">│   │   ├──</span> medicamento.schema.ts
+<span class="c">│   │   ├──</span> inventario.schema.ts
+<span class="c">│   │   ├──</span> solicitud.schema.ts
+<span class="c">│   │   └──</span> id.schema.ts          <span class="c">Valida el :id de las rutas</span>
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> middlewares/              <span class="c">Se ejecutan antes del controlador</span>
+<span class="c">│   │   ├──</span> verifyToken.ts        <span class="c">Autenticacion y roles</span>
+<span class="c">│   │   ├──</span> validate_request.ts   <span class="c">Validacion con Zod</span>
+<span class="c">│   │   ├──</span> verificar-entidades-relacionadas.ts
+<span class="c">│   │   ├──</span> verificar-inventario.ts
+<span class="c">│   │   ├──</span> verificar-nit-unico.ts
+<span class="c">│   │   ├──</span> verificar-transicion-estado.ts
+<span class="c">│   │   └──</span> error-handler.ts      <span class="c">Manejador central de errores</span>
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> services/                 <span class="c">Logica de negocio</span>
+<span class="c">│   │   ├──</span> auth.service.ts
+<span class="c">│   │   ├──</span> clinica.service.ts
+<span class="c">│   │   ├──</span> almacen.service.ts
+<span class="c">│   │   ├──</span> medicamento.service.ts
+<span class="c">│   │   ├──</span> inventario.service.ts
+<span class="c">│   │   └──</span> solicitud.service.ts  <span class="c">Transacciones y estados</span>
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> controllers/              <span class="c">Traduccion HTTP</span>
+<span class="c">│   │   ├──</span> auth.controller.ts
+<span class="c">│   │   ├──</span> clinica.controller.ts
+<span class="c">│   │   ├──</span> almacen.controller.ts
+<span class="c">│   │   ├──</span> medicamento.controller.ts
+<span class="c">│   │   ├──</span> inventario.controller.ts
+<span class="c">│   │   └──</span> solicitud.controller.ts
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> routes/                   <span class="c">Rutas + documentacion Swagger</span>
+<span class="c">│   │   ├──</span> auth.routes.ts
+<span class="c">│   │   ├──</span> clinica.routes.ts
+<span class="c">│   │   ├──</span> almacen.routes.ts
+<span class="c">│   │   ├──</span> medicamento.routes.ts
+<span class="c">│   │   ├──</span> inventario.routes.ts
+<span class="c">│   │   └──</span> solicitud.routes.ts
+<span class="c">│   │</span>
+<span class="c">│   ├──</span> types/                    <span class="c">Tipos propios del proyecto</span>
+<span class="c">│   │   ├──</span> enums.ts              <span class="c">Roles y estados</span>
+<span class="c">│   │   ├──</span> payload-token.ts      <span class="c">Contenido del JWT</span>
+<span class="c">│   │   └──</span> express.d.ts          <span class="c">Amplia Request con req.user</span>
+<span class="c">│   │</span>
+<span class="c">│   └──</span> utils/                    <span class="c">Utilidades sin dependencias</span>
+<span class="c">│       ├──</span> http-error.ts         <span class="c">Error de negocio con codigo</span>
+<span class="c">│       └──</span> estado-solicitud.ts   <span class="c">Maquina de estados</span>
+<span class="c">│</span>
+<span class="c">├──</span> dist/                         <span class="c">Salida compilada (no se versiona)</span>
+<span class="c">├──</span> .env                          <span class="c">Variables reales (no se versiona)</span>
+<span class="c">├──</span> .env.example                  <span class="c">Plantilla de variables</span>
+<span class="c">├──</span> .gitignore</span>
+<span class="c">├──</span> .dockerignore</span>
+<span class="c">├──</span> Dockerfile                    <span class="c">Construccion multietapa</span>
+<span class="c">├──</span> docker-compose.yml            <span class="c">API + PostgreSQL</span>
+<span class="c">├──</span> backup.sql                    <span class="c">Respaldo de la base de datos</span>
+<span class="c">├──</span> package.json                  <span class="c">Dependencias y comandos</span>
+<span class="c">├──</span> tsconfig.json                 <span class="c">Configuracion del compilador</span>
+<span class="c">└──</span> README.md</code></pre>
+
+<h2>1.2 Descripci&oacute;n de cada carpeta</h2>
+<table>
+  <caption>Tabla 1. Responsabilidad de cada carpeta del c&oacute;digo fuente.</caption>
+  <thead><tr><th style="width:16%">Carpeta</th><th class="c" style="width:9%">Archivos</th><th>Responsabilidad y qu&eacute; NO debe contener</th></tr></thead>
+  <tbody>
+    <tr><td class="id">config/</td><td class="c">10</td><td>Conexi&oacute;n a la base de datos, configuraci&oacute;n de las herramientas de migraci&oacute;n y especificaci&oacute;n de la documentaci&oacute;n. <em>No contiene</em> l&oacute;gica de negocio.</td></tr>
+    <tr><td class="id">migrations/</td><td class="c">6</td><td>Creaci&oacute;n y reversi&oacute;n de la estructura de la base de datos. Cada archivo exporta las funciones <code>up</code> y <code>down</code>.</td></tr>
+    <tr><td class="id">seeders/</td><td class="c">6</td><td>Carga de datos de prueba. Misma estructura que las migraciones.</td></tr>
+    <tr><td class="id">models/</td><td class="c">7</td><td>Definici&oacute;n de las tablas como clases y sus asociaciones. <em>No contiene</em> consultas de negocio.</td></tr>
+    <tr><td class="id">dto/</td><td class="c">7</td><td>Esquemas que describen la forma exacta de los datos de entrada y de los que derivan los tipos de TypeScript.</td></tr>
+    <tr><td class="id">middlewares/</td><td class="c">7</td><td>Funciones que se ejecutan antes del controlador: autenticaci&oacute;n, autorizaci&oacute;n, validaci&oacute;n y reglas previas.</td></tr>
+    <tr><td class="id">services/</td><td class="c">6</td><td>Toda la l&oacute;gica de negocio y el acceso a los modelos. <em>No conoce</em> los objetos petici&oacute;n ni respuesta de Express.</td></tr>
+    <tr><td class="id">controllers/</td><td class="c">6</td><td>Traducci&oacute;n entre HTTP y los servicios: leer la petici&oacute;n, elegir el c&oacute;digo de estado, responder. <em>No contiene</em> reglas de negocio.</td></tr>
+    <tr><td class="id">routes/</td><td class="c">6</td><td>Definici&oacute;n de rutas, encadenamiento de middlewares y comentarios de los que Swagger extrae la documentaci&oacute;n.</td></tr>
+    <tr><td class="id">types/</td><td class="c">3</td><td>Tipos, enumeraciones e interfaces propias, incluida la ampliaci&oacute;n del tipo <code>Request</code> de Express.</td></tr>
+    <tr><td class="id">utils/</td><td class="c">2</td><td>Utilidades independientes: el error de negocio y la m&aacute;quina de estados. <em>No dependen</em> de ninguna capa.</td></tr>
+  </tbody>
+</table>
+
+<h2>1.3 Archivos de la ra&iacute;z</h2>
+<table>
+  <caption>Tabla 2. Archivos de configuraci&oacute;n en la ra&iacute;z del proyecto.</caption>
+  <thead><tr><th style="width:22%">Archivo</th><th>Funci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="id">package.json</td><td>Declara las dependencias, los comandos de <code>npm</code> y el tipo de m&oacute;dulos. El campo <code>"type": "module"</code> activa los m&oacute;dulos ES nativos, motivo por el cual todas las importaciones internas llevan la extensi&oacute;n <code>.js</code>.</td></tr>
+    <tr><td class="id">tsconfig.json</td><td>Configuraci&oacute;n del compilador de TypeScript: destino, resoluci&oacute;n de m&oacute;dulos, modo estricto y carpeta de salida.</td></tr>
+    <tr><td class="id">.env.example</td><td>Plantilla de las variables de entorno necesarias. Se versiona para que cualquiera sepa qu&eacute; configurar.</td></tr>
+    <tr><td class="id">.env</td><td>Valores reales de las variables. <strong>No se versiona</strong>: contiene credenciales y la clave de firma de los tokens.</td></tr>
+    <tr><td class="id">Dockerfile</td><td>Construcci&oacute;n multietapa de la imagen con tres etapas: base, desarrollo y producci&oacute;n.</td></tr>
+    <tr><td class="id">docker-compose.yml</td><td>Orquesta el contenedor de la API y el de PostgreSQL, con red interna, volumen persistente y verificaci&oacute;n de salud.</td></tr>
+    <tr><td class="id">backup.sql</td><td>Respaldo completo de la base de datos con estructura y datos de prueba.</td></tr>
+    <tr><td class="id">.gitignore</td><td>Excluye <code>node_modules</code>, <code>dist</code> y <code>.env</code> del control de versiones.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion" id="t2">
+<h1>2. Tecnolog&iacute;as y frameworks utilizados</h1>
+
+<h2>2.1 Dependencias de producci&oacute;n</h2>
+<table>
+  <caption>Tabla 3. Paquetes necesarios para ejecutar la aplicaci&oacute;n.</caption>
+  <thead><tr><th style="width:20%">Paquete</th><th class="c" style="width:10%">Versi&oacute;n</th><th>Uso concreto en el c&oacute;digo</th></tr></thead>
+  <tbody>
+    <tr><td class="id">express</td><td class="c">^5.2.1</td><td>Enrutamiento y encadenamiento de middlewares. Se usa en <code>app.ts</code> y en todos los archivos de <code>routes/</code>.</td></tr>
+    <tr><td class="id">sequelize</td><td class="c">^6.37.8</td><td>ORM. Define los modelos, ejecuta las consultas y administra las transacciones con bloqueo de fila.</td></tr>
+    <tr><td class="id">pg</td><td class="c">^8.23.0</td><td>Controlador nativo de PostgreSQL que Sequelize utiliza por debajo.</td></tr>
+    <tr><td class="id">pg-hstore</td><td class="c">^2.3.4</td><td>Serializa y deserializa datos para PostgreSQL. Lo requiere Sequelize.</td></tr>
+    <tr><td class="id">umzug</td><td class="c">^3.8.3</td><td>Ejecuta migraciones y seeders llevando registro de los ya aplicados en las tablas <code>migrations</code> y <code>SequelizeData</code>.</td></tr>
+    <tr><td class="id">jsonwebtoken</td><td class="c">^9.0.3</td><td>Firma el token en <code>auth.service.ts</code> y lo verifica en <code>verifyToken.ts</code>.</td></tr>
+    <tr><td class="id">bcrypt</td><td class="c">^6.0.0</td><td>Cifra la contrase&ntilde;a en el gancho del modelo <code>User</code> y la compara al iniciar sesi&oacute;n.</td></tr>
+    <tr><td class="id">zod</td><td class="c">^4.5.4</td><td>Define los esquemas de <code>dto/</code> y genera a partir de ellos los tipos de TypeScript.</td></tr>
+    <tr><td class="id">swagger-jsdoc</td><td class="c">^6.3.0</td><td>Construye la especificaci&oacute;n OpenAPI leyendo los comentarios de <code>routes/</code>.</td></tr>
+    <tr><td class="id">swagger-ui-express</td><td class="c">^5.0.1</td><td>Publica esa especificaci&oacute;n como interfaz web ejecutable en <code>/api-docs</code>.</td></tr>
+    <tr><td class="id">dotenv</td><td class="c">^17.4.2</td><td>Carga el archivo <code>.env</code> en <code>process.env</code> al iniciar.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.2 Dependencias de desarrollo</h2>
+<table>
+  <caption>Tabla 4. Paquetes necesarios solo durante el desarrollo y la compilaci&oacute;n.</caption>
+  <thead><tr><th style="width:24%">Paquete</th><th class="c" style="width:10%">Versi&oacute;n</th><th>Uso</th></tr></thead>
+  <tbody>
+    <tr><td class="id">typescript</td><td class="c">^7.0.2</td><td>Compila el c&oacute;digo fuente a JavaScript en la carpeta <code>dist</code>.</td></tr>
+    <tr><td class="id">tsx</td><td class="c">^4.23.13</td><td>Ejecuta TypeScript directamente y reinicia el servidor al detectar cambios. Tambi&eacute;n ejecuta las migraciones y los seeders.</td></tr>
+    <tr><td class="id">@types/*</td><td class="c">&mdash;</td><td>Definiciones de tipos para express, node, bcrypt, jsonwebtoken, pg y swagger.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.3 Comandos disponibles</h2>
+<table>
+  <caption>Tabla 5. Comandos declarados en <code>package.json</code>.</caption>
+  <thead><tr><th style="width:26%">Comando</th><th style="width:30%">Ejecuta</th><th>Prop&oacute;sito</th></tr></thead>
+  <tbody>
+    <tr><td class="id">npm run dev</td><td class="id">tsx watch src/app.ts</td><td>Levanta el servidor con recarga autom&aacute;tica.</td></tr>
+    <tr><td class="id">npm run build</td><td class="id">tsc</td><td>Compila TypeScript a JavaScript en <code>dist/</code>.</td></tr>
+    <tr><td class="id">npm start</td><td class="id">node dist/app.js</td><td>Ejecuta la versi&oacute;n compilada, sin TypeScript en tiempo de ejecuci&oacute;n.</td></tr>
+    <tr><td class="id">npm run migrate</td><td class="id">tsx src/config/migrate-up.ts</td><td>Crea las tablas que falten.</td></tr>
+    <tr><td class="id">npm run migrate:reverse</td><td class="id">migrate-down.ts</td><td>Deshace la &uacute;ltima migraci&oacute;n.</td></tr>
+    <tr><td class="id">npm run migrate:reset</td><td class="id">migrate-reset.ts</td><td>Deshace todas las migraciones.</td></tr>
+    <tr><td class="id">npm run seed</td><td class="id">seeders-up.ts</td><td>Carga los datos de prueba.</td></tr>
+    <tr><td class="id">npm run seed:down</td><td class="id">seeders-down.ts</td><td>Deshace el &uacute;ltimo seeder.</td></tr>
+    <tr><td class="id">npm run seed:reset</td><td class="id">seeders-reset.ts</td><td>Deshace todos los seeders.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion" id="t3">
+<h1>3. Explicaci&oacute;n de las capas</h1>
+
+<h2>3.1 Regla de dependencia</h2>
+<p>El c&oacute;digo respeta una regla &uacute;nica y verificable: <strong>cada capa solo importa de la capa inmediatamente inferior</strong>. Esta restricci&oacute;n se puede comprobar leyendo las importaciones de cualquier archivo.</p>
+
+<div class="ascii" style="margin:1rem 0;">RUTA          importa  ->  middlewares, controladores, esquemas
+MIDDLEWARE    importa  ->  servicios, modelos, utilidades
+CONTROLADOR   importa  ->  servicios
+SERVICIO      importa  ->  modelos, utilidades, tipos
+MODELO        importa  ->  configuracion de la base de datos, tipos
+
+Lo que NUNCA ocurre:
+
+  un servicio importa  Request  o  Response  de Express
+  un controlador importa un modelo directamente
+  un modelo importa a otro modelo</div>
+
+<div class="nota">
+<strong>Por qu&eacute; un servicio no conoce Express</strong>
+Los servicios reciben datos ya validados y devuelven datos o lanzan un error de negocio. Nunca escriben una respuesta HTTP. Gracias a eso, la misma funci&oacute;n <code>crearSolicitud</code> podr&iacute;a invocarse desde una tarea programada, desde una interfaz de l&iacute;nea de comandos o desde una prueba automatizada, sin arrastrar consigo el protocolo HTTP.
+</div>
+
+<h2>3.2 Recorrido completo de una petici&oacute;n</h2>
+<p>El siguiente ejemplo sigue una petici&oacute;n real desde que llega hasta que se responde, indicando el archivo responsable de cada paso.</p>
+
+<pre><code><span class="c">POST /api/solicitudes    Authorization: Bearer &lt;token&gt;</span>
+<span class="c">{ "clinica_id": "...", "medicamento_id": "...",</span>
+<span class="c">  "almacen_id": "...", "cantidad_solicitada": 120 }</span>
+
+ 1  app.ts                        express.json() convierte el cuerpo
+ 2  app.ts                        enruta hacia routerSolicitudes
+ 3  solicitud.routes.ts           router.use(verifyToken)
+ 4  verifyToken.ts                valida la firma  ->  req.user
+ 5  verifyToken.ts                checkRole('gestor','administrador')
+ 6  validate_request.ts           safeParse(crearSolicitudSchema)
+ 7  verificar-entidades-...ts     consulta las tres entidades
+ 8  verificar-inventario.ts       consulta el inventario disponible
+ 9  solicitud.controller.ts       postSolicitud lee req.body y req.user
+10  solicitud.service.ts          crearSolicitud crea con estado pendiente
+11  solicitud.model.ts            Sequelize construye el INSERT
+12  PostgreSQL                    verifica llaves foraneas y CHECK
+13  solicitud.service.ts          reconsulta con las relaciones incluidas
+14  solicitud.controller.ts       res.status(201).json({...})
+
+<span class="c">Si algo falla en cualquier punto, next(error) entrega el error</span>
+<span class="c">a error-handler.ts, que arma la respuesta JSON correspondiente.</span></code></pre>
+</section>
+<section class="seccion" id="t4">
+<h1>4. Capa de configuraci&oacute;n</h1>
+
+<h2>4.1 Conexi&oacute;n con la base de datos</h2>
+<p>El archivo <code>src/config/db.ts</code> crea una &uacute;nica instancia de Sequelize que se comparte en todo el proyecto. Ning&uacute;n otro archivo crea conexiones adicionales.</p>
+<pre><code><span class="k">import</span> { Sequelize } <span class="k">from</span> <span class="s">"sequelize"</span>;
+<span class="k">import</span> <span class="s">"dotenv/config"</span>;
+
+<span class="k">const</span> {
+    DATABASE_HOST, DATABASE_PORT, DATABASE_USER,
+    DATABASE_PASSWORD, DATABASE_NAME
+} = process.env;
+
+<span class="k">const</span> db = <span class="k">new</span> <span class="f">Sequelize</span>(
+    DATABASE_NAME || <span class="s">""</span>,
+    DATABASE_USER || <span class="s">""</span>,
+    DATABASE_PASSWORD || <span class="s">""</span>,
+    {
+        host: DATABASE_HOST || <span class="s">"localhost"</span>,
+
+        <span class="c">// Dentro del contenedor, docker-compose fija DATABASE_PORT</span>
+        <span class="c">// en 5432. Fuera de Docker se usa el valor del .env.</span>
+        port: <span class="f">Number</span>(DATABASE_PORT) || <span class="s">5432</span>,
+
+        dialect: <span class="s">"postgres"</span>,
+        logging: console.log,
+    }
+);
+
+<span class="k">export default</span> db;</code></pre>
+<p><strong>Decisi&oacute;n t&eacute;cnica.</strong> Cada variable tiene un valor de respaldo con el operador <code>||</code>. Esto evita que la aplicaci&oacute;n falle con un error opaco de tipo si una variable no est&aacute; definida, y hace expl&iacute;cito el comportamiento esperado en ausencia de configuraci&oacute;n.</p>
+
+<h2>4.2 Configuraci&oacute;n de las migraciones</h2>
+<p>El archivo <code>src/config/migrator.ts</code> configura Umzug. Contiene una decisi&oacute;n que merece atenci&oacute;n: el patr&oacute;n de b&uacute;squeda de archivos cambia seg&uacute;n si el proyecto se ejecuta desde el c&oacute;digo fuente o desde la versi&oacute;n compilada.</p>
+<pre><code><span class="k">import</span> { SequelizeStorage, Umzug } <span class="k">from</span> <span class="s">"umzug"</span>;
+<span class="k">import</span> db <span class="k">from</span> <span class="s">"./db.js"</span>;
+
+<span class="c">// En desarrollo este archivo se ejecuta como .ts con tsx;</span>
+<span class="c">// compilado, como .js dentro de dist.</span>
+<span class="c">// El glob tiene que apuntar al mismo formato en cada caso.</span>
+<span class="k">const</span> isCompiled = <span class="k">import</span>.meta.url.<span class="f">endsWith</span>(<span class="s">'.js'</span>);
+
+<span class="k">export const</span> migrator = <span class="k">new</span> <span class="f">Umzug</span>({
+    migrations: {
+        glob: isCompiled
+            ? <span class="s">'dist/migrations/*.js'</span>
+            : <span class="s">'src/migrations/*.ts'</span>
+    },
+    context: db.<span class="f">getQueryInterface</span>(),
+    storage: <span class="k">new</span> <span class="f">SequelizeStorage</span>({
+        sequelize: db,
+        tableName: <span class="s">'migrations'</span>,
+        timestamps: <span class="k">true</span>
+    }),
+    logger: console
+});</code></pre>
+<div class="nota">
+<strong>Por qu&eacute; esta comprobaci&oacute;n es necesaria</strong>
+Sin ella, el mismo archivo buscar&iacute;a archivos <code>.ts</code> dentro de un contenedor de producci&oacute;n que solo contiene <code>.js</code>, y las migraciones sencillamente no encontrar&iacute;an nada que ejecutar, fallando en silencio. La propiedad <code>import.meta.url</code> permite al m&oacute;dulo saber bajo qu&eacute; extensi&oacute;n se est&aacute; ejecutando.
+</div>
+<p>El objeto <code>context</code> es la interfaz de consultas de Sequelize, que es exactamente lo que cada migraci&oacute;n recibe como par&aacute;metro para crear o eliminar tablas.</p>
+</section>
+
+<section class="seccion" id="t5">
+<h1>5. Capa de modelos</h1>
+
+<h2>5.1 Anatom&iacute;a de un modelo</h2>
+<p>Cada modelo declara primero los campos como propiedades tipadas de la clase y despu&eacute;s los define para Sequelize. La doble declaraci&oacute;n permite que TypeScript conozca el tipo de <code>solicitud.estado</code> sin necesidad de conversiones.</p>
+<pre><code><span class="k">class</span> Solicitud <span class="k">extends</span> Model {
+    <span class="c">// Identificador unico de la solicitud.</span>
+    <span class="k">declare</span> id: <span class="k">string</span>;
+
+    <span class="c">// Estado actual dentro del ciclo de vida.</span>
+    <span class="k">declare</span> estado: EstadoSolicitud;
+
+    <span class="c">// Nota opcional al cambiar el estado.</span>
+    <span class="k">declare</span> observaciones: <span class="k">string</span> | <span class="k">null</span>;
+    <span class="c">// ... resto de campos</span>
+}
+
+Solicitud.<span class="f">init</span>(
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: <span class="k">true</span>,
+        },
+        cantidad_solicitada: {
+            type: DataTypes.INTEGER,
+            allowNull: <span class="k">false</span>,
+        },
+        estado: {
+            type: DataTypes.<span class="f">ENUM</span>(...ESTADOS_SOLICITUD),
+            allowNull: <span class="k">false</span>,
+
+            <span class="c">// Toda solicitud nace en estado pendiente.</span>
+            defaultValue: <span class="s">"pendiente"</span>,
+        },
+        <span class="c">// ...</span>
+    },
+    { sequelize: db, tableName: <span class="s">"solicitudes"</span>, timestamps: <span class="k">true</span> }
+);</code></pre>
+<p>La palabra clave <code>declare</code> le indica a TypeScript el tipo de la propiedad <em>sin</em> generar c&oacute;digo que la inicialice. Es indispensable con Sequelize, porque la biblioteca define esas propiedades mediante descriptores en tiempo de ejecuci&oacute;n; una declaraci&oacute;n normal las sobrescribir&iacute;a con <code>undefined</code>.</p>
+<p>El operador de propagaci&oacute;n en <code>DataTypes.ENUM(...ESTADOS_SOLICITUD)</code> expande la lista constante definida en <code>types/enums.ts</code>. Los estados quedan escritos <strong>una sola vez</strong> y se reutilizan en el modelo, en la migraci&oacute;n, en el esquema de validaci&oacute;n y en la m&aacute;quina de estados.</p>
+
+<h2>5.2 Cifrado de la contrase&ntilde;a mediante un gancho</h2>
+<p>El modelo <code>User</code> incorpora un gancho que se dispara autom&aacute;ticamente antes de crear cualquier usuario.</p>
+<pre><code><span class="c">// Antes de guardar un usuario nuevo: se pasan los textos a</span>
+<span class="c">// minusculas y se cifra la contrasena.</span>
+User.<span class="f">beforeCreate</span>(<span class="k">async</span> (user: User) => {
+    user.first_name = user.first_name.<span class="f">toLowerCase</span>();
+    user.last_name  = user.last_name.<span class="f">toLowerCase</span>();
+    user.email      = user.email.<span class="f">toLowerCase</span>();
+
+    <span class="c">// bcrypt convierte la contrasena en un hash irreversible.</span>
+    user.password_hash = <span class="k">await</span> bcrypt.<span class="f">hash</span>(user.password_hash, <span class="s">10</span>);
+});</code></pre>
+<div class="ok">
+<strong>Ventaja de resolverlo en el modelo y no en el servicio</strong>
+La contrase&ntilde;a queda cifrada sin importar por d&oacute;nde se cree el usuario. Si m&aacute;s adelante se agrega un comando de administraci&oacute;n o una carga masiva, no hay riesgo de olvidar el cifrado: es imposible guardar un usuario sin pasar por este gancho.
+</div>
+<p>El n&uacute;mero <code>10</code> es el factor de costo: indica cu&aacute;ntas rondas de derivaci&oacute;n aplica bcrypt. A mayor valor, m&aacute;s lento resulta tanto cifrar como intentar romper el hash por fuerza bruta.</p>
+
+<h2>5.3 Asociaciones centralizadas</h2>
+<p>Todas las relaciones entre modelos se declaran en un &uacute;nico archivo, <code>models/index.ts</code>.</p>
+<pre><code><span class="c">// ------------------------------------------------------</span>
+<span class="c">// INVENTARIO</span>
+<span class="c">// Almacen 1 ---- N Inventario N ---- 1 Medicamento</span>
+<span class="c">// ------------------------------------------------------</span>
+
+Inventario.<span class="f">belongsTo</span>(Almacen,  { foreignKey: <span class="s">"almacen_id"</span>,     as: <span class="s">"almacen"</span> });
+Almacen.<span class="f">hasMany</span>(Inventario,   { foreignKey: <span class="s">"almacen_id"</span>,     as: <span class="s">"inventario"</span> });
+
+Inventario.<span class="f">belongsTo</span>(Medicamento, { foreignKey: <span class="s">"medicamento_id"</span>, as: <span class="s">"medicamento"</span> });
+Medicamento.<span class="f">hasMany</span>(Inventario,  { foreignKey: <span class="s">"medicamento_id"</span>, as: <span class="s">"inventario"</span> });
+
+<span class="c">// Se exportan todos juntos para importarlos comodamente</span>
+<span class="c">// desde los services.</span>
+<span class="k">export</span> { User, Clinica, Almacen, Medicamento, Inventario, Solicitud };</code></pre>
+<div class="aviso">
+<strong>Problema que resuelve la centralizaci&oacute;n</strong>
+Si <code>solicitud.model.ts</code> importara <code>clinica.model.ts</code> para declarar su relaci&oacute;n, y <code>clinica.model.ts</code> importara <code>solicitud.model.ts</code> para declarar la inversa, se producir&iacute;a una importaci&oacute;n circular: al cargarse el primero, el segundo a&uacute;n no existir&iacute;a y una de las dos referencias ser&iacute;a <code>undefined</code>. Declarar todas las asociaciones en un tercer archivo, importado desde <code>app.ts</code> antes de atender peticiones, elimina por completo esa posibilidad.
+</div>
+<p>Los alias definidos en <code>as</code> son los que despu&eacute;s permiten a los servicios pedir las relaciones incluidas y los que dan nombre a las propiedades anidadas de la respuesta JSON.</p>
+</section>
+
+<section class="seccion" id="t6">
+<h1>6. Capa de validaci&oacute;n</h1>
+
+<h2>6.1 Esquema y tipo derivado</h2>
+<p>Cada esquema de <code>dto/</code> cumple dos funciones simult&aacute;neas: valida en tiempo de ejecuci&oacute;n y genera el tipo de TypeScript correspondiente.</p>
+<pre><code><span class="k">export const</span> crearSolicitudSchema = z.<span class="f">object</span>({
+    clinica_id: z.<span class="f">uuid</span>(<span class="s">"El clinica_id es obligatorio y debe tener formato UUID."</span>),
+
+    medicamento_id: z.<span class="f">uuid</span>(<span class="s">"El medicamento_id es obligatorio..."</span>),
+
+    almacen_id: z.<span class="f">uuid</span>(<span class="s">"El almacen_id es obligatorio..."</span>),
+
+    cantidad_solicitada: z
+        .<span class="f">number</span>({ error: <span class="s">"La cantidad solicitada es obligatoria..."</span> })
+        .<span class="f">int</span>(<span class="s">"La cantidad solicitada debe ser un numero entero."</span>)
+        .<span class="f">positive</span>(<span class="s">"La cantidad solicitada debe ser mayor que cero."</span>),
+
+    observaciones: z.<span class="f">string</span>()
+        .<span class="f">max</span>(<span class="s">500</span>, <span class="s">"Las observaciones no pueden superar los 500 caracteres."</span>)
+        .<span class="f">optional</span>(),
+});
+
+<span class="c">// El tipo se deduce del esquema: los campos se escriben una sola vez.</span>
+<span class="k">export type</span> CrearSolicitudInput = z.infer&lt;<span class="k">typeof</span> crearSolicitudSchema&gt;;</code></pre>
+<div class="ok">
+<strong>Ventaja de derivar el tipo del esquema</strong>
+Si ma&ntilde;ana se agrega un campo obligatorio al esquema, el tipo cambia autom&aacute;ticamente y el compilador se&ntilde;ala todos los lugares que dejan de ser v&aacute;lidos. Con una interfaz escrita a mano en paralelo, esa desincronizaci&oacute;n pasar&iacute;a inadvertida hasta producir un fallo en ejecuci&oacute;n.
+</div>
+<p>Obs&eacute;rvese qu&eacute; campos <strong>no</strong> aparecen en el esquema. No se pide <code>usuario_id</code>, porque se toma del token, y no se pide <code>estado</code>, porque toda solicitud nace pendiente. Lo que el esquema omite es tan significativo como lo que incluye: define la superficie de entrada del sistema.</p>
+
+<h2>6.2 Validaci&oacute;n de actualizaciones parciales</h2>
+<p>El esquema de actualizaci&oacute;n usa un refinamiento para rechazar cuerpos vac&iacute;os.</p>
+<pre><code><span class="k">export const</span> actualizarSolicitudSchema = z
+    .<span class="f">object</span>({
+        cantidad_solicitada: z.<span class="f">number</span>().<span class="f">int</span>().<span class="f">positive</span>().<span class="f">optional</span>(),
+        observaciones: z.<span class="f">string</span>().<span class="f">max</span>(<span class="s">500</span>).<span class="f">optional</span>(),
+    })
+    .<span class="f">refine</span>((datos) =&gt; Object.<span class="f">keys</span>(datos).length &gt; <span class="s">0</span>, {
+        message: <span class="s">"Debe enviar al menos un campo para actualizar."</span>,
+    });</code></pre>
+<p>Sin ese refinamiento, una petici&oacute;n con el cuerpo <code>{}</code> pasar&iacute;a la validaci&oacute;n, llegar&iacute;a al servicio y ejecutar&iacute;a una actualizaci&oacute;n que no cambia nada, devolviendo un 200 enga&ntilde;oso.</p>
+</section>
+
+<section class="seccion" id="t7">
+<h1>7. Capa de middlewares</h1>
+
+<h2>7.1 Autenticaci&oacute;n</h2>
+<pre><code><span class="k">export function</span> <span class="f">verifyToken</span>(req: Request, res: Response, next: NextFunction): <span class="k">void</span> {
+    <span class="k">const</span> cabecera = req.headers.authorization;
+
+    <span class="c">// Sin cabecera Authorization no hay nada que validar.</span>
+    <span class="k">if</span> (!cabecera || !cabecera.<span class="f">startsWith</span>(<span class="s">"Bearer "</span>)) {
+        res.<span class="f">status</span>(<span class="s">401</span>).<span class="f">json</span>({ message: <span class="s">"Token no proporcionado."</span> });
+        <span class="k">return</span>;
+    }
+
+    <span class="c">// La cabecera viene como "Bearer abc.def.ghi".</span>
+    <span class="k">const</span> token = cabecera.<span class="f">split</span>(<span class="s">" "</span>)[<span class="s">1</span>];
+    <span class="c">// ...</span>
+
+    <span class="k">try</span> {
+        <span class="c">// jwt.verify revisa la firma y que el token no este vencido.</span>
+        <span class="k">const</span> payload = jwt.<span class="f">verify</span>(token, secreto) <span class="k">as</span> PayloadToken;
+
+        <span class="c">// Se guarda el usuario en la peticion para reutilizarlo despues.</span>
+        req.user = payload;
+        <span class="f">next</span>();
+    } <span class="k">catch</span> {
+        res.<span class="f">status</span>(<span class="s">401</span>).<span class="f">json</span>({ message: <span class="s">"Token invalido o expirado."</span> });
+    }
+}</code></pre>
+<p>La asignaci&oacute;n <code>req.user = payload</code> solo compila porque el archivo <code>types/express.d.ts</code> amplia la interfaz <code>Request</code> de Express para incluir esa propiedad. Es la forma correcta de extender un tipo de una biblioteca externa sin recurrir a conversiones forzadas.</p>
+
+<h2>7.2 Autorizaci&oacute;n por rol</h2>
+<p><code>checkRole</code> es una <strong>funci&oacute;n que devuelve un middleware</strong>. Ese patr&oacute;n permite configurarla en la propia declaraci&oacute;n de la ruta.</p>
+<pre><code><span class="k">export function</span> <span class="f">checkRole</span>(...rolesPermitidos: RolUsuario[]) {
+    <span class="k">return</span> (req: Request, res: Response, next: NextFunction): <span class="k">void</span> =&gt; {
+        <span class="k">const</span> usuario = req.user;
+
+        <span class="c">// Si no hay usuario es porque no paso por verifyToken.</span>
+        <span class="k">if</span> (!usuario) {
+            res.<span class="f">status</span>(<span class="s">401</span>).<span class="f">json</span>({ message: <span class="s">"Usuario no autenticado."</span> });
+            <span class="k">return</span>;
+        }
+
+        <span class="k">if</span> (!rolesPermitidos.<span class="f">includes</span>(usuario.role)) {
+            res.<span class="f">status</span>(<span class="s">403</span>).<span class="f">json</span>({
+                message: <span class="s">"No tiene permisos para realizar esta accion."</span>
+            });
+            <span class="k">return</span>;
+        }
+
+        <span class="f">next</span>();
+    };
+}
+
+<span class="c">// Uso en una ruta:</span>
+router.<span class="f">post</span>(<span class="s">"/"</span>, <span class="f">checkRole</span>(<span class="s">"administrador"</span>), postClinica);</code></pre>
+<p>El par&aacute;metro tipado como <code>RolUsuario[]</code> impide escribir un rol inexistente: <code>checkRole("supervisor")</code> no compila.</p>
+
+<h2>7.3 Validaci&oacute;n de reglas de negocio previas</h2>
+<p>El middleware de inventario ilustra por qu&eacute; conviene separar estas comprobaciones del servicio.</p>
+<pre><code><span class="k">export async function</span> <span class="f">verificarInventarioDisponible</span>(
+    req: Request, res: Response, next: NextFunction
+): Promise&lt;<span class="k">void</span>&gt; {
+    <span class="k">try</span> {
+        <span class="k">const</span> { almacen_id, medicamento_id, cantidad_solicitada } = req.body;
+
+        <span class="k">const</span> registroInventario =
+            <span class="k">await</span> <span class="f">buscarInventario</span>(almacen_id, medicamento_id);
+
+        <span class="c">// El almacen nunca ha manejado ese medicamento.</span>
+        <span class="k">if</span> (!registroInventario) {
+            res.<span class="f">status</span>(<span class="s">400</span>).<span class="f">json</span>({
+                message: <span class="s">"El almacen seleccionado no maneja ese medicamento."</span>
+            });
+            <span class="k">return</span>;
+        }
+
+        <span class="c">// Lo maneja, pero no tiene suficientes unidades.</span>
+        <span class="k">if</span> (registroInventario.cantidad &lt; cantidad_solicitada) {
+            res.<span class="f">status</span>(<span class="s">400</span>).<span class="f">json</span>({
+                message: <span class="s">"El almacen no tiene inventario suficiente..."</span>,
+                cantidad_solicitada: cantidad_solicitada,
+                cantidad_disponible: registroInventario.cantidad,
+            });
+            <span class="k">return</span>;
+        }
+
+        <span class="f">next</span>();
+    } <span class="k">catch</span> (error) {
+        <span class="f">next</span>(error);
+    }
+}</code></pre>
+<p>La respuesta de error no se limita a un mensaje: incluye la cantidad solicitada y la disponible, de modo que quien consume la API puede mostrar un aviso &uacute;til sin realizar otra consulta.</p>
+
+<h2>7.4 Manejador central de errores</h2>
+<p>Express reconoce un manejador de errores porque recibe <strong>cuatro</strong> par&aacute;metros y el primero es el error. Va registrado al final de <code>app.ts</code>, despu&eacute;s de todas las rutas.</p>
+<pre><code><span class="k">export function</span> <span class="f">errorHandler</span>(
+    error: <span class="k">unknown</span>, _req: Request, res: Response, _next: NextFunction
+): <span class="k">void</span> {
+    <span class="c">// Caso 1: error de negocio que lanzamos nosotros,</span>
+    <span class="c">// ya trae su propio codigo HTTP.</span>
+    <span class="k">if</span> (error <span class="k">instanceof</span> HttpError) {
+        res.<span class="f">status</span>(error.statusCode).<span class="f">json</span>({ message: error.message });
+        <span class="k">return</span>;
+    }
+
+    <span class="c">// Caso 2: valor repetido en una columna unica.</span>
+    <span class="k">if</span> (error <span class="k">instanceof</span> UniqueConstraintError) {
+        res.<span class="f">status</span>(<span class="s">409</span>).<span class="f">json</span>({
+            message: <span class="s">"Ya existe un registro con esos datos."</span>,
+            errors: error.errors.<span class="f">map</span>((d) =&gt; d.message),
+        });
+        <span class="k">return</span>;
+    }
+
+    <span class="c">// Caso 3: fallo una validacion del modelo.</span>
+    <span class="k">if</span> (error <span class="k">instanceof</span> ValidationError) { <span class="c">/* 400 */</span> }
+
+    <span class="c">// Caso 4: error inesperado. Se registra en el servidor</span>
+    <span class="c">// pero al cliente solo se le devuelve un mensaje generico.</span>
+    console.<span class="f">error</span>(<span class="s">"Error inesperado:"</span>, error);
+    res.<span class="f">status</span>(<span class="s">500</span>).<span class="f">json</span>({ message: <span class="s">"Error interno del servidor."</span> });
+}</code></pre>
+<div class="ok">
+<strong>Valor de este patr&oacute;n</strong>
+El error se declara como <code>unknown</code> y no como <code>any</code>, lo que obliga a comprobar su tipo antes de acceder a sus propiedades. Los cuatro casos est&aacute;n ordenados de lo m&aacute;s espec&iacute;fico a lo m&aacute;s general, y el &uacute;ltimo garantiza que ning&uacute;n error inesperado filtre su traza al cliente. Sin este manejador, cada uno de los treinta controladores tendr&iacute;a que repetir esta l&oacute;gica.
+</div>
+</section>
+<section class="seccion" id="t8">
+<h1>8. Capa de servicios</h1>
+<p>Es la capa que concentra el valor del sistema. Se documentan los tres fragmentos m&aacute;s relevantes.</p>
+
+<h2>8.1 La m&aacute;quina de estados</h2>
+<p>Las transiciones v&aacute;lidas se declaran como un dato, no como una cadena de condicionales.</p>
+<pre><code><span class="c">/**</span>
+<span class="c"> * Mapa con los cambios de estado permitidos.</span>
+<span class="c"> * Los estados finales tienen la lista vacia: de ahi no se sale.</span>
+<span class="c"> *</span>
+<span class="c"> *   pendiente --&gt; aprobada --&gt; entregada   (final)</span>
+<span class="c"> *       |             \------&gt; cancelada   (final)</span>
+<span class="c"> *       |------&gt; rechazada                 (final)</span>
+<span class="c"> *       \------&gt; cancelada                 (final)</span>
+<span class="c"> */</span>
+<span class="k">export const</span> TRANSICIONES_PERMITIDAS:
+    Record&lt;EstadoSolicitud, EstadoSolicitud[]&gt; = {
+        pendiente: [<span class="s">"aprobada"</span>, <span class="s">"rechazada"</span>, <span class="s">"cancelada"</span>],
+        aprobada:  [<span class="s">"entregada"</span>, <span class="s">"cancelada"</span>],
+        rechazada: [],
+        entregada: [],
+        cancelada: [],
+    };
+
+<span class="k">export function</span> <span class="f">esTransicionValida</span>(
+    estadoActual: EstadoSolicitud,
+    estadoNuevo: EstadoSolicitud
+): <span class="k">boolean</span> {
+    <span class="k">const</span> estadosPosibles = TRANSICIONES_PERMITIDAS[estadoActual];
+    <span class="k">return</span> estadosPosibles.<span class="f">includes</span>(estadoNuevo);
+}</code></pre>
+<div class="ok">
+<strong>Ventajas de modelar las reglas como datos</strong>
+<ul style="margin:.4rem 0 0;">
+<li>El tipo <code>Record&lt;EstadoSolicitud, ...&gt;</code> obliga a declarar los cinco estados. Si ma&ntilde;ana se agrega un estado nuevo al tipo enumerado, el proyecto <strong>no compila</strong> hasta que se defina a d&oacute;nde puede transitar.</li>
+<li>Toda la regla es legible de un vistazo, sin recorrer una cadena de condicionales.</li>
+<li>La misma estructura alimenta el mensaje de error que se le devuelve al cliente.</li>
+</ul>
+</div>
+
+<h2>8.2 Cambio de estado con transacci&oacute;n y bloqueo de fila</h2>
+<p>Es el fragmento t&eacute;cnicamente m&aacute;s exigente del proyecto. Se reproduce con sus comentarios originales.</p>
+<pre><code><span class="k">export async function</span> <span class="f">cambiarEstadoSolicitud</span>(
+    id: <span class="k">string</span>, datos: CambiarEstadoInput
+): Promise&lt;Solicitud&gt; {
+    <span class="k">const</span> transaccion = <span class="k">await</span> db.<span class="f">transaction</span>();
+
+    <span class="k">try</span> {
+        <span class="k">const</span> solicitud = <span class="k">await</span> Solicitud.<span class="f">findOne</span>({
+            where: { id, is_active: <span class="k">true</span> },
+            transaction: transaccion,
+        });
+
+        <span class="k">if</span> (!solicitud) {
+            <span class="k">throw new</span> <span class="f">HttpError</span>(<span class="s">404</span>, <span class="s">"La solicitud no existe o fue eliminada."</span>);
+        }
+
+        <span class="k">const</span> estadoAnterior = solicitud.estado;
+
+        <span class="c">// Caso 1: se aprueba, hay que descontar el inventario.</span>
+        <span class="k">if</span> (datos.estado === <span class="s">"aprobada"</span>) {
+            <span class="k">const</span> registroInventario = <span class="k">await</span> Inventario.<span class="f">findOne</span>({
+                where: {
+                    almacen_id: solicitud.almacen_id,
+                    medicamento_id: solicitud.medicamento_id,
+                    is_active: <span class="k">true</span>,
+                },
+                transaction: transaccion,
+
+                <span class="c">// Bloquea la fila hasta que termine la transaccion, para</span>
+                <span class="c">// que dos aprobaciones al mismo tiempo no descuenten el</span>
+                <span class="c">// mismo stock.</span>
+                lock: Transaction.LOCK.UPDATE,
+            });
+
+            <span class="k">if</span> (!registroInventario) {
+                <span class="k">throw new</span> <span class="f">HttpError</span>(<span class="s">400</span>,
+                    <span class="s">"El almacen ya no maneja ese medicamento..."</span>);
+            }
+
+            <span class="c">// Se vuelve a revisar la cantidad: entre que se creo la</span>
+            <span class="c">// solicitud y ahora, otra aprobacion pudo haber consumido</span>
+            <span class="c">// el inventario.</span>
+            <span class="k">if</span> (registroInventario.cantidad &lt; solicitud.cantidad_solicitada) {
+                <span class="k">throw new</span> <span class="f">HttpError</span>(<span class="s">400</span>,
+                    <span class="s">`Inventario insuficiente para aprobar. `</span> +
+                    <span class="s">`Disponible: ${registroInventario.cantidad}, `</span> +
+                    <span class="s">`solicitado: ${solicitud.cantidad_solicitada}.`</span>);
+            }
+
+            <span class="k">await</span> registroInventario.<span class="f">update</span>(
+                { cantidad: registroInventario.cantidad
+                           - solicitud.cantidad_solicitada },
+                { transaction: transaccion }
+            );
+        }
+
+        <span class="c">// Caso 2: se cancela una solicitud que ya estaba aprobada,</span>
+        <span class="c">// hay que devolver las unidades al almacen.</span>
+        <span class="k">if</span> (datos.estado === <span class="s">"cancelada"</span> &amp;&amp; estadoAnterior === <span class="s">"aprobada"</span>) {
+            <span class="c">// ... mismo bloqueo, suma en lugar de resta</span>
+        }
+
+        <span class="c">// Ya ajustado el inventario, se guarda el estado nuevo.</span>
+        <span class="k">await</span> solicitud.<span class="f">update</span>(
+            { estado: datos.estado,
+              observaciones: datos.observaciones ?? solicitud.observaciones },
+            { transaction: transaccion }
+        );
+
+        <span class="c">// commit confirma todos los cambios de la transaccion.</span>
+        <span class="k">await</span> transaccion.<span class="f">commit</span>();
+        <span class="k">return</span> <span class="f">obtenerSolicitudPorId</span>(id);
+
+    } <span class="k">catch</span> (error) {
+        <span class="c">// rollback deshace todo lo que se alcanzo a hacer.</span>
+        <span class="k">await</span> transaccion.<span class="f">rollback</span>();
+        <span class="k">throw</span> error;
+    }
+}</code></pre>
+
+<h4>Las tres decisiones que sostienen este fragmento</h4>
+<table>
+  <thead><tr><th style="width:26%">Decisi&oacute;n</th><th>Problema que evita</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Transacci&oacute;n</strong></td><td>Sin ella, si el descuento del inventario tuviera &eacute;xito pero la actualizaci&oacute;n del estado fallara, quedar&iacute;a inventario descontado por una solicitud que sigue pendiente. Con la transacci&oacute;n se aplican ambos cambios o ninguno.</td></tr>
+    <tr><td><strong>Bloqueo de fila</strong></td><td>Sin <code>LOCK.UPDATE</code>, dos aprobaciones simult&aacute;neas del mismo medicamento leer&iacute;an la misma cantidad, ambas la considerar&iacute;an suficiente y ambas descontar&iacute;an sobre el mismo valor. El bloqueo obliga a la segunda a esperar y a leer el valor ya actualizado.</td></tr>
+    <tr><td><strong>Revalidaci&oacute;n</strong></td><td>Entre la creaci&oacute;n de la solicitud y su aprobaci&oacute;n pueden pasar horas. La comprobaci&oacute;n que hizo el middleware al crearla ya no es v&aacute;lida en el momento de aprobar, por eso se repite dentro de la transacci&oacute;n.</td></tr>
+  </tbody>
+</table>
+
+<div class="ascii" style="margin:1rem 0;">SIN bloqueo de fila                CON bloqueo de fila
+
+T1 lee cantidad = 500              T1 lee 500 y BLOQUEA la fila
+T2 lee cantidad = 500              T2 intenta leer  ->  ESPERA
+T1 verifica 500 &gt;= 120  ok         T1 verifica y escribe 380
+T2 verifica 500 &gt;= 400  ok         T1 hace COMMIT y libera
+T1 escribe 380                     T2 despierta y lee 380
+T2 escribe 100                     T2 verifica 380 &gt;= 400  FALLA
+                                   T2 responde 400 correctamente
+Se comprometieron 520 unidades
+de un stock de 500.                El inventario nunca queda
+El inventario es incorrecto.       comprometido de mas.</div>
+
+<h2>8.3 Consultas con relaciones incluidas</h2>
+<p>La lista de relaciones se declara una sola vez como constante y se reutiliza en todas las consultas del servicio.</p>
+<pre><code><span class="c">// Al consultar solicitudes siempre se traen los datos de las tablas</span>
+<span class="c">// relacionadas, para no devolver una lista de UUIDs sin significado.</span>
+<span class="k">const</span> incluirRelaciones = [
+    { model: Clinica,     as: <span class="s">"clinica"</span>,
+      attributes: [<span class="s">"id"</span>, <span class="s">"nombre"</span>, <span class="s">"nit"</span>, <span class="s">"responsable_nombre"</span>] },
+    { model: Medicamento, as: <span class="s">"medicamento"</span>,
+      attributes: [<span class="s">"id"</span>, <span class="s">"nombre"</span>, <span class="s">"presentacion"</span>] },
+    { model: Almacen,     as: <span class="s">"almacen"</span>,
+      attributes: [<span class="s">"id"</span>, <span class="s">"nombre"</span>] },
+    { model: User,        as: <span class="s">"usuario"</span>,
+      attributes: [<span class="s">"id"</span>, <span class="s">"first_name"</span>, <span class="s">"last_name"</span>, <span class="s">"email"</span>] },
+];</code></pre>
+<p>El campo <code>attributes</code> es una decisi&oacute;n de seguridad tanto como de eficiencia: al enumerar expl&iacute;citamente las columnas del usuario, es <strong>imposible</strong> que el hash de la contrase&ntilde;a aparezca en una respuesta, incluso por descuido.</p>
+
+<h2>8.4 Diferencia entre solicitudes activas e historial</h2>
+<pre><code><span class="c">/**</span>
+<span class="c"> * Devuelve las solicitudes activas, es decir, las que todavia</span>
+<span class="c"> * estan en curso: pendientes o aprobadas.</span>
+<span class="c"> */</span>
+<span class="k">export async function</span> <span class="f">listarSolicitudesActivas</span>(): Promise&lt;Solicitud[]&gt; {
+    <span class="k">return</span> Solicitud.<span class="f">findAll</span>({
+        where: { is_active: <span class="k">true</span>, estado: [<span class="s">"pendiente"</span>, <span class="s">"aprobada"</span>] },
+        include: incluirRelaciones,
+        order: [[<span class="s">"createdAt"</span>, <span class="s">"DESC"</span>]],
+    });
+}
+
+<span class="c">/**</span>
+<span class="c"> * Devuelve el historial completo de solicitudes.</span>
+<span class="c"> * Aqui no se filtra por estado ni por is_active a proposito:</span>
+<span class="c"> * el historial debe mostrar todo lo que ha pasado.</span>
+<span class="c"> */</span>
+<span class="k">export async function</span> <span class="f">listarHistorialSolicitudes</span>(): Promise&lt;Solicitud[]&gt; {
+    <span class="k">return</span> Solicitud.<span class="f">findAll</span>({
+        include: incluirRelaciones,
+        order: [[<span class="s">"createdAt"</span>, <span class="s">"DESC"</span>]],
+    });
+}</code></pre>
+<p>La ausencia de filtros en la segunda funci&oacute;n es deliberada y est&aacute; documentada en el propio c&oacute;digo, para que nadie la interprete como un olvido y la "corrija".</p>
+</section>
+
+<section class="seccion" id="t9">
+<h1>9. Capa de controladores y rutas</h1>
+
+<h2>9.1 Un controlador tipo</h2>
+<p>Todos los controladores siguen la misma estructura de cinco pasos.</p>
+<pre><code><span class="c">/**</span>
+<span class="c"> * POST /api/solicitudes</span>
+<span class="c"> * Registra una solicitud. El usuario se toma del token.</span>
+<span class="c"> */</span>
+<span class="k">export async function</span> <span class="f">postSolicitud</span>(
+    req: Request, res: Response, next: NextFunction
+): Promise&lt;<span class="k">void</span>&gt; {
+    <span class="k">try</span> {
+        <span class="c">// 1. Leer lo que ya validaron los middlewares.</span>
+        <span class="k">const</span> usuarioId = req.user!.id;
+
+        <span class="c">// 2. Delegar toda la logica al servicio.</span>
+        <span class="k">const</span> solicitud = <span class="k">await</span> <span class="f">crearSolicitud</span>(req.body, usuarioId);
+
+        <span class="c">// 3. Elegir el codigo HTTP y responder.</span>
+        res.<span class="f">status</span>(<span class="s">201</span>).<span class="f">json</span>({
+            message: <span class="s">"Solicitud registrada correctamente."</span>,
+            solicitud,
+        });
+    } <span class="k">catch</span> (error) {
+        <span class="c">// 4. Cualquier error va al manejador central.</span>
+        <span class="f">next</span>(error);
+    }
+}</code></pre>
+<p>El controlador no contiene ni una sola regla de negocio: no sabe qu&eacute; es un estado v&aacute;lido ni c&oacute;mo se descuenta el inventario. Solo traduce entre el protocolo HTTP y la capa de servicios. Esa disciplina es lo que mantiene los controladores en menos de veinte l&iacute;neas cada uno.</p>
+
+<h2>9.2 Encadenamiento de middlewares en una ruta</h2>
+<p>La declaraci&oacute;n de una ruta es, en la pr&aacute;ctica, la documentaci&oacute;n ejecutable de sus reglas.</p>
+<pre><code><span class="c">// Todas las rutas de solicitudes exigen token.</span>
+router.<span class="f">use</span>(verifyToken);
+
+router.<span class="f">get</span>(<span class="s">"/"</span>, getSolicitudes);
+
+<span class="c">// Va declarada ANTES que /:id. Si estuviera despues, Express</span>
+<span class="c">// interpretaria la palabra "historial" como si fuera un id.</span>
+router.<span class="f">get</span>(<span class="s">"/historial"</span>, getHistorialSolicitudes);
+
+router.<span class="f">get</span>(<span class="s">"/:id"</span>, <span class="f">validateParams</span>(idSchema), getSolicitudPorId);
+
+<span class="c">// Antes de crearla se revisa, en este orden:</span>
+<span class="c">//   1. que los datos tengan el formato correcto y cantidad &gt; 0,</span>
+<span class="c">//   2. que la clinica, el medicamento y el almacen existan,</span>
+<span class="c">//   3. que el almacen tenga inventario suficiente.</span>
+router.<span class="f">post</span>(
+    <span class="s">"/"</span>,
+    <span class="f">checkRole</span>(<span class="s">"gestor"</span>, <span class="s">"administrador"</span>),
+    <span class="f">validateRequest</span>(crearSolicitudSchema),
+    verificarEntidadesRelacionadas,
+    verificarInventarioDisponible,
+    postSolicitud
+);</code></pre>
+<div class="aviso">
+<strong>Detalle de implementaci&oacute;n f&aacute;cil de pasar por alto</strong>
+El orden de <code>/historial</code> y <code>/:id</code> no es indiferente. Express eval&uacute;a las rutas en el orden en que fueron declaradas. Si <code>/:id</code> estuviera primero, una petici&oacute;n a <code>/api/solicitudes/historial</code> har&iacute;a coincidir el par&aacute;metro con el texto <em>historial</em>, la validaci&oacute;n de UUID fallar&iacute;a y el endpoint de historial resultar&iacute;a inalcanzable. Por eso el c&oacute;digo lleva un comentario que advierte a quien lo modifique en el futuro.
+</div>
+
+<h2>9.3 Documentaci&oacute;n integrada</h2>
+<p>La documentaci&oacute;n de la API no vive en un archivo aparte: se escribe como comentarios junto a la ruta que describe, y <code>swagger-jsdoc</code> los extrae para construir la especificaci&oacute;n OpenAPI que se publica en <code>/api-docs</code>. La consecuencia pr&aacute;ctica es que modificar una ruta y olvidar actualizar su documentaci&oacute;n exige ignorar un comentario que est&aacute; a tres l&iacute;neas de distancia.</p>
+</section>
+
+<section class="seccion" id="t10">
+<h1>10. Migraciones y seeders</h1>
+
+<h2>10.1 Estructura de una migraci&oacute;n</h2>
+<p>Cada migraci&oacute;n exporta dos funciones: <code>up</code> aplica el cambio y <code>down</code> lo revierte.</p>
+<pre><code><span class="k">export async function</span> <span class="f">up</span>({ context }: { context: QueryInterface }) {
+    <span class="k">await</span> context.<span class="f">createTable</span>(<span class="s">"inventario"</span>, {
+        id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4,
+              primaryKey: <span class="k">true</span> },
+        almacen_id: {
+            type: DataTypes.UUID, allowNull: <span class="k">false</span>,
+            <span class="c">// Llave foranea: inventario.almacen_id -&gt; almacenes.id</span>
+            references: { model: <span class="s">"almacenes"</span>, key: <span class="s">"id"</span> },
+        },
+        <span class="c">// ...</span>
+    });
+
+    <span class="c">// Evita que se registre dos veces el mismo medicamento</span>
+    <span class="c">// en el mismo almacen.</span>
+    <span class="k">await</span> context.<span class="f">addConstraint</span>(<span class="s">"inventario"</span>, {
+        fields: [<span class="s">"almacen_id"</span>, <span class="s">"medicamento_id"</span>],
+        type: <span class="s">"unique"</span>,
+        name: <span class="s">"inventario_almacen_medicamento_unico"</span>,
+    });
+
+    <span class="c">// Regla en la propia base de datos para que la cantidad</span>
+    <span class="c">// nunca pueda quedar en negativo.</span>
+    <span class="k">await</span> context.sequelize.<span class="f">query</span>(<span class="s">`</span>
+<span class="s">        ALTER TABLE inventario</span>
+<span class="s">        ADD CONSTRAINT inventario_cantidad_no_negativa</span>
+<span class="s">        CHECK (cantidad &gt;= 0);</span>
+<span class="s">    `</span>);
+}
+
+<span class="k">export async function</span> <span class="f">down</span>({ context }: { context: QueryInterface }) {
+    <span class="k">await</span> context.<span class="f">dropTable</span>(<span class="s">"inventario"</span>);
+}</code></pre>
+<p>La restricci&oacute;n de verificaci&oacute;n se declara con SQL directo porque la interfaz de consultas de Sequelize no ofrece un m&eacute;todo espec&iacute;fico para ese tipo de restricci&oacute;n. Es un ejemplo de d&oacute;nde conviene bajar del ORM al SQL: la regla es cr&iacute;tica y debe vivir en el motor.</p>
+<p>En la migraci&oacute;n de <code>users</code>, la funci&oacute;n <code>down</code> incluye un detalle propio de PostgreSQL:</p>
+<pre><code><span class="k">export async function</span> <span class="f">down</span>({ context }: { context: QueryInterface }) {
+    <span class="k">await</span> context.<span class="f">dropTable</span>(<span class="s">"users"</span>);
+
+    <span class="c">// PostgreSQL guarda los ENUM como un tipo aparte,</span>
+    <span class="c">// por eso hay que eliminarlo a mano.</span>
+    <span class="k">await</span> context.sequelize.<span class="f">query</span>(<span class="s">'DROP TYPE IF EXISTS "enum_users_role";'</span>);
+}</code></pre>
+<p>Sin esa l&iacute;nea, revertir y volver a aplicar la migraci&oacute;n fallar&iacute;a: el tipo ya existir&iacute;a.</p>
+
+<h2>10.2 C&oacute;mo los seeders resuelven los UUID</h2>
+<p>Los identificadores se generan al azar en cada ejecuci&oacute;n, de modo que un seeder no puede escribir a mano la llave for&aacute;nea que necesita. La soluci&oacute;n es consultar la tabla anterior y localizar el registro por un campo estable.</p>
+<pre><code><span class="c">// El inventario necesita los ids reales del almacen y del</span>
+<span class="c">// medicamento, que se generaron al azar en los seeders anteriores.</span>
+<span class="k">const</span> [almacenes] = <span class="k">await</span> context.sequelize.<span class="f">query</span>(
+    <span class="s">`SELECT id, nombre FROM almacenes`</span>
+);
+
+<span class="k">const</span> central = almacenes.<span class="f">find</span>((a) =&gt; a.nombre === <span class="s">"Almacen Central"</span>);</code></pre>
+<p>Esta dependencia es la que obliga a que los archivos se ejecuten en orden num&eacute;rico: <code>050-inventario</code> necesita que <code>030-almacenes</code> y <code>040-medicamentos</code> ya hayan corrido.</p>
+
+<div class="aviso">
+<strong>Comportamiento no evidente al reiniciar la base de datos</strong>
+El comando <code>migrate:reset</code> borra las tablas del dominio, pero el registro que Umzug lleva de los seeders sobrevive en la tabla <code>SequelizeData</code>. Si no se ejecuta <code>seed:reset</code> primero, el comando <code>seed</code> asume que los seeders ya corrieron, no carga nada y las tablas quedan vac&iacute;as sin mostrar ning&uacute;n error. El orden correcto es: <code>seed:reset</code>, <code>migrate:reset</code>, <code>migrate</code>, <code>seed</code>.
+</div>
+</section>
+
+<section class="seccion" id="t11">
+<h1>11. Buenas pr&aacute;cticas de programaci&oacute;n aplicadas</h1>
+
+<table>
+  <caption>Tabla 6. Buenas pr&aacute;cticas aplicadas y evidencia en el c&oacute;digo.</caption>
+  <thead><tr><th class="id" style="width:8%">C&oacute;digo</th><th style="width:24%">Pr&aacute;ctica</th><th>D&oacute;nde se evidencia en el proyecto</th></tr></thead>
+  <tbody>
+    <tr><td class="id">BP-01</td><td><strong>Responsabilidad &uacute;nica</strong></td><td>Cada capa hace una sola cosa. Un controlador nunca contiene reglas de negocio; un servicio nunca escribe una respuesta HTTP.</td></tr>
+    <tr><td class="id">BP-02</td><td><strong>No repetirse</strong></td><td>Los estados y los roles se escriben una sola vez en <code>types/enums.ts</code> y se reutilizan en el modelo, la migraci&oacute;n, el esquema de validaci&oacute;n y la m&aacute;quina de estados. La lista de relaciones incluidas se declara una vez por servicio.</td></tr>
+    <tr><td class="id">BP-03</td><td><strong>Tipado estricto</strong></td><td>Ninguna funci&oacute;n usa <code>any</code>. El manejador de errores recibe <code>unknown</code>, lo que obliga a comprobar el tipo antes de usarlo.</td></tr>
+    <tr><td class="id">BP-04</td><td><strong>Nombres que explican</strong></td><td><code>verificarInventarioDisponible</code>, <code>esTransicionValida</code>, <code>estadosPosiblesComoTexto</code>. El nombre dice qu&eacute; hace la funci&oacute;n sin necesidad de leerla.</td></tr>
+    <tr><td class="id">BP-05</td><td><strong>Comentarios que explican el porqu&eacute;</strong></td><td>Los comentarios no repiten lo que el c&oacute;digo ya dice, sino que justifican decisiones: por qu&eacute; se bloquea la fila, por qu&eacute; el historial no filtra, por qu&eacute; <code>/historial</code> va antes que <code>/:id</code>.</td></tr>
+    <tr><td class="id">BP-06</td><td><strong>Errores tipados</strong></td><td>La clase <code>HttpError</code> transporta el c&oacute;digo HTTP junto al mensaje, evitando que cada capa tenga que decidirlo por su cuenta.</td></tr>
+    <tr><td class="id">BP-07</td><td><strong>Validaci&oacute;n en el borde</strong></td><td>Los datos se validan en un middleware anterior al controlador. La capa de servicios nunca recibe datos sin verificar.</td></tr>
+    <tr><td class="id">BP-08</td><td><strong>Configuraci&oacute;n externa</strong></td><td>Ninguna credencial, puerto o clave aparece en el c&oacute;digo. Todo proviene de variables de entorno, y se distribuye una plantilla de ejemplo.</td></tr>
+    <tr><td class="id">BP-09</td><td><strong>Cambios de esquema versionados</strong></td><td>Migraciones numeradas y reversibles en lugar de sincronizaci&oacute;n autom&aacute;tica, que no deja historial y puede destruir datos.</td></tr>
+    <tr><td class="id">BP-10</td><td><strong>Operaciones at&oacute;micas</strong></td><td>Las que afectan al inventario se ejecutan dentro de una transacci&oacute;n con bloqueo de fila, con <code>rollback</code> en el bloque <code>catch</code>.</td></tr>
+    <tr><td class="id">BP-11</td><td><strong>Seguridad por omisi&oacute;n</strong></td><td>Las respuestas de usuario se construyen con una funci&oacute;n que omite el hash. Las consultas con relaciones enumeran expl&iacute;citamente las columnas que devuelven.</td></tr>
+    <tr><td class="id">BP-12</td><td><strong>Documentaci&oacute;n junto al c&oacute;digo</strong></td><td>Los comentarios de Swagger viven en el mismo archivo que la ruta que describen, lo que dificulta que se desincronicen.</td></tr>
+    <tr><td class="id">BP-13</td><td><strong>Preservaci&oacute;n del historial</strong></td><td>Eliminaci&oacute;n l&oacute;gica en todas las entidades: ning&uacute;n registro se borra f&iacute;sicamente.</td></tr>
+    <tr><td class="id">BP-14</td><td><strong>Entorno reproducible</strong></td><td>Contenedores con versiones fijadas, verificaci&oacute;n de salud de la base de datos y construcci&oacute;n multietapa que produce una imagen de producci&oacute;n m&iacute;nima.</td></tr>
+    <tr><td class="id">BP-15</td><td><strong>Principio de m&iacute;nimo privilegio</strong></td><td>La imagen de producci&oacute;n se ejecuta con un usuario sin privilegios y no incluye compilador, dependencias de desarrollo ni c&oacute;digo fuente.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion" id="t12">
+<h1>12. M&eacute;tricas del c&oacute;digo</h1>
+
+<table>
+  <caption>Tabla 7. Distribuci&oacute;n de archivos por capa.</caption>
+  <thead><tr><th style="width:26%">Capa</th><th class="c" style="width:14%">Archivos</th><th>Contenido</th></tr></thead>
+  <tbody>
+    <tr><td>Punto de entrada</td><td class="c">1</td><td><code>app.ts</code></td></tr>
+    <tr><td>Configuraci&oacute;n</td><td class="c">10</td><td>Conexi&oacute;n, migradores, comandos y documentaci&oacute;n</td></tr>
+    <tr><td>Migraciones</td><td class="c">6</td><td>Una por tabla del dominio</td></tr>
+    <tr><td>Seeders</td><td class="c">6</td><td>Una por tabla del dominio</td></tr>
+    <tr><td>Modelos</td><td class="c">7</td><td>Seis modelos y el archivo de asociaciones</td></tr>
+    <tr><td>Esquemas de validaci&oacute;n</td><td class="c">7</td><td>Seis por entidad y uno para el par&aacute;metro de ruta</td></tr>
+    <tr><td>Middlewares</td><td class="c">7</td><td>Seguridad, validaci&oacute;n, negocio y manejo de errores</td></tr>
+    <tr><td>Servicios</td><td class="c">6</td><td>Uno por m&oacute;dulo funcional</td></tr>
+    <tr><td>Controladores</td><td class="c">6</td><td>Uno por m&oacute;dulo funcional</td></tr>
+    <tr><td>Rutas</td><td class="c">6</td><td>Uno por m&oacute;dulo funcional</td></tr>
+    <tr><td>Tipos</td><td class="c">3</td><td>Enumeraciones, contenido del token y ampliaci&oacute;n de Express</td></tr>
+    <tr><td>Utilidades</td><td class="c">2</td><td>Error de negocio y m&aacute;quina de estados</td></tr>
+    <tr style="background:#eaf6e3;"><td><strong>Total</strong></td><td class="c"><strong>67</strong></td><td>Archivos TypeScript en <code>src/</code></td></tr>
+  </tbody>
+</table>
+
+<table>
+  <caption>Tabla 8. Superficie funcional del sistema.</caption>
+  <thead><tr><th style="width:40%">Elemento</th><th class="c">Cantidad</th></tr></thead>
+  <tbody>
+    <tr><td>Endpoints expuestos</td><td class="c">30</td></tr>
+    <tr><td>Tablas del dominio</td><td class="c">6</td></tr>
+    <tr><td>Tipos enumerados</td><td class="c">2</td></tr>
+    <tr><td>Llaves for&aacute;neas</td><td class="c">6</td></tr>
+    <tr><td>Restricciones de unicidad</td><td class="c">3</td></tr>
+    <tr><td>Restricciones de verificaci&oacute;n</td><td class="c">2</td></tr>
+    <tr><td>Middlewares personalizados</td><td class="c">7</td></tr>
+    <tr><td>Estados de la solicitud</td><td class="c">5</td></tr>
+    <tr><td>Transiciones de estado permitidas</td><td class="c">5</td></tr>
+  </tbody>
+</table>
+
+<h2>12.1 Repositorio del c&oacute;digo fuente</h2>
+<div class="ok">
+<strong>C&oacute;digo fuente completo</strong>
+<p style="margin:.3rem 0 0">El c&oacute;digo &iacute;ntegro descrito en este documento se encuentra publicado en:</p>
+<p style="margin:.3rem 0 0"><strong>https://github.com/DylanSrz/pd_node</strong></p>
+</div>
+
+<div class="firma">
+  <div>Dylan Alberto Su&aacute;rez Laverde<br><span style="color:#5a635c">Aprendiz</span></div>
+  <div><span class="rellenar">[ Nombre del instructor ]</span><br><span style="color:#5a635c">Instructor evaluador</span></div>
+</div>
+</section>
+
+</div>
+
+</body>
+</html>

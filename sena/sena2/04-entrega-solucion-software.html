@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrega de la Solucion de Software - API RiwiMediCare Plus</title>
+<style>
+:root{
+  --verde:#39A900; --verde-osc:#2d8400; --verde-claro:#eaf6e3;
+  --tinta:#1a1f1c; --gris:#5a635c; --linea:#d8ddd6; --fondo-alt:#f6f8f5;
+  --naranja:#c25e00; --azul:#0b5b8a; --rojo:#b3261e;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--tinta); background:#fff; line-height:1.65; font-size:11pt;
+  margin:0; padding:0;
+}
+.hoja{max-width:19cm; margin:0 auto; padding:1.5cm 1.6cm 2cm;}
+
+/* ---------- PORTADA ---------- */
+.portada{
+  min-height:26cm; display:flex; flex-direction:column;
+  justify-content:space-between; text-align:center;
+  padding:2.5cm 1.6cm; page-break-after:always;
+}
+.portada .marca{font-size:9pt;letter-spacing:.22em;text-transform:uppercase;color:var(--verde-osc);font-weight:700;}
+.portada .logo{width:96px;height:96px;margin:0 auto 1.2rem;}
+.portada h1{font-size:26pt;line-height:1.2;margin:.6rem 0;color:var(--tinta);border:0;}
+.portada .sub{font-size:13pt;color:var(--gris);margin:0 0 1.4rem;font-weight:400;}
+.portada .norma{
+  display:inline-block;border:2px solid var(--verde);border-radius:8px;
+  padding:.7rem 1.4rem;font-size:10.5pt;color:var(--verde-osc);font-weight:600;
+  background:var(--verde-claro);
+}
+.portada .datos{
+  margin:2rem auto 0;text-align:left;max-width:13cm;
+  border-top:1px solid var(--linea);padding-top:1.2rem;
+}
+.portada .datos dl{display:grid;grid-template-columns:auto 1fr;gap:.45rem 1.2rem;margin:0;font-size:10.5pt;}
+.portada .datos dt{color:var(--gris);font-weight:600;}
+.portada .datos dd{margin:0;}
+.portada .pie{font-size:9.5pt;color:var(--gris);border-top:1px solid var(--linea);padding-top:1rem;}
+.rellenar{background:#fff6d9;border-bottom:1px dashed #c9a227;padding:0 .2rem;}
+
+/* ---------- TIPOGRAFÍA ---------- */
+h1{
+  font-size:19pt;color:var(--tinta);margin:0 0 1.2rem;padding-bottom:.5rem;
+  border-bottom:3px solid var(--verde);page-break-after:avoid;
+}
+h2{font-size:14pt;margin:2rem 0 .7rem;color:var(--verde-osc);page-break-after:avoid;}
+h3{font-size:12pt;margin:1.4rem 0 .5rem;color:var(--tinta);page-break-after:avoid;}
+h4{font-size:11pt;margin:1.1rem 0 .4rem;color:var(--gris);text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid;}
+p{margin:.7rem 0;text-align:justify;}
+ul,ol{margin:.6rem 0 .9rem;padding-left:1.4rem;}
+li{margin:.3rem 0;}
+a{color:var(--azul);}
+code{
+  font-family:Consolas,"Courier New",monospace;font-size:.9em;
+  background:var(--fondo-alt);border:1px solid var(--linea);
+  border-radius:3px;padding:.08em .35em;
+}
+pre{
+  background:#1e2420;color:#e8ede8;border-radius:6px;padding:.9rem 1.1rem;
+  overflow-x:auto;font-family:Consolas,"Courier New",monospace;
+  font-size:9pt;line-height:1.55;page-break-inside:avoid;
+}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit;}
+pre .c{color:#8fae86;}      /* comentario */
+pre .k{color:#7fc9ff;}      /* keyword   */
+pre .s{color:#f3c98b;}      /* string    */
+pre .f{color:#c6a0f6;}      /* función   */
+
+/* ---------- SECCIÓN ---------- */
+.seccion{page-break-before:always;}
+.seccion:first-of-type{page-break-before:avoid;}
+
+/* ---------- TABLAS ---------- */
+table{
+  width:100%;border-collapse:collapse;margin:1rem 0 1.4rem;
+  font-size:9.5pt;page-break-inside:avoid;
+}
+caption{
+  caption-side:bottom;text-align:left;font-size:9pt;color:var(--gris);
+  padding-top:.45rem;font-style:italic;
+}
+th{
+  background:var(--verde-claro);color:var(--verde-osc);text-align:left;
+  padding:.5rem .6rem;border:1px solid var(--linea);font-weight:700;
+}
+td{padding:.45rem .6rem;border:1px solid var(--linea);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--fondo-alt);}
+td.id,th.id{white-space:nowrap;font-family:Consolas,monospace;font-size:9pt;}
+td.c,th.c{text-align:center;}
+
+/* ---------- COMPONENTES ---------- */
+.nota,.aviso,.ok{
+  border-left:4px solid var(--azul);background:#f0f6fa;
+  padding:.8rem 1rem;margin:1rem 0;border-radius:0 6px 6px 0;
+  font-size:10pt;page-break-inside:avoid;
+}
+.aviso{border-color:var(--naranja);background:#fdf4ea;}
+.ok{border-color:var(--verde);background:var(--verde-claro);}
+.nota strong:first-child,.aviso strong:first-child,.ok strong:first-child{display:block;margin-bottom:.25rem;}
+
+.toc{background:var(--fondo-alt);border:1px solid var(--linea);border-radius:8px;padding:1.2rem 1.6rem;}
+.toc h2{margin-top:0;}
+.toc ol{list-style:none;padding-left:0;counter-reset:s;}
+.toc > ol > li{counter-increment:s;margin:.4rem 0;font-weight:600;}
+.toc > ol > li::before{content:counter(s) ". ";color:var(--verde-osc);}
+.toc ol ol{padding-left:1.6rem;counter-reset:ss;}
+.toc ol ol li{counter-increment:ss;font-weight:400;font-size:10pt;margin:.15rem 0;}
+.toc ol ol li::before{content:counter(s) "." counter(ss) " ";color:var(--gris);}
+.toc a{text-decoration:none;color:var(--tinta);}
+
+.badge{
+  display:inline-block;padding:.12em .55em;border-radius:99px;
+  font-size:8.5pt;font-weight:700;letter-spacing:.03em;
+}
+.b-get{background:#e3f0fb;color:#0b5b8a;}
+.b-post{background:#e4f5df;color:#2d8400;}
+.b-put{background:#fdf0e0;color:#c25e00;}
+.b-patch{background:#f3e9fb;color:#6b34a8;}
+.b-del{background:#fbe6e5;color:#b3261e;}
+.b-pub{background:#eceff0;color:#5a635c;}
+.b-adm{background:#fbe6e5;color:#b3261e;}
+.b-ges{background:#fdf0e0;color:#c25e00;}
+.b-aut{background:#e3f0fb;color:#0b5b8a;}
+
+.figura{
+  border:1px solid var(--linea);border-radius:8px;padding:1rem;
+  margin:1.2rem 0;background:#fff;text-align:center;page-break-inside:avoid;
+}
+.figura svg{max-width:100%;height:auto;}
+.figura figcaption{
+  font-size:9pt;color:var(--gris);margin-top:.6rem;
+  font-style:italic;text-align:center;
+}
+.ascii{
+  background:var(--fondo-alt);border:1px solid var(--linea);border-radius:6px;
+  padding:1rem;font-family:Consolas,"Courier New",monospace;font-size:9pt;
+  line-height:1.5;white-space:pre;overflow-x:auto;text-align:left;
+  page-break-inside:avoid;
+}
+.hueco-captura{
+  border:2px dashed var(--verde);border-radius:8px;background:var(--verde-claro);
+  padding:2.4rem 1rem;text-align:center;color:var(--verde-osc);
+  margin:1rem 0 .3rem;font-size:10pt;page-break-inside:avoid;
+}
+.hueco-captura strong{display:block;font-size:11pt;margin-bottom:.3rem;}
+.hueco-captura em{font-style:normal;color:var(--gris);font-size:9.5pt;}
+
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.tarjeta{
+  border:1px solid var(--linea);border-left:4px solid var(--verde);
+  border-radius:0 8px 8px 0;padding:.9rem 1.1rem;background:var(--fondo-alt);
+  page-break-inside:avoid;
+}
+.tarjeta h4{margin-top:0;color:var(--verde-osc);}
+.tarjeta p{margin:.3rem 0;font-size:10pt;text-align:left;}
+
+.firma{
+  margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;
+  page-break-inside:avoid;
+}
+.firma div{border-top:1px solid var(--tinta);padding-top:.5rem;text-align:center;font-size:9.5pt;}
+
+/* ---------- IMPRESIÓN ---------- */
+@page{size:A4;margin:1.6cm 1.5cm;}
+@media print{
+  body{font-size:10.5pt;}
+  .hoja{max-width:none;padding:0;margin:0;}
+  .portada{min-height:24cm;padding:1cm 0;}
+  .no-print{display:none !important;}
+  a{color:var(--tinta);text-decoration:none;}
+  pre{border:1px solid var(--linea);}
+}
+.barra-print{
+  position:sticky;top:0;z-index:9;background:var(--verde);color:#fff;
+  padding:.55rem 1rem;font-size:9.5pt;text-align:center;
+}
+.barra-print kbd{
+  background:#fff;color:var(--verde-osc);border-radius:4px;
+  padding:.05em .4em;font-family:inherit;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="barra-print no-print">Para generar el PDF: <kbd>Ctrl</kbd> + <kbd>P</kbd> &rarr; Destino: <kbd>Guardar como PDF</kbd> &rarr; Margenes: <kbd>Predeterminado</kbd> &rarr; activar <kbd>Graficos de fondo</kbd></div>
+<section class="portada">
+  <div>
+    <div class="logo">
+      <svg viewBox="0 0 96 96" role="img" aria-label="Espacio para el logo institucional">
+        <rect x="2" y="2" width="92" height="92" rx="10" fill="#eaf6e3" stroke="#39A900" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="48" y="44" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">LOGO</text>
+        <text x="48" y="60" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">SENA</text>
+      </svg>
+    </div>
+    <div class="marca">Servicio Nacional de Aprendizaje &middot; SENA</div>
+  </div>
+  <div>
+    <div class="norma">EVIDENCIA DE PRODUCTO &middot; NORMA 220501096</div>
+    <h1>Entrega de la Soluci&oacute;n de Software</h1>
+    <p class="sub">Constancia de entrega y gu&iacute;a de verificaci&oacute;n del sistema funcional<br><strong>API RiwiMediCare Plus</strong></p>
+    <div class="datos">
+      <dl>
+        <dt>Aprendiz</dt><dd>Dylan Alberto Su&aacute;rez Laverde</dd>
+        <dt>Programa</dt><dd><span class="rellenar">[ Nombre del programa de formaci&oacute;n ]</span></dd>
+        <dt>Ficha</dt><dd><span class="rellenar">[ N&uacute;mero de ficha ]</span></dd>
+        <dt>Instructor</dt><dd><span class="rellenar">[ Nombre del instructor ]</span></dd>
+        <dt>Repositorio</dt><dd>https://github.com/DylanSrz/pd_node</dd>
+        <dt>Rama principal</dt><dd>main</dd>
+        <dt>Fecha</dt><dd><span class="rellenar">[ Fecha de entrega ]</span></dd>
+      </dl>
+    </div>
+  </div>
+  <div class="pie">
+    Producto 3 de la evidencia: <strong>Soluci&oacute;n de software</strong><br>
+    Repositorio &middot; C&oacute;digo fuente &middot; Base de datos &middot; API funcionando
+  </div>
+</section>
+
+<div class="hoja">
+
+<section class="seccion">
+<h1>1. Identificaci&oacute;n de la soluci&oacute;n entregada</h1>
+
+<table>
+  <caption>Tabla 1. Datos generales de la soluci&oacute;n de software.</caption>
+  <thead><tr><th style="width:26%">Elemento</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Nombre</strong></td><td>API RiwiMediCare Plus</td></tr>
+    <tr><td><strong>Tipo</strong></td><td>API REST &mdash; capa de servidor</td></tr>
+    <tr><td><strong>Prop&oacute;sito</strong></td><td>Gesti&oacute;n del ciclo de vida de las solicitudes de abastecimiento de medicamentos e insumos m&eacute;dicos, con control de inventario e historial.</td></tr>
+    <tr><td><strong>Lenguaje</strong></td><td>TypeScript sobre Node.js</td></tr>
+    <tr><td><strong>Base de datos</strong></td><td>PostgreSQL 16</td></tr>
+    <tr><td><strong>Estado</strong></td><td>Funcional y desplegable. Sustentado ante el jurado evaluador.</td></tr>
+    <tr><td><strong>Endpoints</strong></td><td>30, distribuidos en 6 m&oacute;dulos funcionales</td></tr>
+    <tr><td><strong>Documentaci&oacute;n</strong></td><td>Interactiva, mediante Swagger UI en <code>/api-docs</code></td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion">
+<h1>2. Repositorio del c&oacute;digo fuente</h1>
+
+<div class="ok" style="text-align:center;">
+<strong style="display:block;font-size:12pt;margin-bottom:.3rem;">Repositorio p&uacute;blico en GitHub</strong>
+<span style="font-family:Consolas,monospace;font-size:12pt;">https://github.com/DylanSrz/pd_node</span>
+</div>
+
+<h2>2.1 Estructura de ramas</h2>
+<table>
+  <caption>Tabla 2. Ramas del repositorio.</caption>
+  <thead><tr><th style="width:18%">Rama</th><th>Contenido</th></tr></thead>
+  <tbody>
+    <tr><td class="id"><strong>main</strong></td><td>Rama principal. Contiene la versi&oacute;n estable y completa del proyecto. Es la que debe revisarse.</td></tr>
+    <tr><td class="id">dev</td><td>Rama de desarrollo desde la que se integraron los cambios.</td></tr>
+    <tr><td class="id">pd_english</td><td>Rama con la versi&oacute;n del proyecto en ingl&eacute;s.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.2 Historial de desarrollo</h2>
+<p>El historial de confirmaciones documenta la construcci&oacute;n incremental del sistema, siguiendo la convenci&oacute;n de mensajes <em>Conventional Commits</em>.</p>
+<pre><code>0a4ddb2  docs: completar README y agregar backup de la base de datos
+9719aac  docs(swagger): documentar todos los endpoints de la API
+009d5a4  feat(seeders): agregar datos de prueba ejecutables por comando
+9ecbc59  feat(solicitudes): implementar creacion, cambio de estado e historial
+7da221e  feat(almacenes,medicamentos,inventario): implementar CRUD de las tres entidades
+834173d  feat(clinicas): implementar CRUD con validacion de NIT unico
+8114b19  feat(auth): implementar registro, login y proteccion con JWT
+42a752c  feat(db): agregar migraciones y modelos del dominio
+9cfebd1  Merge pull request #1 from DylanSrz/dev
+0c4ab9b  initial config
+3b49b94  Initial commit</code></pre>
+<p>El orden de las confirmaciones refleja el orden l&oacute;gico de construcci&oacute;n: primero el esquema de datos, despu&eacute;s la autenticaci&oacute;n que protege todo lo dem&aacute;s, luego los datos maestros, a continuaci&oacute;n el m&oacute;dulo de solicitudes que depende de ellos, y por &uacute;ltimo los datos de prueba y la documentaci&oacute;n.</p>
+
+<h2>2.3 C&oacute;mo obtener el c&oacute;digo</h2>
+<pre><code>git clone https://github.com/DylanSrz/pd_node.git
+cd pd_node
+git checkout main</code></pre>
+</section>
+
+<section class="seccion">
+<h1>3. Contenido de la entrega</h1>
+
+<table>
+  <caption>Tabla 3. Elementos que componen la soluci&oacute;n entregada.</caption>
+  <thead><tr><th class="c" style="width:8%">&nbsp;</th><th style="width:30%">Elemento</th><th style="width:24%">Ubicaci&oacute;n</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c">&#10003;</td><td><strong>C&oacute;digo fuente completo</strong></td><td class="id">src/</td><td>67 archivos TypeScript organizados en capas.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Repositorio p&uacute;blico</strong></td><td class="id">GitHub</td><td>Historial completo de desarrollo con 11 confirmaciones.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Respaldo de la base de datos</strong></td><td class="id">backup.sql</td><td>Estructura y datos de prueba, listo para restaurar.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Gui&oacute;n del esquema</strong></td><td class="id">sena1/modelo-datos/<br>08-esquema.sql</td><td>Creaci&oacute;n comentada de tipos, tablas, llaves, restricciones e &iacute;ndices.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Migraciones versionadas</strong></td><td class="id">src/migrations/</td><td>6 migraciones reversibles ejecutables por comando.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Datos de prueba</strong></td><td class="id">src/seeders/</td><td>6 seeders con 30 registros que cubren todos los estados.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Documentaci&oacute;n interactiva</strong></td><td class="id">/api-docs</td><td>Los 30 endpoints consultables y ejecutables.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Configuraci&oacute;n de contenedores</strong></td><td class="id">Dockerfile<br>docker-compose.yml</td><td>Construcci&oacute;n multietapa y orquestaci&oacute;n de API y base de datos.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Plantilla de configuraci&oacute;n</strong></td><td class="id">.env.example</td><td>Variables de entorno necesarias, sin credenciales reales.</td></tr>
+    <tr><td class="c">&#10003;</td><td><strong>Documentaci&oacute;n del proyecto</strong></td><td class="id">README.md</td><td>Instalaci&oacute;n, comandos, endpoints y reglas de negocio.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion">
+<h1>4. Cumplimiento de los requisitos</h1>
+<p>Trazabilidad entre los requisitos funcionales definidos en el documento de dise&ntilde;o (norma 220501095) y su implementaci&oacute;n verificable en el c&oacute;digo.</p>
+
+<table>
+  <caption>Tabla 4. Requisitos funcionales y su implementaci&oacute;n.</caption>
+  <thead><tr><th class="id" style="width:9%">Req.</th><th style="width:26%">Requisito</th><th style="width:32%">Implementado en</th><th class="c" style="width:12%">Estado</th></tr></thead>
+  <tbody>
+    <tr><td class="id">RF-01</td><td>Registro de usuario</td><td class="id">auth.service &middot; user.model</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-02</td><td>Inicio de sesi&oacute;n con JWT</td><td class="id">auth.service</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-03</td><td>Protecci&oacute;n de rutas</td><td class="id">verifyToken</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-04</td><td>Autorizaci&oacute;n por rol</td><td class="id">checkRole</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-05</td><td>Gesti&oacute;n de cl&iacute;nicas</td><td class="id">clinica.service &middot; clinica.routes</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-06</td><td>Historial por cl&iacute;nica</td><td class="id">listarSolicitudesPorClinica</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-07</td><td>Gesti&oacute;n de almacenes</td><td class="id">almacen.service</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-08</td><td>Gesti&oacute;n de medicamentos</td><td class="id">medicamento.service</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-09</td><td>Gesti&oacute;n de inventario</td><td class="id">inventario.service</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-10</td><td>Registro de solicitud</td><td class="id">crearSolicitud</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-11</td><td>Validaci&oacute;n de entidades relacionadas</td><td class="id">verificar-entidades-relacionadas</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-12</td><td>Validaci&oacute;n de disponibilidad</td><td class="id">verificar-inventario</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-13</td><td>Listado de solicitudes en curso</td><td class="id">listarSolicitudesActivas</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-14</td><td>Historial general</td><td class="id">listarHistorialSolicitudes</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-15</td><td>Consulta individual</td><td class="id">obtenerSolicitudPorId</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-16</td><td>Cambio de estado</td><td class="id">cambiarEstadoSolicitud &middot; verificar-transicion-estado</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-17</td><td>Descuento de inventario</td><td class="id">cambiarEstadoSolicitud (transacci&oacute;n)</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-18</td><td>Reintegro de inventario</td><td class="id">cambiarEstadoSolicitud &middot; eliminarSolicitud</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-19</td><td>Correcci&oacute;n de solicitud</td><td class="id">actualizarSolicitud</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-20</td><td>Baja l&oacute;gica</td><td class="id">Todos los servicios (<code>is_active</code>)</td><td class="c">&#10003; Cumplido</td></tr>
+    <tr><td class="id">RF-21</td><td>Documentaci&oacute;n interactiva</td><td class="id">config/swagger &middot; routes/</td><td class="c">&#10003; Cumplido</td></tr>
+  </tbody>
+</table>
+
+<h2>4.1 Integraci&oacute;n con la base de datos</h2>
+<table>
+  <caption>Tabla 5. Evidencia de la integraci&oacute;n con PostgreSQL.</caption>
+  <thead><tr><th style="width:32%">Aspecto</th><th>Implementaci&oacute;n verificable</th></tr></thead>
+  <tbody>
+    <tr><td>Conexi&oacute;n</td><td>Instancia &uacute;nica de Sequelize en <code>config/db.ts</code>, configurada desde variables de entorno.</td></tr>
+    <tr><td>Esquema versionado</td><td>6 migraciones numeradas y reversibles, ejecutadas y registradas por Umzug en la tabla <code>migrations</code>.</td></tr>
+    <tr><td>Integridad referencial</td><td>6 llaves for&aacute;neas declaradas en las migraciones e impuestas por el motor.</td></tr>
+    <tr><td>Restricciones de unicidad</td><td>3: correo del usuario, NIT de la cl&iacute;nica y la pareja almac&eacute;n-medicamento del inventario.</td></tr>
+    <tr><td>Restricciones de verificaci&oacute;n</td><td>2: cantidad de inventario no negativa y cantidad solicitada mayor que cero.</td></tr>
+    <tr><td>Tipos enumerados</td><td>2: roles de usuario y estados de solicitud, definidos en el motor.</td></tr>
+    <tr><td>Transacciones</td><td>El cambio de estado y la baja de solicitudes se ejecutan dentro de una transacci&oacute;n con <code>rollback</code> ante cualquier fallo.</td></tr>
+    <tr><td>Control de concurrencia</td><td>Bloqueo de fila con <code>LOCK.UPDATE</code> sobre el registro de inventario durante la aprobaci&oacute;n.</td></tr>
+    <tr><td>Consultas con relaciones</td><td>Las consultas de solicitudes e inventario resuelven sus relaciones con <code>include</code>, enumerando expl&iacute;citamente las columnas devueltas.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion">
+<h1>5. Gu&iacute;a de verificaci&oacute;n para el evaluador</h1>
+<p>Procedimiento para comprobar el funcionamiento completo del sistema.</p>
+
+<h2>5.1 Puesta en marcha</h2>
+<pre><code><span class="c"># 1. Obtener el codigo</span>
+git clone https://github.com/DylanSrz/pd_node.git
+cd pd_node
+
+<span class="c"># 2. Instalar dependencias</span>
+npm install
+
+<span class="c"># 3. Configurar el entorno</span>
+cp .env.example .env
+<span class="c">#    Editar el .env con los datos de PostgreSQL propios</span>
+
+<span class="c"># 4. Crear la base de datos</span>
+createdb -U admin db_nodejs
+
+<span class="c"># 5. Crear las tablas y cargar los datos</span>
+npm run migrate
+npm run seed
+
+<span class="c"># 6. Levantar el servidor</span>
+npm run dev</code></pre>
+<p>Alternativa con contenedores, sin instalar Node ni PostgreSQL:</p>
+<pre><code>docker compose up -d
+docker compose exec api npm run migrate
+docker compose exec api npm run seed</code></pre>
+
+<h2>5.2 Recorrido de verificaci&oacute;n</h2>
+<p>Con el servidor en ejecuci&oacute;n, abrir <code>http://localhost:3000/api-docs</code> y seguir esta secuencia.</p>
+
+<table>
+  <caption>Tabla 6. Secuencia de verificaci&oacute;n del sistema funcional.</caption>
+  <thead><tr><th class="c" style="width:6%">&nbsp;</th><th style="width:34%">Acci&oacute;n</th><th style="width:12%">Esperado</th><th>Qu&eacute; demuestra</th></tr></thead>
+  <tbody>
+    <tr><td class="c">1</td><td><code>POST /api/auth/login</code><br>con <code>dylan.suarez@riwimedicare.com</code> / <code>admin1234</code></td><td class="c">200</td><td>Autenticaci&oacute;n funcional y emisi&oacute;n del token.</td></tr>
+    <tr><td class="c">2</td><td>Pulsar <strong>Authorize</strong> y pegar el token</td><td class="c">&mdash;</td><td>Sesi&oacute;n autorizada.</td></tr>
+    <tr><td class="c">3</td><td><code>GET /api/inventario</code><br><em>anotar la cantidad</em></td><td class="c">200</td><td>Estado inicial del inventario.</td></tr>
+    <tr><td class="c">4</td><td><code>POST /api/solicitudes</code><br>con cantidad v&aacute;lida</td><td class="c">201</td><td>Creaci&oacute;n en estado <em>pendiente</em>, con las relaciones resueltas.</td></tr>
+    <tr><td class="c">5</td><td><code>GET /api/inventario</code></td><td class="c">200</td><td><strong>La cantidad NO cambi&oacute;</strong>: crear no descuenta.</td></tr>
+    <tr><td class="c">6</td><td><code>PATCH /api/solicitudes/:id/estado</code><br>con <code>"estado": "entregada"</code></td><td class="c">400</td><td>La m&aacute;quina de estados rechaza el salto e indica los estados v&aacute;lidos.</td></tr>
+    <tr><td class="c">7</td><td><code>PATCH /api/solicitudes/:id/estado</code><br>con <code>"estado": "aprobada"</code></td><td class="c">200</td><td>Transici&oacute;n v&aacute;lida aceptada.</td></tr>
+    <tr><td class="c">8</td><td><code>GET /api/inventario</code></td><td class="c">200</td><td><strong>La cantidad disminuy&oacute;</strong> exactamente en lo solicitado: descuento autom&aacute;tico.</td></tr>
+    <tr><td class="c">9</td><td><code>PATCH /api/solicitudes/:id/estado</code><br>con <code>"estado": "cancelada"</code></td><td class="c">200</td><td>Cancelaci&oacute;n de una solicitud aprobada.</td></tr>
+    <tr><td class="c">10</td><td><code>GET /api/inventario</code></td><td class="c">200</td><td><strong>La cantidad volvi&oacute; a su valor original</strong>: reintegro autom&aacute;tico.</td></tr>
+    <tr><td class="c">11</td><td><code>POST /api/solicitudes</code><br>con cantidad <code>99999</code></td><td class="c">400</td><td>Validaci&oacute;n de disponibilidad, informando lo pedido y lo disponible.</td></tr>
+    <tr><td class="c">12</td><td>Iniciar sesi&oacute;n como <strong>gestor</strong><br>e intentar <code>POST /api/clinicas</code></td><td class="c">403</td><td>Control de acceso por rol.</td></tr>
+    <tr><td class="c">13</td><td>Pulsar <strong>Logout</strong> y ejecutar cualquier <code>GET</code></td><td class="c">401</td><td>Todas las rutas est&aacute;n protegidas.</td></tr>
+    <tr><td class="c">14</td><td><code>GET /api/solicitudes/historial</code></td><td class="c">200</td><td>Historial completo, con solicitudes en los cinco estados.</td></tr>
+  </tbody>
+</table>
+
+<div class="ok">
+<strong>Los pasos 3, 5, 8 y 10 son el n&uacute;cleo de la verificaci&oacute;n</strong>
+Consultar el inventario cuatro veces a lo largo del recorrido demuestra la regla de negocio central del sistema: crear una solicitud no descuenta inventario, aprobarla s&iacute;, y cancelarla lo reintegra. La secuencia de cantidades debe ser, por ejemplo: <strong>500 &rarr; 500 &rarr; 380 &rarr; 500</strong>.
+</div>
+
+<h2>5.3 Verificaci&oacute;n directa en la base de datos</h2>
+<pre><code><span class="c">-- Comprobar que existen las seis tablas del dominio</span>
+psql -U admin -d db_nodejs -c <span class="s">"\dt"</span>
+
+<span class="c">-- Comprobar que las restricciones estan declaradas</span>
+psql -U admin -d db_nodejs -c <span class="s">"SELECT conname, contype FROM pg_constraint WHERE conrelid = 'solicitudes'::regclass;"</span>
+
+<span class="c">-- Comprobar el tipo enumerado de los estados</span>
+psql -U admin -d db_nodejs -c <span class="s">"SELECT enumlabel FROM pg_enum WHERE enumtypid = 'enum_solicitudes_estado'::regtype;"</span>
+
+<span class="c">-- Comprobar que ningun registro se borra fisicamente</span>
+psql -U admin -d db_nodejs -c <span class="s">"SELECT estado, is_active, COUNT(*) FROM solicitudes GROUP BY estado, is_active;"</span></code></pre>
+</section>
+
+<section class="seccion">
+<h1>6. Lista de verificaci&oacute;n de la entrega</h1>
+
+<table>
+  <caption>Tabla 7. Lista de comprobaci&oacute;n de los elementos exigidos por la norma.</caption>
+  <thead><tr><th class="c" style="width:8%">&nbsp;</th><th style="width:34%">Elemento exigido</th><th>Evidencia entregada</th></tr></thead>
+  <tbody>
+    <tr><td class="c">&#9744;</td><td><strong>Implementaci&oacute;n del c&oacute;digo fuente</strong></td><td>67 archivos TypeScript en <code>src/</code>, publicados en el repositorio.</td></tr>
+    <tr><td class="c">&#9744;</td><td><strong>Cumplimiento de los requisitos</strong></td><td>21 requisitos funcionales implementados y trazados en la Tabla 4.</td></tr>
+    <tr><td class="c">&#9744;</td><td><strong>Funcionamiento correcto de las funcionalidades</strong></td><td>Recorrido de verificaci&oacute;n de 14 pasos de la Tabla 6, y capturas del manual de usuario.</td></tr>
+    <tr><td class="c">&#9744;</td><td><strong>Integraci&oacute;n con base de datos</strong></td><td>PostgreSQL con 6 tablas, 6 llaves for&aacute;neas, 3 restricciones de unicidad, 2 de verificaci&oacute;n y transacciones con bloqueo de fila.</td></tr>
+    <tr><td class="c">&#9744;</td><td><strong>Buenas pr&aacute;cticas de programaci&oacute;n</strong></td><td>15 pr&aacute;cticas documentadas con su evidencia en el documento t&eacute;cnico de c&oacute;digo fuente.</td></tr>
+    <tr><td class="c">&#9744;</td><td><strong>Repositorio en GitHub</strong></td><td>https://github.com/DylanSrz/pd_node</td></tr>
+    <tr><td class="c">&#9744;</td><td><strong>Scripts SQL</strong></td><td><code>backup.sql</code> en la ra&iacute;z del repositorio y <code>08-esquema.sql</code> en la carpeta del modelo de datos.</td></tr>
+    <tr><td class="c">&#9744;</td><td><strong>API funcionando</strong></td><td>Se levanta con <code>npm run dev</code> o con <code>docker compose up</code>, y expone su documentaci&oacute;n en <code>/api-docs</code>.</td></tr>
+  </tbody>
+</table>
+
+<h2>6.1 Antes de radicar la entrega</h2>
+<div class="nota">
+<strong>Comprobaciones finales recomendadas</strong>
+<ol style="margin:.4rem 0 0;">
+<li>Confirmar que la rama <code>main</code> del repositorio remoto est&aacute; actualizada con la versi&oacute;n final.</li>
+<li>Verificar que el archivo <code>.env</code> <strong>no</strong> est&aacute; versionado y que <code>.env.example</code> s&iacute; lo est&aacute;.</li>
+<li>Clonar el repositorio en una carpeta limpia y seguir el numeral 5.1 desde cero, para comprobar que las instrucciones bastan por s&iacute; solas.</li>
+<li>Confirmar que <code>backup.sql</code> restaura correctamente en una base de datos vac&iacute;a.</li>
+<li>Completar las capturas del manual de usuario siguiendo la gu&iacute;a correspondiente.</li>
+<li>Reemplazar los campos marcados en amarillo de las portadas por los datos institucionales reales.</li>
+</ol>
+</div>
+
+<div class="firma">
+  <div>Dylan Alberto Su&aacute;rez Laverde<br><span style="color:#5a635c">Aprendiz</span></div>
+  <div><span class="rellenar">[ Nombre del instructor ]</span><br><span style="color:#5a635c">Instructor evaluador</span></div>
+</div>
+</section>
+
+</div>
+
+</body>
+</html>

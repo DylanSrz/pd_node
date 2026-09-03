@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modelo de Base de Datos - API RiwiMediCare Plus</title>
+<style>
+:root{
+  --verde:#39A900; --verde-osc:#2d8400; --verde-claro:#eaf6e3;
+  --tinta:#1a1f1c; --gris:#5a635c; --linea:#d8ddd6; --fondo-alt:#f6f8f5;
+  --naranja:#c25e00; --azul:#0b5b8a; --rojo:#b3261e;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--tinta); background:#fff; line-height:1.65; font-size:11pt;
+  margin:0; padding:0;
+}
+.hoja{max-width:19cm; margin:0 auto; padding:1.5cm 1.6cm 2cm;}
+
+/* ---------- PORTADA ---------- */
+.portada{
+  min-height:26cm; display:flex; flex-direction:column;
+  justify-content:space-between; text-align:center;
+  padding:2.5cm 1.6cm; page-break-after:always;
+}
+.portada .marca{font-size:9pt;letter-spacing:.22em;text-transform:uppercase;color:var(--verde-osc);font-weight:700;}
+.portada .logo{width:96px;height:96px;margin:0 auto 1.2rem;}
+.portada h1{font-size:26pt;line-height:1.2;margin:.6rem 0;color:var(--tinta);border:0;}
+.portada .sub{font-size:13pt;color:var(--gris);margin:0 0 1.4rem;font-weight:400;}
+.portada .norma{
+  display:inline-block;border:2px solid var(--verde);border-radius:8px;
+  padding:.7rem 1.4rem;font-size:10.5pt;color:var(--verde-osc);font-weight:600;
+  background:var(--verde-claro);
+}
+.portada .datos{
+  margin:2rem auto 0;text-align:left;max-width:13cm;
+  border-top:1px solid var(--linea);padding-top:1.2rem;
+}
+.portada .datos dl{display:grid;grid-template-columns:auto 1fr;gap:.45rem 1.2rem;margin:0;font-size:10.5pt;}
+.portada .datos dt{color:var(--gris);font-weight:600;}
+.portada .datos dd{margin:0;}
+.portada .pie{font-size:9.5pt;color:var(--gris);border-top:1px solid var(--linea);padding-top:1rem;}
+.rellenar{background:#fff6d9;border-bottom:1px dashed #c9a227;padding:0 .2rem;}
+
+/* ---------- TIPOGRAFÍA ---------- */
+h1{
+  font-size:19pt;color:var(--tinta);margin:0 0 1.2rem;padding-bottom:.5rem;
+  border-bottom:3px solid var(--verde);page-break-after:avoid;
+}
+h2{font-size:14pt;margin:2rem 0 .7rem;color:var(--verde-osc);page-break-after:avoid;}
+h3{font-size:12pt;margin:1.4rem 0 .5rem;color:var(--tinta);page-break-after:avoid;}
+h4{font-size:11pt;margin:1.1rem 0 .4rem;color:var(--gris);text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid;}
+p{margin:.7rem 0;text-align:justify;}
+ul,ol{margin:.6rem 0 .9rem;padding-left:1.4rem;}
+li{margin:.3rem 0;}
+a{color:var(--azul);}
+code{
+  font-family:Consolas,"Courier New",monospace;font-size:.9em;
+  background:var(--fondo-alt);border:1px solid var(--linea);
+  border-radius:3px;padding:.08em .35em;
+}
+pre{
+  background:#1e2420;color:#e8ede8;border-radius:6px;padding:.9rem 1.1rem;
+  overflow-x:auto;font-family:Consolas,"Courier New",monospace;
+  font-size:9pt;line-height:1.55;page-break-inside:avoid;
+}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit;}
+pre .c{color:#8fae86;}      /* comentario */
+pre .k{color:#7fc9ff;}      /* keyword   */
+pre .s{color:#f3c98b;}      /* string    */
+pre .f{color:#c6a0f6;}      /* función   */
+
+/* ---------- SECCIÓN ---------- */
+.seccion{page-break-before:always;}
+.seccion:first-of-type{page-break-before:avoid;}
+
+/* ---------- TABLAS ---------- */
+table{
+  width:100%;border-collapse:collapse;margin:1rem 0 1.4rem;
+  font-size:9.5pt;page-break-inside:avoid;
+}
+caption{
+  caption-side:bottom;text-align:left;font-size:9pt;color:var(--gris);
+  padding-top:.45rem;font-style:italic;
+}
+th{
+  background:var(--verde-claro);color:var(--verde-osc);text-align:left;
+  padding:.5rem .6rem;border:1px solid var(--linea);font-weight:700;
+}
+td{padding:.45rem .6rem;border:1px solid var(--linea);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--fondo-alt);}
+td.id,th.id{white-space:nowrap;font-family:Consolas,monospace;font-size:9pt;}
+td.c,th.c{text-align:center;}
+
+/* ---------- COMPONENTES ---------- */
+.nota,.aviso,.ok{
+  border-left:4px solid var(--azul);background:#f0f6fa;
+  padding:.8rem 1rem;margin:1rem 0;border-radius:0 6px 6px 0;
+  font-size:10pt;page-break-inside:avoid;
+}
+.aviso{border-color:var(--naranja);background:#fdf4ea;}
+.ok{border-color:var(--verde);background:var(--verde-claro);}
+.nota strong:first-child,.aviso strong:first-child,.ok strong:first-child{display:block;margin-bottom:.25rem;}
+
+.toc{background:var(--fondo-alt);border:1px solid var(--linea);border-radius:8px;padding:1.2rem 1.6rem;}
+.toc h2{margin-top:0;}
+.toc ol{list-style:none;padding-left:0;counter-reset:s;}
+.toc > ol > li{counter-increment:s;margin:.4rem 0;font-weight:600;}
+.toc > ol > li::before{content:counter(s) ". ";color:var(--verde-osc);}
+.toc ol ol{padding-left:1.6rem;counter-reset:ss;}
+.toc ol ol li{counter-increment:ss;font-weight:400;font-size:10pt;margin:.15rem 0;}
+.toc ol ol li::before{content:counter(s) "." counter(ss) " ";color:var(--gris);}
+.toc a{text-decoration:none;color:var(--tinta);}
+
+.badge{
+  display:inline-block;padding:.12em .55em;border-radius:99px;
+  font-size:8.5pt;font-weight:700;letter-spacing:.03em;
+}
+.b-get{background:#e3f0fb;color:#0b5b8a;}
+.b-post{background:#e4f5df;color:#2d8400;}
+.b-put{background:#fdf0e0;color:#c25e00;}
+.b-patch{background:#f3e9fb;color:#6b34a8;}
+.b-del{background:#fbe6e5;color:#b3261e;}
+.b-pub{background:#eceff0;color:#5a635c;}
+.b-adm{background:#fbe6e5;color:#b3261e;}
+.b-ges{background:#fdf0e0;color:#c25e00;}
+.b-aut{background:#e3f0fb;color:#0b5b8a;}
+
+.figura{
+  border:1px solid var(--linea);border-radius:8px;padding:1rem;
+  margin:1.2rem 0;background:#fff;text-align:center;page-break-inside:avoid;
+}
+.figura svg{max-width:100%;height:auto;}
+.figura figcaption{
+  font-size:9pt;color:var(--gris);margin-top:.6rem;
+  font-style:italic;text-align:center;
+}
+.ascii{
+  background:var(--fondo-alt);border:1px solid var(--linea);border-radius:6px;
+  padding:1rem;font-family:Consolas,"Courier New",monospace;font-size:9pt;
+  line-height:1.5;white-space:pre;overflow-x:auto;text-align:left;
+  page-break-inside:avoid;
+}
+.hueco-captura{
+  border:2px dashed var(--verde);border-radius:8px;background:var(--verde-claro);
+  padding:2.4rem 1rem;text-align:center;color:var(--verde-osc);
+  margin:1rem 0 .3rem;font-size:10pt;page-break-inside:avoid;
+}
+.hueco-captura strong{display:block;font-size:11pt;margin-bottom:.3rem;}
+.hueco-captura em{font-style:normal;color:var(--gris);font-size:9.5pt;}
+
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.tarjeta{
+  border:1px solid var(--linea);border-left:4px solid var(--verde);
+  border-radius:0 8px 8px 0;padding:.9rem 1.1rem;background:var(--fondo-alt);
+  page-break-inside:avoid;
+}
+.tarjeta h4{margin-top:0;color:var(--verde-osc);}
+.tarjeta p{margin:.3rem 0;font-size:10pt;text-align:left;}
+
+.firma{
+  margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;
+  page-break-inside:avoid;
+}
+.firma div{border-top:1px solid var(--tinta);padding-top:.5rem;text-align:center;font-size:9.5pt;}
+
+/* ---------- IMPRESIÓN ---------- */
+@page{size:A4;margin:1.6cm 1.5cm;}
+@media print{
+  body{font-size:10.5pt;}
+  .hoja{max-width:none;padding:0;margin:0;}
+  .portada{min-height:24cm;padding:1cm 0;}
+  .no-print{display:none !important;}
+  a{color:var(--tinta);text-decoration:none;}
+  pre{border:1px solid var(--linea);}
+}
+.barra-print{
+  position:sticky;top:0;z-index:9;background:var(--verde);color:#fff;
+  padding:.55rem 1rem;font-size:9.5pt;text-align:center;
+}
+.barra-print kbd{
+  background:#fff;color:var(--verde-osc);border-radius:4px;
+  padding:.05em .4em;font-family:inherit;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="barra-print no-print">Para generar el PDF: <kbd>Ctrl</kbd> + <kbd>P</kbd> &rarr; Destino: <kbd>Guardar como PDF</kbd> &rarr; Margenes: <kbd>Predeterminado</kbd> &rarr; activar <kbd>Graficos de fondo</kbd></div>
+<section class="portada">
+  <div>
+    <div class="logo">
+      <svg viewBox="0 0 96 96" role="img" aria-label="Espacio para el logo institucional">
+        <rect x="2" y="2" width="92" height="92" rx="10" fill="#eaf6e3" stroke="#39A900" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="48" y="44" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">LOGO</text>
+        <text x="48" y="60" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">SENA</text>
+      </svg>
+    </div>
+    <div class="marca">Servicio Nacional de Aprendizaje &middot; SENA</div>
+  </div>
+  <div>
+    <div class="norma">EVIDENCIA DE PRODUCTO &middot; NORMA 220501095</div>
+    <h1>Modelo de Base de Datos</h1>
+    <p class="sub">Diccionario de datos y descripci&oacute;n del modelo relacional<br><strong>API RiwiMediCare Plus</strong></p>
+    <div class="datos">
+      <dl>
+        <dt>Aprendiz</dt><dd>Dylan Alberto Su&aacute;rez Laverde</dd>
+        <dt>Programa</dt><dd><span class="rellenar">[ Nombre del programa de formaci&oacute;n ]</span></dd>
+        <dt>Ficha</dt><dd><span class="rellenar">[ N&uacute;mero de ficha ]</span></dd>
+        <dt>Instructor</dt><dd><span class="rellenar">[ Nombre del instructor ]</span></dd>
+        <dt>Motor</dt><dd>PostgreSQL 16</dd>
+        <dt>Base de datos</dt><dd>db_nodejs</dd>
+        <dt>Tablas</dt><dd>6 de dominio + 2 de control</dd>
+        <dt>Fecha</dt><dd><span class="rellenar">[ Fecha de entrega ]</span></dd>
+      </dl>
+    </div>
+  </div>
+  <div class="pie">
+    Producto 4 de la evidencia: <strong>Modelo de base de datos</strong><br>
+    Identificaci&oacute;n de entidades &middot; Relaciones entre tablas &middot; Atributos principales
+  </div>
+</section>
+
+<div class="hoja">
+
+<section class="seccion">
+<h1>1. Descripci&oacute;n general del modelo</h1>
+<p>La base de datos <code>db_nodejs</code> est&aacute; compuesta por <strong>seis tablas de dominio</strong> y dos tablas de control que la herramienta de migraciones administra por su cuenta. Todas las tablas de dominio comparten la misma convenci&oacute;n estructural.</p>
+
+<h2>1.1 Convenciones aplicadas a todas las tablas</h2>
+<table>
+  <caption>Tabla 1. Convenciones estructurales comunes.</caption>
+  <thead><tr><th style="width:26%">Convenci&oacute;n</th><th>Descripci&oacute;n y motivo</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Llave primaria UUID</strong></td><td>Todas las tablas usan <code>id UUID</code> como llave primaria. Un identificador secuencial revelar&iacute;a el volumen de registros y permitir&iacute;a recorrer recursos probando n&uacute;meros consecutivos.</td></tr>
+    <tr><td><strong>Campo <code>is_active</code></strong></td><td>Booleano con valor por omisi&oacute;n <code>true</code>. La eliminaci&oacute;n es siempre l&oacute;gica: el registro se marca inactivo pero permanece, de modo que el historial que lo referencia se conserva &iacute;ntegro.</td></tr>
+    <tr><td><strong>Marcas de tiempo</strong></td><td><code>createdAt</code> y <code>updatedAt</code> con zona horaria, administradas autom&aacute;ticamente por el ORM. Aportan trazabilidad sin c&oacute;digo adicional.</td></tr>
+    <tr><td><strong>Nombres en plural</strong></td><td>Las tablas se nombran en plural y en min&uacute;sculas, salvo <code>inventario</code>, que es un sustantivo incontable.</td></tr>
+    <tr><td><strong>Sufijo <code>_id</code></strong></td><td>Toda llave for&aacute;nea lleva el nombre de la tabla referenciada en singular m&aacute;s el sufijo <code>_id</code>.</td></tr>
+    <tr><td><strong>Restricciones en el motor</strong></td><td>Las reglas cr&iacute;ticas (unicidad, cantidad no negativa, cantidad mayor que cero) se declaran en la base de datos y no solo en la aplicaci&oacute;n, de modo que se cumplen aunque el dato entre por otra v&iacute;a.</td></tr>
+  </tbody>
+</table>
+
+<h2>1.2 Inventario de tablas</h2>
+<table>
+  <caption>Tabla 2. Tablas del modelo, su prop&oacute;sito y su volumen de columnas.</caption>
+  <thead><tr><th style="width:18%">Tabla</th><th class="c" style="width:10%">Columnas</th><th class="c" style="width:8%">FK</th><th>Prop&oacute;sito</th></tr></thead>
+  <tbody>
+    <tr><td class="id"><strong>users</strong></td><td class="c">9</td><td class="c">0</td><td>Personas que pueden autenticarse en la API.</td></tr>
+    <tr><td class="id"><strong>clinicas</strong></td><td class="c">12</td><td class="c">0</td><td>Centros de atenci&oacute;n que solicitan medicamentos y sus responsables.</td></tr>
+    <tr><td class="id"><strong>almacenes</strong></td><td class="c">7</td><td class="c">0</td><td>Dep&oacute;sitos desde los que se despachan los medicamentos.</td></tr>
+    <tr><td class="id"><strong>medicamentos</strong></td><td class="c">8</td><td class="c">0</td><td>Cat&aacute;logo de productos distribuidos por la empresa.</td></tr>
+    <tr><td class="id"><strong>inventario</strong></td><td class="c">7</td><td class="c">2</td><td>Unidades de cada medicamento disponibles en cada almac&eacute;n.</td></tr>
+    <tr><td class="id"><strong>solicitudes</strong></td><td class="c">11</td><td class="c">4</td><td>Solicitudes de abastecimiento y su estado.</td></tr>
+    <tr><td class="id">migrations</td><td class="c">1</td><td class="c">0</td><td>Control: migraciones ya ejecutadas.</td></tr>
+    <tr><td class="id">SequelizeData</td><td class="c">1</td><td class="c">0</td><td>Control: seeders ya ejecutados.</td></tr>
+  </tbody>
+</table>
+
+<h2>1.3 Tipos enumerados</h2>
+<p>PostgreSQL almacena los tipos enumerados como objetos independientes de las tablas, lo que obliga a crearlos antes y a eliminarlos expl&iacute;citamente al revertir una migraci&oacute;n.</p>
+<table>
+  <caption>Tabla 3. Tipos enumerados definidos en la base de datos.</caption>
+  <thead><tr><th style="width:30%">Tipo</th><th style="width:20%">Usado en</th><th>Valores admitidos</th></tr></thead>
+  <tbody>
+    <tr><td class="id">enum_users_role</td><td class="id">users.role</td><td><code>administrador</code>, <code>gestor</code></td></tr>
+    <tr><td class="id">enum_solicitudes_estado</td><td class="id">solicitudes.estado</td><td><code>pendiente</code>, <code>aprobada</code>, <code>rechazada</code>, <code>entregada</code>, <code>cancelada</code></td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion">
+<h1>2. Diccionario de datos</h1>
+
+<h2>2.1 Tabla <code>users</code></h2>
+<p>Guarda las personas que pueden autenticarse. La contrase&ntilde;a nunca se almacena en texto plano.</p>
+<table>
+  <caption>Tabla 4. Diccionario de datos de <code>users</code>.</caption>
+  <thead><tr><th class="c" style="width:6%">Clave</th><th style="width:18%">Columna</th><th style="width:20%">Tipo</th><th class="c" style="width:8%">Nulo</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><strong>PK</strong></td><td class="id">id</td><td class="id">UUID</td><td class="c">No</td><td>Identificador &uacute;nico del usuario.</td></tr>
+    <tr><td class="c"></td><td class="id">first_name</td><td class="id">VARCHAR(100)</td><td class="c">No</td><td>Nombre. Se normaliza a min&uacute;sculas antes de guardar.</td></tr>
+    <tr><td class="c"></td><td class="id">last_name</td><td class="id">VARCHAR(100)</td><td class="c">No</td><td>Apellido. Se normaliza a min&uacute;sculas antes de guardar.</td></tr>
+    <tr><td class="c"><strong>U</strong></td><td class="id">email</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Correo de inicio de sesi&oacute;n. &Uacute;nico en toda la tabla.</td></tr>
+    <tr><td class="c"></td><td class="id">password_hash</td><td class="id">VARCHAR(255)</td><td class="c">No</td><td>Hash bcrypt con factor de costo 10. Nunca se devuelve en una respuesta.</td></tr>
+    <tr><td class="c"></td><td class="id">role</td><td class="id">enum_users_role</td><td class="c">No</td><td>Rol que determina los permisos del usuario.</td></tr>
+    <tr><td class="c"></td><td class="id">is_active</td><td class="id">BOOLEAN</td><td class="c">No</td><td>Estado del registro. Por omisi&oacute;n <code>true</code>. Un usuario inactivo no puede iniciar sesi&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">createdAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de creaci&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">updatedAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de la &uacute;ltima modificaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+<p><strong>Restricciones:</strong> <code>users_pkey</code> PRIMARY KEY (id) &middot; <code>users_email_key</code> UNIQUE (email)</p>
+
+<h2>2.2 Tabla <code>clinicas</code></h2>
+<p>Registra las cl&iacute;nicas atendidas junto con los datos de la persona responsable de cada una.</p>
+<table>
+  <caption>Tabla 5. Diccionario de datos de <code>clinicas</code>.</caption>
+  <thead><tr><th class="c" style="width:6%">Clave</th><th style="width:22%">Columna</th><th style="width:18%">Tipo</th><th class="c" style="width:8%">Nulo</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><strong>PK</strong></td><td class="id">id</td><td class="id">UUID</td><td class="c">No</td><td>Identificador &uacute;nico de la cl&iacute;nica.</td></tr>
+    <tr><td class="c"></td><td class="id">nombre</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Nombre comercial de la cl&iacute;nica.</td></tr>
+    <tr><td class="c"><strong>U</strong></td><td class="id">nit</td><td class="id">VARCHAR(20)</td><td class="c">No</td><td>N&uacute;mero de identificaci&oacute;n tributaria. &Uacute;nico incluso frente a cl&iacute;nicas dadas de baja.</td></tr>
+    <tr><td class="c"></td><td class="id">direccion</td><td class="id">VARCHAR(200)</td><td class="c">No</td><td>Direcci&oacute;n f&iacute;sica de la cl&iacute;nica.</td></tr>
+    <tr><td class="c"></td><td class="id">telefono</td><td class="id">VARCHAR(20)</td><td class="c">No</td><td>Tel&eacute;fono de contacto de la cl&iacute;nica.</td></tr>
+    <tr><td class="c"></td><td class="id">email</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Correo institucional de la cl&iacute;nica. Validado con formato de correo.</td></tr>
+    <tr><td class="c"></td><td class="id">responsable_nombre</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Nombre de la persona responsable.</td></tr>
+    <tr><td class="c"></td><td class="id">responsable_email</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Correo de la persona responsable.</td></tr>
+    <tr><td class="c"></td><td class="id">responsable_telefono</td><td class="id">VARCHAR(20)</td><td class="c">No</td><td>Tel&eacute;fono de la persona responsable.</td></tr>
+    <tr><td class="c"></td><td class="id">is_active</td><td class="id">BOOLEAN</td><td class="c">No</td><td>Estado del registro. Por omisi&oacute;n <code>true</code>.</td></tr>
+    <tr><td class="c"></td><td class="id">createdAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de creaci&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">updatedAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de la &uacute;ltima modificaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+<p><strong>Restricciones:</strong> <code>clinicas_pkey</code> PRIMARY KEY (id) &middot; <code>clinicas_nit_key</code> UNIQUE (nit)</p>
+
+<h2>2.3 Tabla <code>almacenes</code></h2>
+<table>
+  <caption>Tabla 6. Diccionario de datos de <code>almacenes</code>.</caption>
+  <thead><tr><th class="c" style="width:6%">Clave</th><th style="width:18%">Columna</th><th style="width:20%">Tipo</th><th class="c" style="width:8%">Nulo</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><strong>PK</strong></td><td class="id">id</td><td class="id">UUID</td><td class="c">No</td><td>Identificador &uacute;nico del almac&eacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">nombre</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Nombre del almac&eacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">direccion</td><td class="id">VARCHAR(200)</td><td class="c">No</td><td>Direcci&oacute;n f&iacute;sica del almac&eacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">telefono</td><td class="id">VARCHAR(20)</td><td class="c">No</td><td>Tel&eacute;fono de contacto.</td></tr>
+    <tr><td class="c"></td><td class="id">is_active</td><td class="id">BOOLEAN</td><td class="c">No</td><td>Estado del registro. Por omisi&oacute;n <code>true</code>.</td></tr>
+    <tr><td class="c"></td><td class="id">createdAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de creaci&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">updatedAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de la &uacute;ltima modificaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+<p><strong>Restricciones:</strong> <code>almacenes_pkey</code> PRIMARY KEY (id)</p>
+
+<h2>2.4 Tabla <code>medicamentos</code></h2>
+<p>Cat&aacute;logo de productos. La cantidad disponible no vive en esta tabla porque el mismo medicamento existe en varios almacenes con cantidades distintas.</p>
+<table>
+  <caption>Tabla 7. Diccionario de datos de <code>medicamentos</code>.</caption>
+  <thead><tr><th class="c" style="width:6%">Clave</th><th style="width:18%">Columna</th><th style="width:20%">Tipo</th><th class="c" style="width:8%">Nulo</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><strong>PK</strong></td><td class="id">id</td><td class="id">UUID</td><td class="c">No</td><td>Identificador &uacute;nico del medicamento.</td></tr>
+    <tr><td class="c"></td><td class="id">nombre</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Nombre del medicamento.</td></tr>
+    <tr><td class="c"></td><td class="id">descripcion</td><td class="id">VARCHAR(255)</td><td class="c">No</td><td>Descripci&oacute;n corta de su indicaci&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">presentacion</td><td class="id">VARCHAR(100)</td><td class="c">No</td><td>Forma de presentaci&oacute;n. Ejemplo: <em>Caja x 30 tabletas</em>.</td></tr>
+    <tr><td class="c"></td><td class="id">laboratorio</td><td class="id">VARCHAR(150)</td><td class="c">No</td><td>Laboratorio fabricante.</td></tr>
+    <tr><td class="c"></td><td class="id">is_active</td><td class="id">BOOLEAN</td><td class="c">No</td><td>Estado del registro. Por omisi&oacute;n <code>true</code>.</td></tr>
+    <tr><td class="c"></td><td class="id">createdAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de creaci&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">updatedAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de la &uacute;ltima modificaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+<p><strong>Restricciones:</strong> <code>medicamentos_pkey</code> PRIMARY KEY (id)</p>
+
+<h2>2.5 Tabla <code>inventario</code></h2>
+<p>Tabla intermedia que resuelve la relaci&oacute;n muchos a muchos entre almacenes y medicamentos, aportando el atributo propio <code>cantidad</code>.</p>
+<table>
+  <caption>Tabla 8. Diccionario de datos de <code>inventario</code>.</caption>
+  <thead><tr><th class="c" style="width:6%">Clave</th><th style="width:20%">Columna</th><th style="width:18%">Tipo</th><th class="c" style="width:8%">Nulo</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><strong>PK</strong></td><td class="id">id</td><td class="id">UUID</td><td class="c">No</td><td>Identificador &uacute;nico del registro de inventario.</td></tr>
+    <tr><td class="c"><strong>FK</strong></td><td class="id">almacen_id</td><td class="id">UUID</td><td class="c">No</td><td>Almac&eacute;n donde se guarda el medicamento. Referencia <code>almacenes(id)</code>.</td></tr>
+    <tr><td class="c"><strong>FK</strong></td><td class="id">medicamento_id</td><td class="id">UUID</td><td class="c">No</td><td>Medicamento del que se lleva la cuenta. Referencia <code>medicamentos(id)</code>.</td></tr>
+    <tr><td class="c"></td><td class="id">cantidad</td><td class="id">INTEGER</td><td class="c">No</td><td>Unidades disponibles. Por omisi&oacute;n <code>0</code>. Nunca puede ser negativa.</td></tr>
+    <tr><td class="c"></td><td class="id">is_active</td><td class="id">BOOLEAN</td><td class="c">No</td><td>Estado del registro. Por omisi&oacute;n <code>true</code>.</td></tr>
+    <tr><td class="c"></td><td class="id">createdAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de creaci&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">updatedAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de la &uacute;ltima modificaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+<h4>Restricciones de <code>inventario</code></h4>
+<table>
+  <thead><tr><th style="width:38%">Nombre de la restricci&oacute;n</th><th style="width:14%">Tipo</th><th>Definici&oacute;n y prop&oacute;sito</th></tr></thead>
+  <tbody>
+    <tr><td class="id">inventario_pkey</td><td>PRIMARY KEY</td><td><code>(id)</code></td></tr>
+    <tr><td class="id">inventario_almacen_id_fkey</td><td>FOREIGN KEY</td><td><code>(almacen_id) &rarr; almacenes(id)</code>. Impide inventario de un almac&eacute;n inexistente.</td></tr>
+    <tr><td class="id">inventario_medicamento_id_fkey</td><td>FOREIGN KEY</td><td><code>(medicamento_id) &rarr; medicamentos(id)</code>. Impide inventario de un medicamento inexistente.</td></tr>
+    <tr><td class="id">inventario_almacen_medicamento_unico</td><td>UNIQUE</td><td><code>(almacen_id, medicamento_id)</code>. Un almac&eacute;n no puede tener dos filas del mismo medicamento, lo que har&iacute;a ambigua la cantidad disponible.</td></tr>
+    <tr><td class="id">inventario_cantidad_no_negativa</td><td>CHECK</td><td><code>(cantidad &gt;= 0)</code>. &Uacute;ltima l&iacute;nea de defensa: aunque un error de la aplicaci&oacute;n intentara descontar de m&aacute;s, el motor rechaza la operaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.6 Tabla <code>solicitudes</code></h2>
+<p>N&uacute;cleo del sistema. Referencia a cuatro tablas y concentra el estado del proceso de abastecimiento.</p>
+<table>
+  <caption>Tabla 9. Diccionario de datos de <code>solicitudes</code>.</caption>
+  <thead><tr><th class="c" style="width:6%">Clave</th><th style="width:22%">Columna</th><th style="width:18%">Tipo</th><th class="c" style="width:8%">Nulo</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><strong>PK</strong></td><td class="id">id</td><td class="id">UUID</td><td class="c">No</td><td>Identificador &uacute;nico de la solicitud.</td></tr>
+    <tr><td class="c"><strong>FK</strong></td><td class="id">clinica_id</td><td class="id">UUID</td><td class="c">No</td><td>Cl&iacute;nica que radica la solicitud. Referencia <code>clinicas(id)</code>.</td></tr>
+    <tr><td class="c"><strong>FK</strong></td><td class="id">medicamento_id</td><td class="id">UUID</td><td class="c">No</td><td>Medicamento pedido. Referencia <code>medicamentos(id)</code>.</td></tr>
+    <tr><td class="c"><strong>FK</strong></td><td class="id">almacen_id</td><td class="id">UUID</td><td class="c">No</td><td>Almac&eacute;n asignado para el despacho. Referencia <code>almacenes(id)</code>.</td></tr>
+    <tr><td class="c"><strong>FK</strong></td><td class="id">usuario_id</td><td class="id">UUID</td><td class="c">No</td><td>Usuario que registr&oacute; la solicitud. Se toma del token, no del cuerpo de la petici&oacute;n. Referencia <code>users(id)</code>.</td></tr>
+    <tr><td class="c"></td><td class="id">cantidad_solicitada</td><td class="id">INTEGER</td><td class="c">No</td><td>Unidades pedidas. Siempre mayor que cero.</td></tr>
+    <tr><td class="c"></td><td class="id">estado</td><td class="id">enum_solicitudes_estado</td><td class="c">No</td><td>Estado dentro del ciclo de vida. Por omisi&oacute;n <code>pendiente</code>.</td></tr>
+    <tr><td class="c"></td><td class="id">observaciones</td><td class="id">TEXT</td><td class="c">S&iacute;</td><td>Nota opcional que se adjunta al crear la solicitud o al cambiar su estado.</td></tr>
+    <tr><td class="c"></td><td class="id">is_active</td><td class="id">BOOLEAN</td><td class="c">No</td><td>Estado del registro. Por omisi&oacute;n <code>true</code>. El historial incluye tambi&eacute;n las inactivas.</td></tr>
+    <tr><td class="c"></td><td class="id">createdAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora de radicaci&oacute;n.</td></tr>
+    <tr><td class="c"></td><td class="id">updatedAt</td><td class="id">TIMESTAMPTZ</td><td class="c">No</td><td>Fecha y hora del &uacute;ltimo cambio de estado.</td></tr>
+  </tbody>
+</table>
+<h4>Restricciones de <code>solicitudes</code></h4>
+<table>
+  <thead><tr><th style="width:38%">Nombre de la restricci&oacute;n</th><th style="width:14%">Tipo</th><th>Definici&oacute;n y prop&oacute;sito</th></tr></thead>
+  <tbody>
+    <tr><td class="id">solicitudes_pkey</td><td>PRIMARY KEY</td><td><code>(id)</code></td></tr>
+    <tr><td class="id">solicitudes_clinica_id_fkey</td><td>FOREIGN KEY</td><td><code>(clinica_id) &rarr; clinicas(id)</code></td></tr>
+    <tr><td class="id">solicitudes_medicamento_id_fkey</td><td>FOREIGN KEY</td><td><code>(medicamento_id) &rarr; medicamentos(id)</code></td></tr>
+    <tr><td class="id">solicitudes_almacen_id_fkey</td><td>FOREIGN KEY</td><td><code>(almacen_id) &rarr; almacenes(id)</code></td></tr>
+    <tr><td class="id">solicitudes_usuario_id_fkey</td><td>FOREIGN KEY</td><td><code>(usuario_id) &rarr; users(id)</code></td></tr>
+    <tr><td class="id">solicitudes_cantidad_mayor_a_cero</td><td>CHECK</td><td><code>(cantidad_solicitada &gt; 0)</code>. Impide radicar solicitudes de cero o de cantidades negativas.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion">
+<h1>3. Relaciones entre tablas</h1>
+
+<table>
+  <caption>Tabla 10. Relaciones del modelo, su cardinalidad y su justificaci&oacute;n.</caption>
+  <thead><tr><th style="width:30%">Relaci&oacute;n</th><th class="c" style="width:10%">Cardinalidad</th><th>Justificaci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td><code>almacenes</code> &rarr; <code>inventario</code></td><td class="c">1 : N</td><td>Un almac&eacute;n guarda muchos medicamentos distintos; cada fila de inventario pertenece a un solo almac&eacute;n.</td></tr>
+    <tr><td><code>medicamentos</code> &rarr; <code>inventario</code></td><td class="c">1 : N</td><td>Un medicamento puede estar en varios almacenes; cada fila de inventario corresponde a un solo medicamento.</td></tr>
+    <tr><td><code>clinicas</code> &rarr; <code>solicitudes</code></td><td class="c">1 : N</td><td>Una cl&iacute;nica radica muchas solicitudes a lo largo del tiempo; cada solicitud proviene de una sola cl&iacute;nica.</td></tr>
+    <tr><td><code>medicamentos</code> &rarr; <code>solicitudes</code></td><td class="c">1 : N</td><td>Cada solicitud pide un solo medicamento. Para pedir varios se radican varias solicitudes, de modo que cada una se aprueba o rechaza por separado.</td></tr>
+    <tr><td><code>almacenes</code> &rarr; <code>solicitudes</code></td><td class="c">1 : N</td><td>Cada solicitud se asigna a un solo almac&eacute;n de despacho, que es del que se descontar&aacute; el inventario.</td></tr>
+    <tr><td><code>users</code> &rarr; <code>solicitudes</code></td><td class="c">1 : N</td><td>Un usuario registra muchas solicitudes; cada solicitud tiene un &uacute;nico autor, lo que permite auditar qui&eacute;n la radic&oacute;.</td></tr>
+    <tr><td><code>almacenes</code> &harr; <code>medicamentos</code></td><td class="c">N : M</td><td>Relaci&oacute;n de muchos a muchos resuelta mediante la tabla intermedia <code>inventario</code>, que a&ntilde;ade el atributo propio <code>cantidad</code>.</td></tr>
+  </tbody>
+</table>
+
+<div class="nota">
+<strong>Sobre la relaci&oacute;n de muchos a muchos</strong>
+Una tabla intermedia con atributos propios no es una simple tabla de uni&oacute;n: <code>inventario</code> existe porque la cantidad disponible no pertenece ni al almac&eacute;n ni al medicamento por separado, sino a la combinaci&oacute;n de ambos. Guardar la cantidad en <code>medicamentos</code> obligar&iacute;a a duplicar la fila del medicamento por cada almac&eacute;n.
+</div>
+
+<h2>3.1 Vista de conjunto</h2>
+<div class="figura">
+<div class="ascii">     users                                          almacenes
+  +-----------+                                  +-------------+
+  | id  (PK)  |                                  | id    (PK)  |
+  +-----+-----+                                  +--+-------+--+
+        |                                           |       |
+        | 1                                       1 |       | 1
+        |                                           |       |
+        |                clinicas                   |       |
+        |             +------------+                |       |
+        |             | id   (PK)  |                |       |
+        |             +-----+------+                |       |
+        |                   | 1                     |       |
+        |                   |                       |       |
+        |                   |     medicamentos      |       |
+        |                   |   +--------------+    |       |
+        |                   |   | id     (PK)  |    |       |
+        |                   |   +--+--------+--+    |       |
+        |                   |    1 |        | 1     |       |
+        |                   |      |        |       |       |
+        |                   |      |        v       v       |
+        |                   |      |     +---------------+  |
+        |                   |      |     |  inventario   |  |
+        |                   |      |     |  almacen_id   |  |
+        |                   |      |     |  medicament_id|  |
+        |                   |      |     |  cantidad     |  |
+        |                   |      |     +---------------+  |
+        |                   |      |          N              |
+        |                   |      |                         |
+        | N                 | N    | N                       | N
+        v                   v      v                         v
+     +-------------------------------------------------------+
+     |                     solicitudes                       |
+     |  clinica_id . medicamento_id . almacen_id . usuario_id|
+     |  cantidad_solicitada . estado . observaciones          |
+     +-------------------------------------------------------+</div>
+<figcaption>Figura 1. Vista de conjunto de las relaciones del modelo.</figcaption>
+</div>
+</section>
+
+<section class="seccion">
+<h1>4. Normalizaci&oacute;n del modelo</h1>
+<p>El modelo cumple la tercera forma normal. Se documenta la verificaci&oacute;n para cada nivel.</p>
+
+<table>
+  <caption>Tabla 11. Verificaci&oacute;n de las formas normales.</caption>
+  <thead><tr><th style="width:16%">Forma normal</th><th style="width:26%">Condici&oacute;n</th><th>Verificaci&oacute;n en este modelo</th></tr></thead>
+  <tbody>
+    <tr><td><strong>1FN</strong></td><td>Todos los atributos son at&oacute;micos; no hay grupos repetidos.</td><td>Ninguna columna almacena listas ni valores compuestos. Los datos del responsable de la cl&iacute;nica se guardan en tres columnas independientes en lugar de un solo campo de texto.</td></tr>
+    <tr><td><strong>2FN</strong></td><td>Cumple 1FN y todo atributo no clave depende de la llave primaria completa.</td><td>Todas las llaves primarias son un &uacute;nico campo <code>id</code>, por lo que no existen dependencias parciales. En <code>inventario</code>, aunque la pareja almac&eacute;n-medicamento sea &uacute;nica, <code>cantidad</code> depende de esa combinaci&oacute;n completa, nunca de uno solo de los dos.</td></tr>
+    <tr><td><strong>3FN</strong></td><td>Cumple 2FN y no existen dependencias transitivas entre atributos no clave.</td><td>Los datos del medicamento no se repiten en <code>solicitudes</code>: esta guarda &uacute;nicamente <code>medicamento_id</code>. Lo mismo aplica a cl&iacute;nica, almac&eacute;n y usuario. El nombre del medicamento se obtiene por relaci&oacute;n, no por duplicaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+
+<div class="aviso">
+<strong>Decisi&oacute;n consciente: cantidad_solicitada no se recalcula</strong>
+La columna <code>cantidad_solicitada</code> de una solicitud conserva el valor con el que fue radicada aunque despu&eacute;s cambie el inventario. Esto no es redundancia: es un dato hist&oacute;rico propio de la solicitud, necesario para poder reintegrar exactamente la misma cantidad si m&aacute;s adelante se cancela.
+</div>
+</section>
+
+<section class="seccion">
+<h1>5. Datos de prueba cargados</h1>
+<p>Los seeders del proyecto cargan un conjunto de datos coherente que cubre todos los estados del sistema. Se ejecutan en orden num&eacute;rico porque cada uno depende del anterior.</p>
+
+<table>
+  <caption>Tabla 12. Volumen de datos de prueba por tabla.</caption>
+  <thead><tr><th style="width:20%">Tabla</th><th class="c" style="width:14%">Registros</th><th>Contenido</th></tr></thead>
+  <tbody>
+    <tr><td class="id">users</td><td class="c">4</td><td>Dos administradores y dos gestores, con las contrase&ntilde;as ya cifradas con bcrypt.</td></tr>
+    <tr><td class="id">clinicas</td><td class="c">3</td><td>Tres cl&iacute;nicas con NIT distinto y sus responsables.</td></tr>
+    <tr><td class="id">almacenes</td><td class="c">2</td><td>Dos almacenes de despacho.</td></tr>
+    <tr><td class="id">medicamentos</td><td class="c">6</td><td>Seis productos del cat&aacute;logo con presentaci&oacute;n y laboratorio.</td></tr>
+    <tr><td class="id">inventario</td><td class="c">9</td><td>Nueve combinaciones de almac&eacute;n y medicamento con cantidades distintas.</td></tr>
+    <tr><td class="id">solicitudes</td><td class="c">6</td><td>Seis solicitudes, una por cada estado posible, para poder probar todo el ciclo.</td></tr>
+  </tbody>
+</table>
+
+<div class="nota">
+<strong>C&oacute;mo resuelven los seeders los identificadores</strong>
+Como las llaves primarias son UUID generados al azar en cada ejecuci&oacute;n, los seeders no pueden escribirlos a mano. Cada seeder consulta las tablas anteriores y localiza los registros por su nombre, o por el correo en el caso de los usuarios, y con ese resultado arma las llaves for&aacute;neas. Por eso el orden de ejecuci&oacute;n es obligatorio.
+</div>
+
+<h2>5.1 Reconstrucci&oacute;n completa de la base de datos</h2>
+<pre><code><span class="c"># 1. Limpiar el registro de seeders ejecutados</span>
+npm run seed:reset
+
+<span class="c"># 2. Borrar todas las tablas</span>
+npm run migrate:reset
+
+<span class="c"># 3. Volver a crear la estructura</span>
+npm run migrate
+
+<span class="c"># 4. Cargar de nuevo los datos de prueba</span>
+npm run seed</code></pre>
+
+<div class="aviso">
+<strong>El orden importa</strong>
+<code>migrate:reset</code> borra las tablas del dominio, pero el registro que la herramienta lleva de los seeders sobrevive en la tabla <code>SequelizeData</code>. Si no se ejecuta <code>seed:reset</code> primero, el comando <code>seed</code> asume que los seeders ya corrieron, no carga nada y las tablas quedan vac&iacute;as.
+</div>
+
+<h2>5.2 Restauraci&oacute;n desde el respaldo</h2>
+<p>El repositorio incluye <code>backup.sql</code>, un respaldo completo con estructura y datos ya cargados.</p>
+<pre><code>createdb -h localhost -U admin db_nodejs
+psql -h localhost -U admin -d db_nodejs -f backup.sql</code></pre>
+</section>
+
+<section class="seccion">
+<h1>6. Archivos que integran este producto</h1>
+<table>
+  <caption>Tabla 13. Archivos entregados como evidencia del modelo de base de datos.</caption>
+  <thead><tr><th style="width:38%">Archivo</th><th style="width:16%">Formato</th><th>Contenido</th></tr></thead>
+  <tbody>
+    <tr><td class="id">07-modelo-entidad-relacion.drawio</td><td>draw.io</td><td>Diagrama entidad-relaci&oacute;n completo con todas las columnas, llaves y cardinalidades en notaci&oacute;n de pata de gallo. Editable y exportable a PNG o PDF.</td></tr>
+    <tr><td class="id">08-esquema.sql</td><td>SQL</td><td>Gui&oacute;n de creaci&oacute;n del esquema completo, comentado: tipos enumerados, tablas, llaves, restricciones e &iacute;ndices recomendados.</td></tr>
+    <tr><td class="id">09-diccionario-de-datos.html</td><td>HTML / PDF</td><td>Este documento.</td></tr>
+    <tr><td class="id">backup.sql</td><td>SQL</td><td>Respaldo completo de la base de datos con estructura y datos de prueba. Se encuentra en la ra&iacute;z del repositorio.</td></tr>
+  </tbody>
+</table>
+
+<div class="firma">
+  <div>Dylan Alberto Su&aacute;rez Laverde<br><span style="color:#5a635c">Aprendiz</span></div>
+  <div><span class="rellenar">[ Nombre del instructor ]</span><br><span style="color:#5a635c">Instructor evaluador</span></div>
+</div>
+</section>
+
+</div>
+
+</body>
+</html>

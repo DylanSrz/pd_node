@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documento de Diseno de Software - API RiwiMediCare Plus</title>
+<style>
+:root{
+  --verde:#39A900; --verde-osc:#2d8400; --verde-claro:#eaf6e3;
+  --tinta:#1a1f1c; --gris:#5a635c; --linea:#d8ddd6; --fondo-alt:#f6f8f5;
+  --naranja:#c25e00; --azul:#0b5b8a; --rojo:#b3261e;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--tinta); background:#fff; line-height:1.65; font-size:11pt;
+  margin:0; padding:0;
+}
+.hoja{max-width:19cm; margin:0 auto; padding:1.5cm 1.6cm 2cm;}
+
+/* ---------- PORTADA ---------- */
+.portada{
+  min-height:26cm; display:flex; flex-direction:column;
+  justify-content:space-between; text-align:center;
+  padding:2.5cm 1.6cm; page-break-after:always;
+}
+.portada .marca{font-size:9pt;letter-spacing:.22em;text-transform:uppercase;color:var(--verde-osc);font-weight:700;}
+.portada .logo{width:96px;height:96px;margin:0 auto 1.2rem;}
+.portada h1{font-size:26pt;line-height:1.2;margin:.6rem 0;color:var(--tinta);border:0;}
+.portada .sub{font-size:13pt;color:var(--gris);margin:0 0 1.4rem;font-weight:400;}
+.portada .norma{
+  display:inline-block;border:2px solid var(--verde);border-radius:8px;
+  padding:.7rem 1.4rem;font-size:10.5pt;color:var(--verde-osc);font-weight:600;
+  background:var(--verde-claro);
+}
+.portada .datos{
+  margin:2rem auto 0;text-align:left;max-width:13cm;
+  border-top:1px solid var(--linea);padding-top:1.2rem;
+}
+.portada .datos dl{display:grid;grid-template-columns:auto 1fr;gap:.45rem 1.2rem;margin:0;font-size:10.5pt;}
+.portada .datos dt{color:var(--gris);font-weight:600;}
+.portada .datos dd{margin:0;}
+.portada .pie{font-size:9.5pt;color:var(--gris);border-top:1px solid var(--linea);padding-top:1rem;}
+.rellenar{background:#fff6d9;border-bottom:1px dashed #c9a227;padding:0 .2rem;}
+
+/* ---------- TIPOGRAFÍA ---------- */
+h1{
+  font-size:19pt;color:var(--tinta);margin:0 0 1.2rem;padding-bottom:.5rem;
+  border-bottom:3px solid var(--verde);page-break-after:avoid;
+}
+h2{font-size:14pt;margin:2rem 0 .7rem;color:var(--verde-osc);page-break-after:avoid;}
+h3{font-size:12pt;margin:1.4rem 0 .5rem;color:var(--tinta);page-break-after:avoid;}
+h4{font-size:11pt;margin:1.1rem 0 .4rem;color:var(--gris);text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid;}
+p{margin:.7rem 0;text-align:justify;}
+ul,ol{margin:.6rem 0 .9rem;padding-left:1.4rem;}
+li{margin:.3rem 0;}
+a{color:var(--azul);}
+code{
+  font-family:Consolas,"Courier New",monospace;font-size:.9em;
+  background:var(--fondo-alt);border:1px solid var(--linea);
+  border-radius:3px;padding:.08em .35em;
+}
+pre{
+  background:#1e2420;color:#e8ede8;border-radius:6px;padding:.9rem 1.1rem;
+  overflow-x:auto;font-family:Consolas,"Courier New",monospace;
+  font-size:9pt;line-height:1.55;page-break-inside:avoid;
+}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit;}
+pre .c{color:#8fae86;}      /* comentario */
+pre .k{color:#7fc9ff;}      /* keyword   */
+pre .s{color:#f3c98b;}      /* string    */
+pre .f{color:#c6a0f6;}      /* función   */
+
+/* ---------- SECCIÓN ---------- */
+.seccion{page-break-before:always;}
+.seccion:first-of-type{page-break-before:avoid;}
+
+/* ---------- TABLAS ---------- */
+table{
+  width:100%;border-collapse:collapse;margin:1rem 0 1.4rem;
+  font-size:9.5pt;page-break-inside:avoid;
+}
+caption{
+  caption-side:bottom;text-align:left;font-size:9pt;color:var(--gris);
+  padding-top:.45rem;font-style:italic;
+}
+th{
+  background:var(--verde-claro);color:var(--verde-osc);text-align:left;
+  padding:.5rem .6rem;border:1px solid var(--linea);font-weight:700;
+}
+td{padding:.45rem .6rem;border:1px solid var(--linea);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--fondo-alt);}
+td.id,th.id{white-space:nowrap;font-family:Consolas,monospace;font-size:9pt;}
+td.c,th.c{text-align:center;}
+
+/* ---------- COMPONENTES ---------- */
+.nota,.aviso,.ok{
+  border-left:4px solid var(--azul);background:#f0f6fa;
+  padding:.8rem 1rem;margin:1rem 0;border-radius:0 6px 6px 0;
+  font-size:10pt;page-break-inside:avoid;
+}
+.aviso{border-color:var(--naranja);background:#fdf4ea;}
+.ok{border-color:var(--verde);background:var(--verde-claro);}
+.nota strong:first-child,.aviso strong:first-child,.ok strong:first-child{display:block;margin-bottom:.25rem;}
+
+.toc{background:var(--fondo-alt);border:1px solid var(--linea);border-radius:8px;padding:1.2rem 1.6rem;}
+.toc h2{margin-top:0;}
+.toc ol{list-style:none;padding-left:0;counter-reset:s;}
+.toc > ol > li{counter-increment:s;margin:.4rem 0;font-weight:600;}
+.toc > ol > li::before{content:counter(s) ". ";color:var(--verde-osc);}
+.toc ol ol{padding-left:1.6rem;counter-reset:ss;}
+.toc ol ol li{counter-increment:ss;font-weight:400;font-size:10pt;margin:.15rem 0;}
+.toc ol ol li::before{content:counter(s) "." counter(ss) " ";color:var(--gris);}
+.toc a{text-decoration:none;color:var(--tinta);}
+
+.badge{
+  display:inline-block;padding:.12em .55em;border-radius:99px;
+  font-size:8.5pt;font-weight:700;letter-spacing:.03em;
+}
+.b-get{background:#e3f0fb;color:#0b5b8a;}
+.b-post{background:#e4f5df;color:#2d8400;}
+.b-put{background:#fdf0e0;color:#c25e00;}
+.b-patch{background:#f3e9fb;color:#6b34a8;}
+.b-del{background:#fbe6e5;color:#b3261e;}
+.b-pub{background:#eceff0;color:#5a635c;}
+.b-adm{background:#fbe6e5;color:#b3261e;}
+.b-ges{background:#fdf0e0;color:#c25e00;}
+.b-aut{background:#e3f0fb;color:#0b5b8a;}
+
+.figura{
+  border:1px solid var(--linea);border-radius:8px;padding:1rem;
+  margin:1.2rem 0;background:#fff;text-align:center;page-break-inside:avoid;
+}
+.figura svg{max-width:100%;height:auto;}
+.figura figcaption{
+  font-size:9pt;color:var(--gris);margin-top:.6rem;
+  font-style:italic;text-align:center;
+}
+.ascii{
+  background:var(--fondo-alt);border:1px solid var(--linea);border-radius:6px;
+  padding:1rem;font-family:Consolas,"Courier New",monospace;font-size:9pt;
+  line-height:1.5;white-space:pre;overflow-x:auto;text-align:left;
+  page-break-inside:avoid;
+}
+.hueco-captura{
+  border:2px dashed var(--verde);border-radius:8px;background:var(--verde-claro);
+  padding:2.4rem 1rem;text-align:center;color:var(--verde-osc);
+  margin:1rem 0 .3rem;font-size:10pt;page-break-inside:avoid;
+}
+.hueco-captura strong{display:block;font-size:11pt;margin-bottom:.3rem;}
+.hueco-captura em{font-style:normal;color:var(--gris);font-size:9.5pt;}
+
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.tarjeta{
+  border:1px solid var(--linea);border-left:4px solid var(--verde);
+  border-radius:0 8px 8px 0;padding:.9rem 1.1rem;background:var(--fondo-alt);
+  page-break-inside:avoid;
+}
+.tarjeta h4{margin-top:0;color:var(--verde-osc);}
+.tarjeta p{margin:.3rem 0;font-size:10pt;text-align:left;}
+
+.firma{
+  margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;
+  page-break-inside:avoid;
+}
+.firma div{border-top:1px solid var(--tinta);padding-top:.5rem;text-align:center;font-size:9.5pt;}
+
+/* ---------- IMPRESIÓN ---------- */
+@page{size:A4;margin:1.6cm 1.5cm;}
+@media print{
+  body{font-size:10.5pt;}
+  .hoja{max-width:none;padding:0;margin:0;}
+  .portada{min-height:24cm;padding:1cm 0;}
+  .no-print{display:none !important;}
+  a{color:var(--tinta);text-decoration:none;}
+  pre{border:1px solid var(--linea);}
+}
+.barra-print{
+  position:sticky;top:0;z-index:9;background:var(--verde);color:#fff;
+  padding:.55rem 1rem;font-size:9.5pt;text-align:center;
+}
+.barra-print kbd{
+  background:#fff;color:var(--verde-osc);border-radius:4px;
+  padding:.05em .4em;font-family:inherit;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="barra-print no-print">Para generar el PDF: <kbd>Ctrl</kbd> + <kbd>P</kbd> &rarr; Destino: <kbd>Guardar como PDF</kbd> &rarr; Margenes: <kbd>Predeterminado</kbd> &rarr; activar <kbd>Graficos de fondo</kbd></div>
+<!-- ============================ PORTADA ============================ -->
+<section class="portada">
+  <div>
+    <div class="logo">
+      <svg viewBox="0 0 96 96" role="img" aria-label="Espacio para el logo institucional">
+        <rect x="2" y="2" width="92" height="92" rx="10" fill="#eaf6e3" stroke="#39A900" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="48" y="44" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">LOGO</text>
+        <text x="48" y="60" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">SENA</text>
+      </svg>
+    </div>
+    <div class="marca">Servicio Nacional de Aprendizaje &middot; SENA</div>
+  </div>
+
+  <div>
+    <div class="norma">EVIDENCIA DE PRODUCTO &middot; NORMA 220501095</div>
+    <h1>Documento de Dise&ntilde;o de Software</h1>
+    <p class="sub">Sistema de gesti&oacute;n de solicitudes de abastecimiento de medicamentos<br><strong>API RiwiMediCare Plus</strong></p>
+
+    <div class="datos">
+      <dl>
+        <dt>Aprendiz</dt><dd>Dylan Alberto Su&aacute;rez Laverde</dd>
+        <dt>Programa</dt><dd><span class="rellenar">[ Nombre del programa de formaci&oacute;n ]</span></dd>
+        <dt>Ficha</dt><dd><span class="rellenar">[ N&uacute;mero de ficha ]</span></dd>
+        <dt>Instructor</dt><dd><span class="rellenar">[ Nombre del instructor ]</span></dd>
+        <dt>Centro</dt><dd><span class="rellenar">[ Centro de formaci&oacute;n ]</span></dd>
+        <dt>Competencia</dt><dd>220501095 &mdash; Dise&ntilde;ar la soluci&oacute;n de software de acuerdo con procedimientos y requisitos t&eacute;cnicos</dd>
+        <dt>Repositorio</dt><dd>https://github.com/DylanSrz/pd_node</dd>
+        <dt>Versi&oacute;n</dt><dd>1.0</dd>
+        <dt>Fecha</dt><dd><span class="rellenar">[ Fecha de entrega ]</span></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="pie">
+    Documento elaborado como evidencia de producto del resultado de aprendizaje<br>
+    <strong>Dise&ntilde;ar la soluci&oacute;n de software de acuerdo con procedimientos y requisitos t&eacute;cnicos</strong>
+  </div>
+</section>
+
+<div class="hoja">
+
+<!-- ============================ TABLA DE CONTENIDO ============================ -->
+<section class="toc seccion">
+  <h2>Tabla de contenido</h2>
+  <ol>
+    <li><a href="#s1">Introducci&oacute;n del sistema</a>
+      <ol>
+        <li><a href="#s1">Prop&oacute;sito del documento</a></li>
+        <li><a href="#s1">Alcance</a></li>
+        <li><a href="#s1">Contexto de la organizaci&oacute;n</a></li>
+        <li><a href="#s1">Definiciones, siglas y abreviaturas</a></li>
+      </ol>
+    </li>
+    <li><a href="#s2">Descripci&oacute;n del problema a resolver</a>
+      <ol>
+        <li><a href="#s2">Situaci&oacute;n actual</a></li>
+        <li><a href="#s2">Problemas identificados</a></li>
+        <li><a href="#s2">Soluci&oacute;n propuesta</a></li>
+      </ol>
+    </li>
+    <li><a href="#s3">Objetivos del sistema</a>
+      <ol>
+        <li><a href="#s3">Objetivo general</a></li>
+        <li><a href="#s3">Objetivos espec&iacute;ficos</a></li>
+      </ol>
+    </li>
+    <li><a href="#s4">Actores y usuarios del sistema</a>
+      <ol>
+        <li><a href="#s4">Identificaci&oacute;n de actores</a></li>
+        <li><a href="#s4">Matriz de permisos por rol</a></li>
+      </ol>
+    </li>
+    <li><a href="#s5">Requisitos del sistema</a>
+      <ol>
+        <li><a href="#s5">Requisitos funcionales</a></li>
+        <li><a href="#s5">Requisitos no funcionales</a></li>
+        <li><a href="#s5">Reglas de negocio</a></li>
+      </ol>
+    </li>
+    <li><a href="#s6">Arquitectura de la soluci&oacute;n</a>
+      <ol>
+        <li><a href="#s6">Estilo arquitect&oacute;nico adoptado</a></li>
+        <li><a href="#s6">Arquitectura por capas</a></li>
+        <li><a href="#s6">Flujo de una petici&oacute;n</a></li>
+        <li><a href="#s6">Arquitectura de despliegue</a></li>
+      </ol>
+    </li>
+    <li><a href="#s7">Descripci&oacute;n de m&oacute;dulos</a>
+      <ol>
+        <li><a href="#s7">M&oacute;dulo de autenticaci&oacute;n</a></li>
+        <li><a href="#s7">M&oacute;dulo de cl&iacute;nicas</a></li>
+        <li><a href="#s7">M&oacute;dulos de almacenes, medicamentos e inventario</a></li>
+        <li><a href="#s7">M&oacute;dulo de solicitudes</a></li>
+      </ol>
+    </li>
+    <li><a href="#s8">Tecnolog&iacute;as a utilizar</a></li>
+    <li><a href="#s9">Justificaci&oacute;n t&eacute;cnica</a></li>
+    <li><a href="#s10">Modelo de datos</a></li>
+    <li><a href="#s11">Consideraciones de seguridad</a></li>
+    <li><a href="#s12">Anexos y documentos relacionados</a></li>
+  </ol>
+</section>
+
+<!-- ============================ 1. INTRODUCCION ============================ -->
+<section class="seccion" id="s1">
+<h1>1. Introducci&oacute;n del sistema</h1>
+
+<h2>1.1 Prop&oacute;sito del documento</h2>
+<p>Este documento describe el dise&ntilde;o de la soluci&oacute;n de software <strong>API RiwiMediCare Plus</strong> antes de su construcci&oacute;n. Su prop&oacute;sito es dejar por escrito qu&eacute; problema resuelve el sistema, qui&eacute;n lo va a usar, qu&eacute; debe hacer, c&oacute;mo se estructura internamente y por qu&eacute; se eligi&oacute; cada tecnolog&iacute;a, de modo que la etapa de desarrollo parta de decisiones ya tomadas y no de improvisaci&oacute;n.</p>
+<p>El documento est&aacute; dirigido al instructor evaluador, a cualquier desarrollador que deba dar mantenimiento al sistema y al &aacute;rea log&iacute;stica de la empresa cliente, que es quien valida que las reglas de negocio descritas correspondan a su operaci&oacute;n real.</p>
+
+<h2>1.2 Alcance</h2>
+<p>El sistema es una <strong>API REST</strong> que administra el ciclo de vida completo de las solicitudes de abastecimiento de medicamentos e insumos m&eacute;dicos, desde que una cl&iacute;nica los pide hasta que se entregan o se anulan.</p>
+
+<h4>Queda dentro del alcance</h4>
+<ul>
+  <li>Autenticaci&oacute;n de usuarios mediante JSON Web Token y control de acceso por roles.</li>
+  <li>Administraci&oacute;n de cl&iacute;nicas y de sus personas responsables.</li>
+  <li>Administraci&oacute;n del cat&aacute;logo de medicamentos y de los almacenes de despacho.</li>
+  <li>Control del inventario disponible de cada medicamento en cada almac&eacute;n.</li>
+  <li>Registro de solicitudes de abastecimiento y control de su estado.</li>
+  <li>Descuento y reintegro autom&aacute;tico del inventario seg&uacute;n el estado de la solicitud.</li>
+  <li>Consulta del historial de solicitudes, general y por cl&iacute;nica.</li>
+  <li>Documentaci&oacute;n interactiva de todos los endpoints.</li>
+</ul>
+
+<h4>Queda fuera del alcance</h4>
+<ul>
+  <li>Interfaz gr&aacute;fica de usuario implementada. En este documento se entrega el <strong>prototipo</strong> de dicha interfaz (ver anexo del numeral 12); su construcci&oacute;n corresponde a una fase posterior.</li>
+  <li>Facturaci&oacute;n, cobros o integraci&oacute;n con pasarelas de pago.</li>
+  <li>Rastreo de transporte o log&iacute;stica de entrega en ruta.</li>
+  <li>Integraci&oacute;n con sistemas externos de historia cl&iacute;nica.</li>
+  <li>Notificaciones por correo electr&oacute;nico o mensajer&iacute;a.</li>
+</ul>
+
+<h2>1.3 Contexto de la organizaci&oacute;n</h2>
+<p><strong>RiwiMediCare Plus</strong> es una empresa distribuidora de medicamentos e insumos m&eacute;dicos que abastece a una red de cl&iacute;nicas y centros de atenci&oacute;n. La empresa opera varios almacenes; cada almac&eacute;n guarda cantidades distintas de los mismos medicamentos y despacha hacia las cl&iacute;nicas que tiene asignadas.</p>
+<p>Cuando una cl&iacute;nica necesita reabastecerse, radica una solicitud indicando el medicamento y la cantidad. Esa solicitud debe ser revisada, aprobada o rechazada, y si se aprueba, el inventario del almac&eacute;n que la despacha debe disminuir en la cantidad correspondiente. Todo el recorrido de esa solicitud debe quedar registrado.</p>
+
+<h2>1.4 Definiciones, siglas y abreviaturas</h2>
+<table>
+  <caption>Tabla 1. Glosario de t&eacute;rminos empleados en el documento.</caption>
+  <thead><tr><th style="width:22%">T&eacute;rmino</th><th>Definici&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td><strong>API</strong></td><td><em>Application Programming Interface</em>. Conjunto de operaciones que un programa expone para que otros programas lo usen sin conocer su funcionamiento interno.</td></tr>
+    <tr><td><strong>REST</strong></td><td><em>Representational State Transfer</em>. Estilo de arquitectura en el que cada recurso tiene una direcci&oacute;n propia y se opera sobre &eacute;l con los verbos del protocolo HTTP.</td></tr>
+    <tr><td><strong>JWT</strong></td><td><em>JSON Web Token</em>. Credencial firmada digitalmente que el servidor entrega al iniciar sesi&oacute;n y que el cliente presenta en cada petici&oacute;n posterior.</td></tr>
+    <tr><td><strong>CRUD</strong></td><td><em>Create, Read, Update, Delete</em>. Las cuatro operaciones b&aacute;sicas sobre un registro.</td></tr>
+    <tr><td><strong>ORM</strong></td><td><em>Object Relational Mapping</em>. Biblioteca que traduce entre las tablas de una base de datos relacional y los objetos del lenguaje de programaci&oacute;n.</td></tr>
+    <tr><td><strong>DTO</strong></td><td><em>Data Transfer Object</em>. Definici&oacute;n de la forma exacta que deben tener los datos que entran o salen del sistema.</td></tr>
+    <tr><td><strong>UUID</strong></td><td><em>Universally Unique Identifier</em>. Identificador de 128 bits generado de forma que la probabilidad de repetirse es despreciable.</td></tr>
+    <tr><td><strong>NIT</strong></td><td>N&uacute;mero de Identificaci&oacute;n Tributaria. Identifica de manera &uacute;nica a una persona jur&iacute;dica en Colombia.</td></tr>
+    <tr><td><strong>Migraci&oacute;n</strong></td><td>Archivo versionado que describe un cambio en la estructura de la base de datos y c&oacute;mo deshacerlo.</td></tr>
+    <tr><td><strong>Seeder</strong></td><td>Archivo que carga datos iniciales o de prueba en la base de datos.</td></tr>
+    <tr><td><strong>Eliminaci&oacute;n l&oacute;gica</strong></td><td>Marcar un registro como inactivo en lugar de borrarlo, para conservar el historial que lo referencia.</td></tr>
+    <tr><td><strong>Endpoint</strong></td><td>Combinaci&oacute;n de un verbo HTTP y una ruta que identifica una operaci&oacute;n concreta de la API.</td></tr>
+    <tr><td><strong>Middleware</strong></td><td>Funci&oacute;n que se ejecuta entre la llegada de la petici&oacute;n y la respuesta, y que puede validarla, transformarla o cortarla.</td></tr>
+    <tr><td><strong>Transacci&oacute;n</strong></td><td>Grupo de operaciones de base de datos que se aplican todas o no se aplica ninguna.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ============================ 2. PROBLEMA ============================ -->
+<section class="seccion" id="s2">
+<h1>2. Descripci&oacute;n del problema a resolver</h1>
+
+<h2>2.1 Situaci&oacute;n actual</h2>
+<p>Actualmente el proceso de abastecimiento de las cl&iacute;nicas se gestiona con medios manuales: llamadas telef&oacute;nicas, correos electr&oacute;nicos y hojas de c&aacute;lculo que cada almac&eacute;n mantiene por separado. Cuando una cl&iacute;nica necesita medicamentos, se comunica con la empresa, alguien anota el pedido y otra persona revisa manualmente si el almac&eacute;n tiene existencias.</p>
+<p>Al no existir un registro centralizado, la cantidad real disponible en cada almac&eacute;n solo se conoce con certeza al ir a contarla, y el recorrido de cada pedido queda repartido entre varios buzones de correo.</p>
+
+<h2>2.2 Problemas identificados</h2>
+<table>
+  <caption>Tabla 2. Problemas detectados en el proceso actual y su impacto.</caption>
+  <thead><tr><th class="id">C&oacute;digo</th><th style="width:35%">Problema</th><th>Consecuencia en la operaci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="id">P-01</td><td>Inventario no centralizado</td><td>Se aprueban pedidos que el almac&eacute;n no puede despachar, porque la hoja de c&aacute;lculo estaba desactualizada.</td></tr>
+    <tr><td class="id">P-02</td><td>Descuento manual del stock</td><td>Un pedido despachado no siempre se descuenta, o se descuenta dos veces, y la cifra deja de ser confiable.</td></tr>
+    <tr><td class="id">P-03</td><td>Sin trazabilidad del pedido</td><td>Nadie puede decir con certeza en qu&eacute; punto est&aacute; una solicitud ni qui&eacute;n la autoriz&oacute;.</td></tr>
+    <tr><td class="id">P-04</td><td>Estados informales</td><td>Un pedido puede darse por entregado sin haber sido aprobado, saltando el control administrativo.</td></tr>
+    <tr><td class="id">P-05</td><td>Sin control de acceso</td><td>Cualquier persona con acceso al archivo puede modificar cantidades o autorizar despachos.</td></tr>
+    <tr><td class="id">P-06</td><td>Datos maestros duplicados</td><td>La misma cl&iacute;nica aparece registrada varias veces con datos distintos, lo que fragmenta su historial.</td></tr>
+    <tr><td class="id">P-07</td><td>Historial que se pierde</td><td>Al depurar los archivos se borran los pedidos antiguos y con ellos la posibilidad de auditar o proyectar la demanda.</td></tr>
+    <tr><td class="id">P-08</td><td>Concurrencia sin control</td><td>Dos personas aprueban al mismo tiempo pedidos del mismo medicamento y comprometen unidades que no existen.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.3 Soluci&oacute;n propuesta</h2>
+<p>Se propone construir una <strong>API REST centralizada</strong> que sea la &uacute;nica fuente de verdad del proceso de abastecimiento. La siguiente tabla muestra c&oacute;mo cada problema identificado se atiende con una decisi&oacute;n concreta de dise&ntilde;o.</p>
+<table>
+  <caption>Tabla 3. Trazabilidad entre los problemas y las decisiones de dise&ntilde;o que los resuelven.</caption>
+  <thead><tr><th class="id">Problema</th><th>Decisi&oacute;n de dise&ntilde;o que lo resuelve</th></tr></thead>
+  <tbody>
+    <tr><td class="id">P-01</td><td>Tabla <code>inventario</code> &uacute;nica que relaciona almac&eacute;n y medicamento, consultada antes de aceptar cualquier solicitud.</td></tr>
+    <tr><td class="id">P-02</td><td>El descuento y el reintegro los ejecuta el sistema autom&aacute;ticamente al cambiar el estado; ninguna persona edita la cantidad a mano en ese flujo.</td></tr>
+    <tr><td class="id">P-03</td><td>Cada solicitud guarda su estado, sus observaciones, el usuario que la registr&oacute; y sus marcas de tiempo; el endpoint de historial las expone todas.</td></tr>
+    <tr><td class="id">P-04</td><td>M&aacute;quina de estados expl&iacute;cita con transiciones permitidas; cualquier salto no contemplado se rechaza.</td></tr>
+    <tr><td class="id">P-05</td><td>Autenticaci&oacute;n obligatoria con JWT y autorizaci&oacute;n por rol en cada endpoint sensible.</td></tr>
+    <tr><td class="id">P-06</td><td>Restricci&oacute;n de unicidad sobre el NIT de la cl&iacute;nica y sobre el correo del usuario, validada tanto en la aplicaci&oacute;n como en la base de datos.</td></tr>
+    <tr><td class="id">P-07</td><td>Eliminaci&oacute;n l&oacute;gica: ning&uacute;n registro se borra f&iacute;sicamente, solo se marca inactivo.</td></tr>
+    <tr><td class="id">P-08</td><td>Transacciones con bloqueo de fila sobre el registro de inventario durante la aprobaci&oacute;n.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ============================ 3. OBJETIVOS ============================ -->
+<section class="seccion" id="s3">
+<h1>3. Objetivos del sistema</h1>
+
+<h2>3.1 Objetivo general</h2>
+<div class="ok">
+<p style="margin:0">Desarrollar una API REST que centralice y controle el ciclo de vida completo de las solicitudes de abastecimiento de medicamentos e insumos m&eacute;dicos de RiwiMediCare Plus, garantizando la consistencia del inventario, la trazabilidad de cada solicitud y el acceso diferenciado seg&uacute;n el rol de cada usuario.</p>
+</div>
+
+<h2>3.2 Objetivos espec&iacute;ficos</h2>
+<table>
+  <caption>Tabla 4. Objetivos espec&iacute;ficos y su criterio de verificaci&oacute;n.</caption>
+  <thead><tr><th class="id">C&oacute;digo</th><th style="width:44%">Objetivo espec&iacute;fico</th><th>Criterio de verificaci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="id">OE-01</td><td>Implementar un mecanismo de autenticaci&oacute;n y autorizaci&oacute;n basado en JWT y roles.</td><td>Una petici&oacute;n sin token responde 401 y una con rol insuficiente responde 403.</td></tr>
+    <tr><td class="id">OE-02</td><td>Administrar de forma centralizada cl&iacute;nicas, almacenes, medicamentos e inventario.</td><td>Las cuatro entidades exponen su CRUD completo y funcional.</td></tr>
+    <tr><td class="id">OE-03</td><td>Registrar solicitudes de abastecimiento validando la existencia de las entidades relacionadas y la disponibilidad de inventario.</td><td>Una solicitud con cantidad mayor al stock disponible es rechazada con 400.</td></tr>
+    <tr><td class="id">OE-04</td><td>Controlar el ciclo de vida de la solicitud mediante una m&aacute;quina de estados con transiciones expl&iacute;citas.</td><td>Un salto de <em>pendiente</em> a <em>entregada</em> es rechazado indicando los estados v&aacute;lidos.</td></tr>
+    <tr><td class="id">OE-05</td><td>Ajustar el inventario de forma autom&aacute;tica y at&oacute;mica al cambiar el estado de una solicitud.</td><td>Al aprobar se descuenta la cantidad; al cancelar una solicitud aprobada se reintegra.</td></tr>
+    <tr><td class="id">OE-06</td><td>Conservar el historial completo de solicitudes, incluidas las dadas de baja.</td><td>El endpoint de historial devuelve solicitudes en todos los estados, activas e inactivas.</td></tr>
+    <tr><td class="id">OE-07</td><td>Validar toda la informaci&oacute;n de entrada antes de que alcance la l&oacute;gica de negocio.</td><td>Un cuerpo de petici&oacute;n mal formado responde 400 con el campo y el detalle del error.</td></tr>
+    <tr><td class="id">OE-08</td><td>Versionar la estructura de la base de datos mediante migraciones ejecutables por comando.</td><td>El esquema se crea y se revierte por completo con comandos de <code>npm</code>.</td></tr>
+    <tr><td class="id">OE-09</td><td>Documentar la totalidad de los endpoints de forma interactiva.</td><td>Todos los endpoints son consultables y ejecutables desde la interfaz de Swagger.</td></tr>
+    <tr><td class="id">OE-10</td><td>Garantizar la reproducibilidad del entorno de ejecuci&oacute;n.</td><td>El sistema completo se levanta con un solo comando de Docker Compose.</td></tr>
+  </tbody>
+</table>
+</section>
+<!-- ============================ 4. ACTORES ============================ -->
+<section class="seccion" id="s4">
+<h1>4. Actores y usuarios del sistema</h1>
+
+<h2>4.1 Identificaci&oacute;n de actores</h2>
+<p>El sistema reconoce dos roles de usuario autenticado, definidos en el tipo <code>ROLES_USUARIO</code>, y contempla adem&aacute;s un actor no autenticado y dos entidades que participan en el proceso sin operar directamente la API.</p>
+
+<div class="rejilla">
+  <div class="tarjeta">
+    <h4>Administrador</h4>
+    <p><strong>Qui&eacute;n es:</strong> personal del &aacute;rea log&iacute;stica con autoridad para autorizar despachos y mantener los datos maestros.</p>
+    <p><strong>Qu&eacute; puede hacer:</strong> todas las operaciones del sistema. Es el &uacute;nico que puede crear, modificar y dar de baja cl&iacute;nicas, almacenes, medicamentos y registros de inventario, y el &uacute;nico que puede corregir o eliminar una solicitud.</p>
+  </div>
+  <div class="tarjeta">
+    <h4>Gestor</h4>
+    <p><strong>Qui&eacute;n es:</strong> personal operativo que atiende a las cl&iacute;nicas y radica sus pedidos.</p>
+    <p><strong>Qu&eacute; puede hacer:</strong> consultar toda la informaci&oacute;n, registrar solicitudes nuevas y cambiar su estado. No puede modificar los datos maestros ni eliminar solicitudes.</p>
+  </div>
+  <div class="tarjeta">
+    <h4>Usuario no autenticado</h4>
+    <p><strong>Qui&eacute;n es:</strong> cualquier persona que a&uacute;n no ha iniciado sesi&oacute;n.</p>
+    <p><strong>Qu&eacute; puede hacer:</strong> &uacute;nicamente registrarse e iniciar sesi&oacute;n. Toda otra ruta le responde 401.</p>
+  </div>
+  <div class="tarjeta">
+    <h4>Cl&iacute;nica (actor indirecto)</h4>
+    <p><strong>Qui&eacute;n es:</strong> la entidad que necesita el abastecimiento y su persona responsable.</p>
+    <p><strong>Qu&eacute; puede hacer:</strong> no opera la API. Solicita por los canales de la empresa; un gestor registra la solicitud en su nombre. Sus datos de contacto se conservan en el sistema.</p>
+  </div>
+</div>
+
+<h2>4.2 Matriz de permisos por rol</h2>
+<table>
+  <caption>Tabla 5. Operaciones del sistema y roles autorizados para ejecutarlas.</caption>
+  <thead>
+    <tr><th style="width:38%">Operaci&oacute;n</th><th class="c">No autenticado</th><th class="c">Gestor</th><th class="c">Administrador</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Registrarse en el sistema</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Iniciar sesi&oacute;n</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Consultar cl&iacute;nicas, almacenes, medicamentos e inventario</td><td class="c">No</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Crear, modificar o dar de baja cl&iacute;nicas</td><td class="c">No</td><td class="c">No</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Crear, modificar o dar de baja almacenes</td><td class="c">No</td><td class="c">No</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Crear, modificar o dar de baja medicamentos</td><td class="c">No</td><td class="c">No</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Crear, modificar o dar de baja registros de inventario</td><td class="c">No</td><td class="c">No</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Consultar solicitudes e historial</td><td class="c">No</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Registrar una solicitud de abastecimiento</td><td class="c">No</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Cambiar el estado de una solicitud</td><td class="c">No</td><td class="c">S&iacute;</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Corregir la cantidad de una solicitud pendiente</td><td class="c">No</td><td class="c">No</td><td class="c">S&iacute;</td></tr>
+    <tr><td>Dar de baja una solicitud</td><td class="c">No</td><td class="c">No</td><td class="c">S&iacute;</td></tr>
+  </tbody>
+</table>
+
+<div class="nota">
+<strong>Criterio aplicado</strong>
+El gestor puede mover el flujo operativo (radicar y avanzar solicitudes) pero no puede alterar los datos que sirven de base a ese flujo ni borrar evidencia. La modificaci&oacute;n de datos maestros y la baja de registros quedan reservadas al administrador.
+</div>
+</section>
+
+<!-- ============================ 5. REQUISITOS ============================ -->
+<section class="seccion" id="s5">
+<h1>5. Requisitos del sistema</h1>
+
+<h2>5.1 Requisitos funcionales</h2>
+<p>Describen lo que el sistema debe hacer. Cada requisito indica el actor que lo ejecuta y el objetivo espec&iacute;fico al que contribuye.</p>
+
+<table>
+  <caption>Tabla 6. Requisitos funcionales del sistema.</caption>
+  <thead>
+    <tr><th class="id">C&oacute;digo</th><th style="width:26%">Requisito</th><th>Descripci&oacute;n</th><th style="width:13%">Actor</th><th class="id">Objetivo</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="id">RF-01</td><td>Registro de usuario</td><td>El sistema debe permitir crear una cuenta indicando nombre, apellido, correo, contrase&ntilde;a y rol. El correo no puede repetirse y la contrase&ntilde;a debe almacenarse cifrada.</td><td>No autenticado</td><td class="id">OE-01</td></tr>
+    <tr><td class="id">RF-02</td><td>Inicio de sesi&oacute;n</td><td>El sistema debe validar las credenciales y devolver un token firmado con vigencia limitada, junto con los datos p&uacute;blicos del usuario.</td><td>No autenticado</td><td class="id">OE-01</td></tr>
+    <tr><td class="id">RF-03</td><td>Protecci&oacute;n de rutas</td><td>Toda ruta distinta del registro y el inicio de sesi&oacute;n debe exigir un token v&aacute;lido y vigente en la cabecera de autorizaci&oacute;n.</td><td>Sistema</td><td class="id">OE-01</td></tr>
+    <tr><td class="id">RF-04</td><td>Autorizaci&oacute;n por rol</td><td>El sistema debe comparar el rol contenido en el token contra los roles permitidos para la operaci&oacute;n antes de ejecutarla.</td><td>Sistema</td><td class="id">OE-01</td></tr>
+    <tr><td class="id">RF-05</td><td>Gesti&oacute;n de cl&iacute;nicas</td><td>El sistema debe permitir crear, consultar, listar, modificar y dar de baja cl&iacute;nicas con sus datos de contacto y los de su responsable.</td><td>Administrador</td><td class="id">OE-02</td></tr>
+    <tr><td class="id">RF-06</td><td>Historial por cl&iacute;nica</td><td>El sistema debe listar todas las solicitudes asociadas a una cl&iacute;nica determinada, en cualquier estado.</td><td>Gestor / Admin.</td><td class="id">OE-06</td></tr>
+    <tr><td class="id">RF-07</td><td>Gesti&oacute;n de almacenes</td><td>El sistema debe permitir el CRUD completo de los almacenes desde los que se despachan los medicamentos.</td><td>Administrador</td><td class="id">OE-02</td></tr>
+    <tr><td class="id">RF-08</td><td>Gesti&oacute;n de medicamentos</td><td>El sistema debe permitir el CRUD completo del cat&aacute;logo de medicamentos, con presentaci&oacute;n y laboratorio.</td><td>Administrador</td><td class="id">OE-02</td></tr>
+    <tr><td class="id">RF-09</td><td>Gesti&oacute;n de inventario</td><td>El sistema debe permitir registrar y ajustar cu&aacute;ntas unidades de cada medicamento hay en cada almac&eacute;n.</td><td>Administrador</td><td class="id">OE-02</td></tr>
+    <tr><td class="id">RF-10</td><td>Registro de solicitud</td><td>El sistema debe permitir radicar una solicitud indicando cl&iacute;nica, medicamento, almac&eacute;n y cantidad. El usuario que la registra se toma del token, no del cuerpo de la petici&oacute;n.</td><td>Gestor / Admin.</td><td class="id">OE-03</td></tr>
+    <tr><td class="id">RF-11</td><td>Validaci&oacute;n de entidades relacionadas</td><td>Antes de crear la solicitud el sistema debe verificar que la cl&iacute;nica, el medicamento y el almac&eacute;n existan y est&eacute;n activos, e indicar cu&aacute;l de los tres falla.</td><td>Sistema</td><td class="id">OE-03</td></tr>
+    <tr><td class="id">RF-12</td><td>Validaci&oacute;n de disponibilidad</td><td>Antes de crear la solicitud el sistema debe verificar que el almac&eacute;n maneje ese medicamento y tenga unidades suficientes, informando lo pedido y lo disponible.</td><td>Sistema</td><td class="id">OE-03</td></tr>
+    <tr><td class="id">RF-13</td><td>Listado de solicitudes en curso</td><td>El sistema debe listar las solicitudes activas, entendidas como las que se encuentran pendientes o aprobadas, con los datos de sus entidades relacionadas.</td><td>Gestor / Admin.</td><td class="id">OE-06</td></tr>
+    <tr><td class="id">RF-14</td><td>Historial general</td><td>El sistema debe exponer el historial completo de solicitudes en cualquier estado, incluidas las dadas de baja.</td><td>Gestor / Admin.</td><td class="id">OE-06</td></tr>
+    <tr><td class="id">RF-15</td><td>Consulta individual</td><td>El sistema debe permitir consultar una solicitud por su identificador, con sus relaciones resueltas.</td><td>Gestor / Admin.</td><td class="id">OE-06</td></tr>
+    <tr><td class="id">RF-16</td><td>Cambio de estado</td><td>El sistema debe permitir cambiar el estado de una solicitud, admitiendo &uacute;nicamente las transiciones definidas y permitiendo adjuntar observaciones.</td><td>Gestor / Admin.</td><td class="id">OE-04</td></tr>
+    <tr><td class="id">RF-17</td><td>Descuento de inventario</td><td>Al pasar una solicitud a aprobada, el sistema debe descontar la cantidad solicitada del inventario del almac&eacute;n asignado.</td><td>Sistema</td><td class="id">OE-05</td></tr>
+    <tr><td class="id">RF-18</td><td>Reintegro de inventario</td><td>Al cancelar o dar de baja una solicitud que estaba aprobada, el sistema debe devolver las unidades al inventario del almac&eacute;n.</td><td>Sistema</td><td class="id">OE-05</td></tr>
+    <tr><td class="id">RF-19</td><td>Correcci&oacute;n de solicitud</td><td>El sistema debe permitir corregir la cantidad y las observaciones &uacute;nicamente mientras la solicitud siga pendiente, revalidando el inventario.</td><td>Administrador</td><td class="id">OE-05</td></tr>
+    <tr><td class="id">RF-20</td><td>Baja l&oacute;gica</td><td>El sistema debe dar de baja los registros marc&aacute;ndolos inactivos, sin eliminarlos f&iacute;sicamente.</td><td>Administrador</td><td class="id">OE-06</td></tr>
+    <tr><td class="id">RF-21</td><td>Documentaci&oacute;n interactiva</td><td>El sistema debe exponer una interfaz web donde se pueda consultar y ejecutar cada endpoint con autenticaci&oacute;n incluida.</td><td>Todos</td><td class="id">OE-09</td></tr>
+  </tbody>
+</table>
+
+<h2>5.2 Requisitos no funcionales</h2>
+<p>Describen c&oacute;mo debe comportarse el sistema y bajo qu&eacute; restricciones de calidad opera.</p>
+
+<table>
+  <caption>Tabla 7. Requisitos no funcionales del sistema.</caption>
+  <thead>
+    <tr><th class="id">C&oacute;digo</th><th style="width:18%">Categor&iacute;a</th><th>Requisito</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="id">RNF-01</td><td>Seguridad</td><td>Las contrase&ntilde;as deben almacenarse cifradas con bcrypt y factor de costo 10. En ning&uacute;n punto del sistema debe existir la contrase&ntilde;a en texto plano ni devolverse en una respuesta.</td></tr>
+    <tr><td class="id">RNF-02</td><td>Seguridad</td><td>Los tokens deben firmarse con una clave secreta tomada de las variables de entorno y expirar autom&aacute;ticamente. La vigencia por omisi&oacute;n es de ocho horas.</td></tr>
+    <tr><td class="id">RNF-03</td><td>Seguridad</td><td>Ante credenciales incorrectas, el sistema debe responder el mismo mensaje sin distinguir si el fallo fue el correo o la contrase&ntilde;a, para no revelar qu&eacute; cuentas existen.</td></tr>
+    <tr><td class="id">RNF-04</td><td>Seguridad</td><td>Un usuario dado de baja no debe poder iniciar sesi&oacute;n aunque sus credenciales sean correctas.</td></tr>
+    <tr><td class="id">RNF-05</td><td>Integridad</td><td>Las operaciones que afectan al inventario deben ejecutarse dentro de una transacci&oacute;n con bloqueo de la fila implicada, de modo que dos aprobaciones simult&aacute;neas no consuman las mismas unidades.</td></tr>
+    <tr><td class="id">RNF-06</td><td>Integridad</td><td>La base de datos debe impedir por s&iacute; misma que la cantidad de inventario quede negativa y que la cantidad solicitada sea menor o igual a cero, mediante restricciones de verificaci&oacute;n.</td></tr>
+    <tr><td class="id">RNF-07</td><td>Integridad</td><td>Todas las relaciones entre tablas deben declararse como llaves for&aacute;neas, de modo que no puedan existir solicitudes hu&eacute;rfanas.</td></tr>
+    <tr><td class="id">RNF-08</td><td>Mantenibilidad</td><td>El c&oacute;digo debe escribirse en TypeScript con tipado expl&iacute;cito, para que los errores de tipo se detecten al compilar y no en producci&oacute;n.</td></tr>
+    <tr><td class="id">RNF-09</td><td>Mantenibilidad</td><td>La l&oacute;gica de negocio debe residir en la capa de servicios. Los controladores solo traducen entre el protocolo HTTP y esa capa.</td></tr>
+    <tr><td class="id">RNF-10</td><td>Mantenibilidad</td><td>La estructura de la base de datos debe versionarse en migraciones numeradas, reversibles y ejecutables por comando. No debe emplearse sincronizaci&oacute;n autom&aacute;tica del esquema.</td></tr>
+    <tr><td class="id">RNF-11</td><td>Usabilidad</td><td>Todas las respuestas deben tener formato JSON con una estructura uniforme que incluya siempre un campo de mensaje legible.</td></tr>
+    <tr><td class="id">RNF-12</td><td>Usabilidad</td><td>Los mensajes de error deben indicar en espa&ntilde;ol qu&eacute; campo fall&oacute; y por qu&eacute;, sin exponer detalles internos del motor de base de datos.</td></tr>
+    <tr><td class="id">RNF-13</td><td>Fiabilidad</td><td>Todos los errores deben canalizarse a un &uacute;nico manejador central que asigne el c&oacute;digo HTTP correspondiente. Un error no previsto nunca debe filtrar su traza al cliente.</td></tr>
+    <tr><td class="id">RNF-14</td><td>Portabilidad</td><td>El sistema debe poder ejecutarse tanto de forma local como en contenedores, sin cambios en el c&oacute;digo fuente.</td></tr>
+    <tr><td class="id">RNF-15</td><td>Configurabilidad</td><td>Los datos de conexi&oacute;n, el puerto y la clave de firma deben leerse de variables de entorno y nunca escribirse en el c&oacute;digo ni versionarse.</td></tr>
+    <tr><td class="id">RNF-16</td><td>Trazabilidad</td><td>Cada registro debe conservar su fecha de creaci&oacute;n y de &uacute;ltima modificaci&oacute;n de forma autom&aacute;tica.</td></tr>
+    <tr><td class="id">RNF-17</td><td>Interoperabilidad</td><td>Los identificadores deben ser UUID, de manera que puedan generarse en cualquier nodo sin coordinaci&oacute;n central y no revelen el volumen de registros.</td></tr>
+  </tbody>
+</table>
+
+<h2>5.3 Reglas de negocio</h2>
+<p>Son las restricciones propias del proceso de abastecimiento, independientes de la tecnolog&iacute;a con la que se implemente el sistema.</p>
+
+<table>
+  <caption>Tabla 8. Reglas de negocio y respuesta esperada del sistema.</caption>
+  <thead>
+    <tr><th class="id">C&oacute;digo</th><th>Regla</th><th class="c" style="width:9%">C&oacute;digo HTTP</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="id">RN-01</td><td>Toda solicitud nace en estado <strong>pendiente</strong>. El estado no puede indicarse al crearla.</td><td class="c">201</td></tr>
+    <tr><td class="id">RN-02</td><td>Desde <strong>pendiente</strong> una solicitud puede pasar a aprobada, rechazada o cancelada.</td><td class="c">200</td></tr>
+    <tr><td class="id">RN-03</td><td>Desde <strong>aprobada</strong> una solicitud puede pasar a entregada o cancelada.</td><td class="c">200</td></tr>
+    <tr><td class="id">RN-04</td><td><strong>Rechazada</strong>, <strong>entregada</strong> y <strong>cancelada</strong> son estados finales: de ellos no se sale.</td><td class="c">400</td></tr>
+    <tr><td class="id">RN-05</td><td>Cualquier otra transici&oacute;n se rechaza informando el estado actual y los estados a los que s&iacute; se puede pasar.</td><td class="c">400</td></tr>
+    <tr><td class="id">RN-06</td><td>No se puede cambiar una solicitud al estado que ya tiene.</td><td class="c">400</td></tr>
+    <tr><td class="id">RN-07</td><td>Al crear la solicitud se verifica la disponibilidad pero <strong>no</strong> se descuenta inventario.</td><td class="c">201</td></tr>
+    <tr><td class="id">RN-08</td><td>El inventario se descuenta al aprobar, revalidando la disponibilidad en ese instante.</td><td class="c">200</td></tr>
+    <tr><td class="id">RN-09</td><td>Al cancelar una solicitud que estaba aprobada, las unidades se reintegran al almac&eacute;n.</td><td class="c">200</td></tr>
+    <tr><td class="id">RN-10</td><td>Al dar de baja una solicitud aprobada, las unidades tambi&eacute;n se reintegran.</td><td class="c">200</td></tr>
+    <tr><td class="id">RN-11</td><td>Solo se puede corregir una solicitud mientras siga pendiente.</td><td class="c">409</td></tr>
+    <tr><td class="id">RN-12</td><td>La cantidad solicitada debe ser un n&uacute;mero entero mayor que cero.</td><td class="c">400</td></tr>
+    <tr><td class="id">RN-13</td><td>No pueden existir dos cl&iacute;nicas con el mismo NIT, aunque una de ellas est&eacute; dada de baja.</td><td class="c">409</td></tr>
+    <tr><td class="id">RN-14</td><td>No pueden existir dos usuarios con el mismo correo electr&oacute;nico.</td><td class="c">409</td></tr>
+    <tr><td class="id">RN-15</td><td>Un almac&eacute;n no puede tener dos registros de inventario del mismo medicamento.</td><td class="c">409</td></tr>
+    <tr><td class="id">RN-16</td><td>No se puede solicitar un medicamento que el almac&eacute;n no maneja.</td><td class="c">400</td></tr>
+    <tr><td class="id">RN-17</td><td>Ning&uacute;n registro se elimina f&iacute;sicamente; la baja es siempre l&oacute;gica.</td><td class="c">200</td></tr>
+    <tr><td class="id">RN-18</td><td>El historial conserva las solicitudes dadas de baja y las que est&aacute;n en estado final.</td><td class="c">200</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ============================ 6. ARQUITECTURA ============================ -->
+<section class="seccion" id="s6">
+<h1>6. Arquitectura de la soluci&oacute;n</h1>
+
+<h2>6.1 Estilo arquitect&oacute;nico adoptado</h2>
+<p>La soluci&oacute;n adopta una <strong>arquitectura monol&iacute;tica en capas</strong> que expone sus funcionalidades mediante una <strong>interfaz REST</strong>. Se descarta una arquitectura de microservicios porque el dominio es peque&ntilde;o y altamente cohesionado: separar solicitudes de inventario en procesos distintos obligar&iacute;a a coordinar transacciones distribuidas para resolver algo que una sola transacci&oacute;n de base de datos resuelve de forma trivial.</p>
+
+<h4>Principios que rigen el dise&ntilde;o</h4>
+<ul>
+  <li><strong>Separaci&oacute;n de responsabilidades.</strong> Cada capa hace una sola cosa y no conoce los detalles de las dem&aacute;s.</li>
+  <li><strong>Dependencia unidireccional.</strong> Las capas superiores dependen de las inferiores; nunca al rev&eacute;s.</li>
+  <li><strong>Validaci&oacute;n temprana.</strong> Un dato inv&aacute;lido se rechaza en el borde del sistema, antes de tocar la l&oacute;gica de negocio.</li>
+  <li><strong>Fuente &uacute;nica de verdad.</strong> Cada regla se escribe en un solo lugar y se reutiliza desde donde se necesite.</li>
+</ul>
+
+<h2>6.2 Arquitectura por capas</h2>
+<div class="figura">
+<div class="ascii">    CLIENTE  (navegador, Swagger UI, Postman, futuro frontend)
+        |
+        |  HTTP + JSON
+        v
++---------------------------------------------------------------+
+|  CAPA DE PRESENTACION                                          |
+|  app.ts  +  routes/                                            |
+|  Define las rutas, monta los middlewares y expone Swagger.     |
++---------------------------------------------------------------+
+        |
+        v
++---------------------------------------------------------------+
+|  CAPA DE MIDDLEWARES                                           |
+|  verifyToken . checkRole . validateRequest . validateParams    |
+|  verificar-entidades-relacionadas . verificar-inventario       |
+|  verificar-nit-unico . verificar-transicion-estado             |
+|  Autentica, autoriza y valida. Corta la peticion si algo falla.|
++---------------------------------------------------------------+
+        |
+        v
++---------------------------------------------------------------+
+|  CAPA DE CONTROLADORES                                         |
+|  controllers/                                                  |
+|  Lee la peticion, llama al servicio, elige el codigo HTTP.     |
+|  No contiene reglas de negocio.                                |
++---------------------------------------------------------------+
+        |
+        v
++---------------------------------------------------------------+
+|  CAPA DE SERVICIOS                                             |
+|  services/                                                     |
+|  Toda la logica de negocio: transiciones de estado, descuento  |
+|  y reintegro de inventario, transacciones.                     |
++---------------------------------------------------------------+
+        |
+        v
++---------------------------------------------------------------+
+|  CAPA DE ACCESO A DATOS                                        |
+|  models/  +  config/db.ts   (Sequelize ORM)                    |
+|  Traduce entre objetos y tablas. Declara las asociaciones.     |
++---------------------------------------------------------------+
+        |
+        v
++---------------------------------------------------------------+
+|  PERSISTENCIA                                                  |
+|  PostgreSQL 16                                                 |
+|  Llaves foraneas, restricciones unicas y de verificacion.      |
++---------------------------------------------------------------+
+
+CAPAS TRANSVERSALES
+  dto/          Esquemas de validacion (Zod)
+  types/        Tipos, enumeraciones e interfaces
+  utils/        HttpError y maquina de estados
+  migrations/   Versionado del esquema
+  seeders/      Datos de prueba
+  error-handler Manejador central de errores</div>
+<figcaption>Figura 1. Arquitectura por capas de la API RiwiMediCare Plus.</figcaption>
+</div>
+
+<h2>6.3 Flujo de una petici&oacute;n</h2>
+<p>Toda petici&oacute;n recorre siempre la misma secuencia. El ejemplo corresponde al registro de una solicitud de abastecimiento, que es la operaci&oacute;n con m&aacute;s validaciones del sistema.</p>
+
+<div class="figura">
+<div class="ascii">POST /api/solicitudes     Authorization: Bearer &lt;token&gt;
+   |
+   v
+[1] express.json()                  Convierte el cuerpo en objeto
+   |
+   v
+[2] verifyToken                     Firma valida y token vigente?  -> 401
+   |
+   v
+[3] checkRole(gestor, admin)        El rol esta autorizado?        -> 403
+   |
+   v
+[4] validateRequest(schema)         Los campos son correctos?      -> 400
+   |                                 cantidad entera y mayor a cero
+   v
+[5] verificarEntidadesRelacionadas  Clinica, medicamento y
+   |                                 almacen existen y activos?    -> 404
+   v
+[6] verificarInventarioDisponible   El almacen maneja el
+   |                                 medicamento y le alcanza?     -> 400
+   v
+[7] controlador postSolicitud       Toma el usuario del token
+   |
+   v
+[8] servicio crearSolicitud         Crea con estado pendiente
+   |
+   v
+[9] modelo Solicitud (Sequelize)    INSERT + relaciones incluidas
+   |
+   v
+[10] PostgreSQL                     Llaves foraneas y CHECK
+   |
+   v
+201 Created  { message, solicitud }
+
+Si cualquier paso lanza un error, next(error) lo entrega al
+manejador central errorHandler, que arma la respuesta JSON.</div>
+<figcaption>Figura 2. Recorrido de una petici&oacute;n de creaci&oacute;n de solicitud a trav&eacute;s de las capas.</figcaption>
+</div>
+
+<div class="nota">
+<strong>Por qu&eacute; el orden de los middlewares importa</strong>
+Las validaciones se ordenan de la m&aacute;s barata a la m&aacute;s costosa. Primero se verifica el token, que es un c&aacute;lculo en memoria; luego el formato de los datos, que tampoco consulta la base; y solo al final se hacen las consultas a PostgreSQL. Una petici&oacute;n sin token se rechaza sin haber tocado la base de datos ni una sola vez.
+</div>
+
+<h2>6.4 Arquitectura de despliegue</h2>
+<p>El despliegue se resuelve con Docker Compose en dos contenedores comunicados por una red interna. La base de datos escribe en un volumen persistente, de modo que los datos sobreviven al apagado de los contenedores.</p>
+
+<div class="figura">
+<div class="ascii">                        MAQUINA ANFITRIONA
++-----------------------------------------------------------------+
+|                                                                  |
+|   puerto ${PORT}                        puerto ${DATABASE_PORT}  |
+|        |                                          |              |
+|  +-----v-------------------+          +-----------v-----------+  |
+|  |  CONTENEDOR  api        |          |  CONTENEDOR  db       |  |
+|  |                         |          |                       |  |
+|  |  node:24-alpine         |  red     |  postgres:16          |  |
+|  |  Express + TypeScript   |  interna |                       |  |
+|  |  target: development    |<-------->|  healthcheck:         |  |
+|  |                         |  db:5432 |  pg_isready           |  |
+|  |  depends_on: db healthy |          |                       |  |
+|  +-------------------------+          +-----------+-----------+  |
+|        |                                          |              |
+|  volumen bind  .:/app                      volumen db_pd_nodejs  |
+|  (recarga en caliente)                     (datos persistentes)  |
++-----------------------------------------------------------------+
+
+Construccion multietapa del Dockerfile:
+
+        base  (node:24-alpine, /app, package*.json)
+        /   \
+       /     \
+  development  build            production
+  npm ci       npm ci           npm ci --omit=dev
+  tsx watch    npm run build    COPY --from=build /app/dist
+                    |           USER node
+                    +---------> node dist/app.js</div>
+<figcaption>Figura 3. Arquitectura de despliegue en contenedores y etapas de construcci&oacute;n de la imagen.</figcaption>
+</div>
+</section>
+<!-- ============================ 7. MODULOS ============================ -->
+<section class="seccion" id="s7">
+<h1>7. Descripci&oacute;n de m&oacute;dulos</h1>
+<p>El sistema se divide en seis m&oacute;dulos funcionales. Cada uno agrupa su ruta, su controlador, su servicio, su esquema de validaci&oacute;n y su modelo, siguiendo siempre la misma estructura interna.</p>
+
+<table>
+  <caption>Tabla 9. M&oacute;dulos del sistema y su prop&oacute;sito.</caption>
+  <thead><tr><th style="width:20%">M&oacute;dulo</th><th>Responsabilidad</th><th class="c" style="width:15%">Endpoints</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Autenticaci&oacute;n</strong></td><td>Registrar usuarios, validar credenciales y emitir tokens.</td><td class="c">2</td></tr>
+    <tr><td><strong>Cl&iacute;nicas</strong></td><td>Datos maestros de las cl&iacute;nicas y sus responsables; historial por cl&iacute;nica.</td><td class="c">6</td></tr>
+    <tr><td><strong>Almacenes</strong></td><td>Datos maestros de los centros de despacho.</td><td class="c">5</td></tr>
+    <tr><td><strong>Medicamentos</strong></td><td>Cat&aacute;logo de productos distribuidos.</td><td class="c">5</td></tr>
+    <tr><td><strong>Inventario</strong></td><td>Existencias de cada medicamento en cada almac&eacute;n.</td><td class="c">5</td></tr>
+    <tr><td><strong>Solicitudes</strong></td><td>Ciclo de vida de la solicitud y ajuste del inventario.</td><td class="c">7</td></tr>
+  </tbody>
+</table>
+
+<h2>7.1 M&oacute;dulo de autenticaci&oacute;n</h2>
+<p><strong>Prop&oacute;sito.</strong> Es la puerta de entrada al sistema. Todos los dem&aacute;s m&oacute;dulos dependen de que este funcione, porque el token que emite es el que habilita el resto de las rutas.</p>
+<table>
+  <thead><tr><th class="c" style="width:9%">M&eacute;todo</th><th style="width:26%">Ruta</th><th>Descripci&oacute;n</th><th class="c" style="width:16%">Acceso</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/auth/register</td><td>Crea un usuario. Cifra la contrase&ntilde;a y normaliza los textos a min&uacute;sculas antes de guardar.</td><td class="c"><span class="badge b-pub">P&uacute;blico</span></td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/auth/login</td><td>Valida credenciales y devuelve el token firmado junto con los datos p&uacute;blicos del usuario.</td><td class="c"><span class="badge b-pub">P&uacute;blico</span></td></tr>
+  </tbody>
+</table>
+<p><strong>Decisiones de dise&ntilde;o.</strong> El cifrado de la contrase&ntilde;a se resuelve con un gancho del modelo que se dispara antes de crear el registro, y no en el servicio. As&iacute; la contrase&ntilde;a queda cifrada sin importar por d&oacute;nde se cree el usuario. La respuesta se construye siempre a partir de una funci&oacute;n que omite el campo de la contrase&ntilde;a, de modo que resulta imposible devolverla por descuido.</p>
+
+<h2>7.2 M&oacute;dulo de cl&iacute;nicas</h2>
+<p><strong>Prop&oacute;sito.</strong> Mantener el registro de las cl&iacute;nicas atendidas y de la persona responsable de cada una, y exponer su historial de solicitudes.</p>
+<table>
+  <thead><tr><th class="c" style="width:9%">M&eacute;todo</th><th style="width:30%">Ruta</th><th>Descripci&oacute;n</th><th class="c" style="width:16%">Acceso</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas</td><td>Lista las cl&iacute;nicas activas.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas/:id</td><td>Consulta una cl&iacute;nica por su identificador.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas/:id/solicitudes</td><td>Historial de solicitudes de la cl&iacute;nica, en cualquier estado.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/clinicas</td><td>Registra una cl&iacute;nica verificando que el NIT no est&eacute; ocupado.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/clinicas/:id</td><td>Actualiza los datos, excluyendo la propia cl&iacute;nica de la verificaci&oacute;n de NIT.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/clinicas/:id</td><td>Baja l&oacute;gica de la cl&iacute;nica.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+  </tbody>
+</table>
+<p><strong>Decisiones de dise&ntilde;o.</strong> La verificaci&oacute;n del NIT no filtra por el estado activo del registro. Una cl&iacute;nica dada de baja conserva su NIT ocupado, porque en la base de datos la restricci&oacute;n de unicidad sigue vigente y porque reutilizar el NIT de una cl&iacute;nica anterior confundir&iacute;a el historial.</p>
+
+<h2>7.3 M&oacute;dulos de almacenes, medicamentos e inventario</h2>
+<p><strong>Prop&oacute;sito.</strong> Sostienen los datos maestros sobre los que se apoya el m&oacute;dulo de solicitudes. Los tres exponen la misma estructura de CRUD.</p>
+<table>
+  <thead><tr><th class="c" style="width:9%">M&eacute;todo</th><th style="width:34%">Ruta</th><th>Descripci&oacute;n</th><th class="c" style="width:16%">Acceso</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/{recurso}</td><td>Lista los registros activos del recurso.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/{recurso}/:id</td><td>Consulta un registro por su identificador.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/{recurso}</td><td>Crea un registro validado por su esquema.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/{recurso}/:id</td><td>Actualiza los campos enviados.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/{recurso}/:id</td><td>Baja l&oacute;gica del registro.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+  </tbody>
+  <caption>Donde <code>{recurso}</code> corresponde a <code>almacenes</code>, <code>medicamentos</code> o <code>inventario</code>.</caption>
+</table>
+<p><strong>Decisiones de dise&ntilde;o.</strong> La cantidad disponible no se guarda en el medicamento sino en una tabla intermedia, porque el mismo medicamento existe en varios almacenes con cantidades distintas. Sobre esa tabla se impone una restricci&oacute;n de unicidad compuesta por almac&eacute;n y medicamento, de modo que un almac&eacute;n no pueda tener dos filas del mismo producto, y una restricci&oacute;n de verificaci&oacute;n que impide que la cantidad quede negativa.</p>
+
+<h2>7.4 M&oacute;dulo de solicitudes</h2>
+<p><strong>Prop&oacute;sito.</strong> Es el n&uacute;cleo del sistema. Concentra las reglas de negocio propias del dominio y es el &uacute;nico m&oacute;dulo que modifica el inventario sin que un administrador lo edite a mano.</p>
+<table>
+  <thead><tr><th class="c" style="width:9%">M&eacute;todo</th><th style="width:30%">Ruta</th><th>Descripci&oacute;n</th><th class="c" style="width:16%">Acceso</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes</td><td>Lista las solicitudes en curso: pendientes y aprobadas.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes/historial</td><td>Historial completo en cualquier estado, incluidas las dadas de baja.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes/:id</td><td>Consulta una solicitud con sus relaciones resueltas.</td><td class="c"><span class="badge b-aut">Autenticado</span></td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/solicitudes</td><td>Registra la solicitud tras las tres validaciones previas.</td><td class="c"><span class="badge b-ges">Gestor / Admin.</span></td></tr>
+    <tr><td class="c"><span class="badge b-patch">PATCH</span></td><td class="id">/api/solicitudes/:id/estado</td><td>Cambia el estado y ajusta el inventario dentro de una transacci&oacute;n.</td><td class="c"><span class="badge b-ges">Gestor / Admin.</span></td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/solicitudes/:id</td><td>Corrige cantidad y observaciones si la solicitud sigue pendiente.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/solicitudes/:id</td><td>Baja l&oacute;gica con reintegro del inventario si estaba aprobada.</td><td class="c"><span class="badge b-adm">Admin.</span></td></tr>
+  </tbody>
+</table>
+
+<h3>M&aacute;quina de estados de la solicitud</h3>
+<div class="figura">
+<div class="ascii">                          +-------------+
+                          |  PENDIENTE  |   estado inicial
+                          +------+------+
+                                 |
+             +-------------------+-------------------+
+             |                   |                   |
+             v                   v                   v
+      +------+------+     +------+------+     +------+------+
+      |  APROBADA   |     | RECHAZADA   |     | CANCELADA   |
+      |             |     |   (final)   |     |   (final)   |
+      | inventario  |     +-------------+     +-------------+
+      |  DESCONTADO |
+      +------+------+
+             |
+      +------+------+
+      |             |
+      v             v
++-----+-----+  +----+--------+
+| ENTREGADA |  | CANCELADA   |
+|  (final)  |  |   (final)   |
++-----------+  | inventario  |
+               | REINTEGRADO |
+               +-------------+
+
+Efecto sobre el inventario segun la transicion:
+
+  pendiente  -> aprobada   :  cantidad = cantidad - solicitada
+  aprobada   -> cancelada  :  cantidad = cantidad + solicitada
+  aprobada   -> entregada  :  sin efecto (ya se habia descontado)
+  pendiente  -> rechazada  :  sin efecto (nunca se descontó)
+  pendiente  -> cancelada  :  sin efecto (nunca se descontó)
+  baja de una aprobada     :  cantidad = cantidad + solicitada</div>
+<figcaption>Figura 4. M&aacute;quina de estados de la solicitud y su efecto sobre el inventario.</figcaption>
+</div>
+
+<div class="aviso">
+<strong>Decisi&oacute;n de dise&ntilde;o: cu&aacute;ndo descontar el inventario</strong>
+Se evaluaron dos alternativas. Descontar al crear la solicitud reserva las unidades de inmediato, pero deja stock comprometido por solicitudes que quiz&aacute; nunca se aprueben. Descontar al aprobar mantiene el inventario disponible hasta que existe una decisi&oacute;n administrativa real. Se opta por la segunda, y para cubrir el riesgo de que el stock se agote entre la creaci&oacute;n y la aprobaci&oacute;n, la disponibilidad se <strong>vuelve a verificar</strong> en el momento de aprobar, dentro de la misma transacci&oacute;n que hace el descuento.
+</div>
+</section>
+
+<!-- ============================ 8. TECNOLOGIAS ============================ -->
+<section class="seccion" id="s8">
+<h1>8. Tecnolog&iacute;as a utilizar</h1>
+
+<table>
+  <caption>Tabla 10. Tecnolog&iacute;as seleccionadas, versi&oacute;n y funci&oacute;n dentro del sistema.</caption>
+  <thead><tr><th style="width:20%">Tecnolog&iacute;a</th><th class="c" style="width:10%">Versi&oacute;n</th><th style="width:16%">Categor&iacute;a</th><th>Funci&oacute;n en el proyecto</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Node.js</strong></td><td class="c">24 LTS</td><td>Entorno</td><td>Ejecuta JavaScript del lado del servidor. Su modelo de entrada y salida no bloqueante lo hace apropiado para una API que pasa la mayor parte del tiempo esperando a la base de datos.</td></tr>
+    <tr><td><strong>TypeScript</strong></td><td class="c">7.x</td><td>Lenguaje</td><td>A&ntilde;ade tipado est&aacute;tico. Todo el c&oacute;digo fuente est&aacute; escrito en TypeScript y se compila a JavaScript para producci&oacute;n.</td></tr>
+    <tr><td><strong>Express</strong></td><td class="c">5.x</td><td>Framework</td><td>Enruta las peticiones HTTP y encadena los middlewares. Es la base de la capa de presentaci&oacute;n.</td></tr>
+    <tr><td><strong>PostgreSQL</strong></td><td class="c">16</td><td>Base de datos</td><td>Motor relacional. Sostiene las llaves for&aacute;neas, las restricciones de unicidad, las de verificaci&oacute;n y las transacciones con bloqueo de fila.</td></tr>
+    <tr><td><strong>Sequelize</strong></td><td class="c">6.x</td><td>ORM</td><td>Traduce entre las clases del c&oacute;digo y las tablas. Administra las asociaciones y las transacciones.</td></tr>
+    <tr><td><strong>Umzug</strong></td><td class="c">3.x</td><td>Migraciones</td><td>Ejecuta y revierte migraciones y seeders por comando, llevando registro de cu&aacute;les ya se aplicaron.</td></tr>
+    <tr><td><strong>jsonwebtoken</strong></td><td class="c">9.x</td><td>Seguridad</td><td>Firma y verifica los tokens de sesi&oacute;n.</td></tr>
+    <tr><td><strong>bcrypt</strong></td><td class="c">6.x</td><td>Seguridad</td><td>Cifra las contrase&ntilde;as con un algoritmo dise&ntilde;ado para ser lento y resistente a la fuerza bruta.</td></tr>
+    <tr><td><strong>Zod</strong></td><td class="c">4.x</td><td>Validaci&oacute;n</td><td>Define los esquemas de los datos de entrada y genera a partir de ellos los tipos de TypeScript.</td></tr>
+    <tr><td><strong>swagger-jsdoc</strong><br><strong>swagger-ui-express</strong></td><td class="c">6.x / 5.x</td><td>Documentaci&oacute;n</td><td>Construyen la especificaci&oacute;n OpenAPI a partir de los comentarios del c&oacute;digo y la publican como interfaz web ejecutable.</td></tr>
+    <tr><td><strong>dotenv</strong></td><td class="c">17.x</td><td>Configuraci&oacute;n</td><td>Carga las variables de entorno desde el archivo de configuraci&oacute;n local.</td></tr>
+    <tr><td><strong>pg / pg-hstore</strong></td><td class="c">8.x</td><td>Conectividad</td><td>Controlador nativo de PostgreSQL que Sequelize usa por debajo.</td></tr>
+    <tr><td><strong>tsx</strong></td><td class="c">4.x</td><td>Desarrollo</td><td>Ejecuta TypeScript directamente y reinicia el servidor al detectar cambios.</td></tr>
+    <tr><td><strong>Docker</strong><br><strong>Docker Compose</strong></td><td class="c">&mdash;</td><td>Despliegue</td><td>Empaquetan la API y la base de datos en contenedores reproducibles.</td></tr>
+    <tr><td><strong>Git / GitHub</strong></td><td class="c">&mdash;</td><td>Control de versiones</td><td>Historial del c&oacute;digo y repositorio remoto del proyecto.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ============================ 9. JUSTIFICACION ============================ -->
+<section class="seccion" id="s9">
+<h1>9. Justificaci&oacute;n t&eacute;cnica</h1>
+<p>Este apartado explica el porqu&eacute; de cada decisi&oacute;n relevante y qu&eacute; alternativas se descartaron.</p>
+
+<h2>9.1 TypeScript sobre JavaScript</h2>
+<p>El dominio manejado es sensible: una cantidad tratada como texto en lugar de n&uacute;mero producir&iacute;a una concatenaci&oacute;n en vez de una resta y corromper&iacute;a el inventario de forma silenciosa. TypeScript detecta esa clase de errores al compilar. Adem&aacute;s, los estados de la solicitud se declaran como un tipo derivado de una lista constante, de manera que escribir mal un estado impide compilar el proyecto en lugar de fallar en producci&oacute;n.</p>
+
+<h2>9.2 Express sobre alternativas como NestJS o Fastify</h2>
+<p>Express impone la menor cantidad de estructura, lo que obliga a dise&ntilde;ar expl&iacute;citamente la separaci&oacute;n en capas en vez de recibirla resuelta por el framework. Para un proyecto formativo esa exigencia es una ventaja pedag&oacute;gica. NestJS habr&iacute;a aportado inyecci&oacute;n de dependencias y estructura impuesta, a costa de una curva de aprendizaje que no aporta al objetivo. Fastify ofrece mejor rendimiento en volumen alto, escenario que este sistema no enfrenta.</p>
+
+<h2>9.3 PostgreSQL sobre MySQL o MongoDB</h2>
+<p>Se descarta MongoDB porque el dominio es intr&iacute;nsecamente relacional: una solicitud referencia obligatoriamente cuatro entidades y esas relaciones deben ser verificadas por el motor, no por la aplicaci&oacute;n. Frente a MySQL, PostgreSQL ofrece tipos enumerados nativos para los estados y los roles, restricciones de verificaci&oacute;n con soporte pleno, y un manejo de bloqueo de fila robusto, que es exactamente lo que exige la aprobaci&oacute;n concurrente de solicitudes.</p>
+
+<h2>9.4 Sequelize como ORM</h2>
+<p>Sequelize permite declarar las asociaciones en un &uacute;nico archivo, evitando importaciones circulares entre modelos, y expone un control expl&iacute;cito de transacciones y bloqueos, indispensable para el ajuste del inventario. Se prefiri&oacute; sobre escribir SQL directo porque el proyecto necesita consultas con relaciones incluidas que en SQL plano exigir&iacute;an ensamblar manualmente los resultados de varias uniones.</p>
+
+<h2>9.5 Migraciones versionadas en lugar de sincronizaci&oacute;n autom&aacute;tica</h2>
+<p>La sincronizaci&oacute;n autom&aacute;tica del esquema deduce la estructura a partir de los modelos, no deja historial de los cambios, no es reversible y puede destruir datos al alterar una tabla. Las migraciones versionadas, en cambio, describen expl&iacute;citamente cada cambio y c&oacute;mo deshacerlo, dejan constancia de qu&eacute; se aplic&oacute; y cu&aacute;ndo, y permiten declarar restricciones que los modelos no expresan, como la verificaci&oacute;n de cantidad no negativa. La numeraci&oacute;n del nombre garantiza el orden de ejecuci&oacute;n, necesario porque las tablas con llaves for&aacute;neas dependen de las que referencian.</p>
+
+<h2>9.6 Identificadores UUID sobre enteros autoincrementales</h2>
+<p>Un entero secuencial revela cu&aacute;ntos registros existen y crece de forma predecible, lo que permite recorrer recursos ajenos probando identificadores consecutivos. El UUID elimina esa exposici&oacute;n y puede generarse en cualquier nodo sin coordinaci&oacute;n central, lo que deja abierta una eventual distribuci&oacute;n del sistema. Se acepta el mayor consumo de almacenamiento por registro como contrapartida.</p>
+
+<h2>9.7 Autenticaci&oacute;n sin estado con JWT</h2>
+<p>El token lleva dentro el identificador, el correo y el rol del usuario, de modo que verificar una petici&oacute;n no requiere consultar la base de datos: basta con validar la firma. Esto ahorra una consulta por petici&oacute;n y permite escalar horizontalmente sin compartir sesiones entre instancias. La contrapartida es que un token emitido sigue siendo v&aacute;lido hasta su vencimiento aunque el usuario sea dado de baja; se mitiga con una vigencia acotada de ocho horas.</p>
+
+<h2>9.8 Validaci&oacute;n con Zod en el borde del sistema</h2>
+<p>Zod cumple una doble funci&oacute;n: valida en tiempo de ejecuci&oacute;n y genera el tipo de TypeScript a partir del mismo esquema. Los campos se escriben una sola vez y no pueden desincronizarse. La validaci&oacute;n ocurre en un middleware previo al controlador, de modo que la capa de servicios siempre recibe datos ya verificados y no necesita volver a comprobarlos.</p>
+
+<h2>9.9 Eliminaci&oacute;n l&oacute;gica sobre borrado f&iacute;sico</h2>
+<p>Borrar f&iacute;sicamente una cl&iacute;nica dejar&iacute;a sus solicitudes hist&oacute;ricas hu&eacute;rfanas o forzar&iacute;a a borrarlas en cascada, destruyendo evidencia que el negocio necesita conservar. Marcar el registro como inactivo lo retira de los listados operativos y preserva la integridad del historial. El costo es que toda consulta operativa debe filtrar por el campo de estado activo, condici&oacute;n que se aplica de forma sistem&aacute;tica en la capa de servicios.</p>
+
+<h2>9.10 Transacciones con bloqueo de fila</h2>
+<p>Sin bloqueo, dos aprobaciones simult&aacute;neas del mismo medicamento leer&iacute;an la misma cantidad disponible y ambas la considerar&iacute;an suficiente, comprometiendo unidades inexistentes. El bloqueo de la fila del inventario obliga a la segunda operaci&oacute;n a esperar a que la primera termine, momento en el que ya lee la cantidad actualizada. La transacci&oacute;n garantiza adem&aacute;s que el cambio de estado y el ajuste del inventario se apliquen ambos o ninguno.</p>
+
+<h2>9.11 Manejador central de errores</h2>
+<p>Concentrar el tratamiento de errores en un &uacute;nico middleware final evita repetir la construcci&oacute;n de la respuesta en cada controlador, garantiza que el formato sea siempre el mismo y asegura que un error inesperado se registre en el servidor pero nunca filtre su traza al cliente. Los servicios se limitan a lanzar un error de negocio con su c&oacute;digo HTTP y el manejador se encarga del resto.</p>
+
+<h2>9.12 Contenedores para el despliegue</h2>
+<p>Docker Compose elimina la discrepancia entre entornos: la versi&oacute;n del motor de base de datos, la de Node y las variables de configuraci&oacute;n quedan declaradas en el repositorio. La verificaci&oacute;n de salud del contenedor de base de datos evita que la API intente conectarse antes de que PostgreSQL est&eacute; listo, un fallo com&uacute;n al levantar ambos servicios a la vez. La construcci&oacute;n multietapa produce una imagen de producci&oacute;n sin compilador, sin dependencias de desarrollo y sin c&oacute;digo fuente, ejecutada por un usuario sin privilegios.</p>
+</section>
+
+<!-- ============================ 10. MODELO DE DATOS ============================ -->
+<section class="seccion" id="s10">
+<h1>10. Modelo de datos</h1>
+<p>El sistema se apoya en seis tablas. La estructura detallada, con tipos, restricciones y diccionario de datos completo, se desarrolla en el documento anexo <em>Modelo de base de datos</em>. Aqu&iacute; se presenta el resumen conceptual.</p>
+
+<div class="figura">
+<div class="ascii">   users                clinicas              medicamentos          almacenes
++-----------+        +------------+        +--------------+      +------------+
+| id  (PK)  |        | id   (PK)  |        | id     (PK)  |      | id   (PK)  |
+| email  U  |        | nit     U  |        | nombre       |      | nombre     |
+| role      |        | nombre     |        | presentacion |      | direccion  |
+| is_active |        | responsab. |        | laboratorio  |      | telefono   |
++-----+-----+        +-----+------+        +---+------+---+      +--+------+--+
+      |                    |                   |      |             |      |
+      |                    |                   |      |             |      |
+      |                    |                   |      |  +----------+      |
+      |                    |                   |      |  |                 |
+      |                    |                   |      v  v                 |
+      |                    |                   |  +--------------+         |
+      |                    |                   |  |  inventario  |         |
+      |                    |                   |  +--------------+         |
+      |                    |                   |  | id      (PK) |         |
+      |                    |                   |  | almacen_id   | (FK)    |
+      |                    |                   |  | medicament_id| (FK)    |
+      |                    |                   |  | cantidad >=0 |         |
+      |                    |                   |  +--------------+         |
+      |                    |                   |   U(almacen, medicamento) |
+      |                    |                   |                           |
+      |                    v                   v                           |
+      |            +---------------------------------------+               |
+      +----------->|            solicitudes                |<--------------+
+                   +---------------------------------------+
+                   | id                  (PK)              |
+                   | clinica_id          (FK -> clinicas)  |
+                   | medicamento_id      (FK -> medicament)|
+                   | almacen_id          (FK -> almacenes) |
+                   | usuario_id          (FK -> users)     |
+                   | cantidad_solicitada  CHECK > 0        |
+                   | estado               ENUM             |
+                   | observaciones                         |
+                   | is_active                             |
+                   +---------------------------------------+
+
+  PK = llave primaria      FK = llave foranea      U = restriccion unica</div>
+<figcaption>Figura 5. Modelo conceptual de datos y relaciones entre las seis tablas del sistema.</figcaption>
+</div>
+
+<table>
+  <caption>Tabla 11. Relaciones entre entidades y su cardinalidad.</caption>
+  <thead><tr><th style="width:32%">Relaci&oacute;n</th><th class="c" style="width:14%">Cardinalidad</th><th>Lectura</th></tr></thead>
+  <tbody>
+    <tr><td>almacenes &rarr; inventario</td><td class="c">1 : N</td><td>Un almac&eacute;n guarda muchos registros de inventario.</td></tr>
+    <tr><td>medicamentos &rarr; inventario</td><td class="c">1 : N</td><td>Un medicamento aparece en el inventario de muchos almacenes.</td></tr>
+    <tr><td>clinicas &rarr; solicitudes</td><td class="c">1 : N</td><td>Una cl&iacute;nica radica muchas solicitudes.</td></tr>
+    <tr><td>medicamentos &rarr; solicitudes</td><td class="c">1 : N</td><td>Un medicamento se pide en muchas solicitudes.</td></tr>
+    <tr><td>almacenes &rarr; solicitudes</td><td class="c">1 : N</td><td>Un almac&eacute;n atiende muchas solicitudes.</td></tr>
+    <tr><td>users &rarr; solicitudes</td><td class="c">1 : N</td><td>Un usuario registra muchas solicitudes.</td></tr>
+    <tr><td>almacenes &harr; medicamentos</td><td class="c">N : M</td><td>Relaci&oacute;n de muchos a muchos resuelta por la tabla <code>inventario</code>, que aporta el atributo propio <code>cantidad</code>.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ============================ 11. SEGURIDAD ============================ -->
+<section class="seccion" id="s11">
+<h1>11. Consideraciones de seguridad</h1>
+
+<table>
+  <caption>Tabla 12. Amenazas consideradas y controles adoptados en el dise&ntilde;o.</caption>
+  <thead><tr><th style="width:28%">Amenaza</th><th>Control implementado</th></tr></thead>
+  <tbody>
+    <tr><td>Robo de contrase&ntilde;as ante una filtraci&oacute;n de la base de datos</td><td>Las contrase&ntilde;as se almacenan como hash de bcrypt con factor de costo 10. El algoritmo est&aacute; dise&ntilde;ado para ser lento a prop&oacute;sito, lo que encarece los ataques por fuerza bruta.</td></tr>
+    <tr><td>Enumeraci&oacute;n de cuentas existentes</td><td>El fallo de autenticaci&oacute;n devuelve el mismo mensaje tanto si el correo no existe como si la contrase&ntilde;a es incorrecta.</td></tr>
+    <tr><td>Acceso sin credenciales</td><td>Todas las rutas salvo el registro y el inicio de sesi&oacute;n exigen un token v&aacute;lido; la ausencia o invalidez del token responde 401.</td></tr>
+    <tr><td>Escalamiento de privilegios</td><td>El rol se lee del token firmado, nunca del cuerpo de la petici&oacute;n. Alterarlo invalidar&iacute;a la firma.</td></tr>
+    <tr><td>Suplantaci&oacute;n del autor de una solicitud</td><td>El identificador del usuario que registra la solicitud se toma del token y no se acepta como campo de entrada.</td></tr>
+    <tr><td>Uso de credenciales de usuarios dados de baja</td><td>El inicio de sesi&oacute;n verifica el estado activo del usuario antes de emitir el token.</td></tr>
+    <tr><td>Inyecci&oacute;n SQL</td><td>Todas las consultas pasan por el ORM, que emplea sentencias parametrizadas.</td></tr>
+    <tr><td>Datos malformados o inesperados</td><td>Cada cuerpo y cada par&aacute;metro de ruta se validan contra un esquema estricto antes de alcanzar la l&oacute;gica de negocio.</td></tr>
+    <tr><td>Exposici&oacute;n de informaci&oacute;n sensible en las respuestas</td><td>Las respuestas de usuario se construyen a partir de una funci&oacute;n que omite expl&iacute;citamente el hash de la contrase&ntilde;a.</td></tr>
+    <tr><td>Filtraci&oacute;n de detalles internos en los errores</td><td>El manejador central registra la traza en el servidor y devuelve al cliente un mensaje gen&eacute;rico.</td></tr>
+    <tr><td>Exposici&oacute;n de secretos en el repositorio</td><td>La clave de firma y las credenciales viven en variables de entorno; el archivo de configuraci&oacute;n est&aacute; excluido del control de versiones y se distribuye una plantilla de ejemplo.</td></tr>
+    <tr><td>Contenedor de producci&oacute;n con privilegios excesivos</td><td>La imagen final se ejecuta con un usuario sin privilegios y no contiene compilador, dependencias de desarrollo ni c&oacute;digo fuente.</td></tr>
+  </tbody>
+</table>
+
+<div class="aviso">
+<strong>Limitaciones conocidas del dise&ntilde;o actual</strong>
+El sistema no implementa revocaci&oacute;n anticipada de tokens, limitaci&oacute;n de intentos de inicio de sesi&oacute;n, ni registro de auditor&iacute;a independiente de las marcas de tiempo. Se documentan como oportunidades de mejora para una versi&oacute;n posterior y no como defectos del alcance acordado.
+</div>
+</section>
+
+<!-- ============================ 12. ANEXOS ============================ -->
+<section class="seccion" id="s12">
+<h1>12. Anexos y documentos relacionados</h1>
+<p>Este documento forma parte de un conjunto de evidencias. Los siguientes productos lo complementan y se entregan junto con &eacute;l.</p>
+
+<table>
+  <caption>Tabla 13. Documentos que integran la evidencia de producto.</caption>
+  <thead><tr><th style="width:10%">Anexo</th><th style="width:34%">Documento</th><th>Contenido</th></tr></thead>
+  <tbody>
+    <tr><td class="c">A</td><td>Diagramas UML</td><td>Casos de uso, clases, secuencia de creaci&oacute;n y de aprobaci&oacute;n de solicitud, actividad del ciclo de estados y diagrama de componentes.</td></tr>
+    <tr><td class="c">B</td><td>Prototipo de la soluci&oacute;n</td><td>Wireframes de las pantallas principales de la interfaz propuesta y mapa de navegaci&oacute;n.</td></tr>
+    <tr><td class="c">C</td><td>Modelo de base de datos</td><td>Diagrama entidad-relaci&oacute;n, diccionario de datos por tabla y guion de creaci&oacute;n del esquema.</td></tr>
+    <tr><td class="c">D</td><td>Documento t&eacute;cnico de c&oacute;digo fuente</td><td>Evidencia de la norma 220501096. Estructura del proyecto y explicaci&oacute;n del c&oacute;digo implementado.</td></tr>
+    <tr><td class="c">E</td><td>Manual de usuario</td><td>Evidencia de la norma 220501096. Instalaci&oacute;n, ejecuci&oacute;n y uso del sistema.</td></tr>
+  </tbody>
+</table>
+
+<h2>Control de versiones del documento</h2>
+<table>
+  <thead><tr><th class="c" style="width:12%">Versi&oacute;n</th><th class="c" style="width:18%">Fecha</th><th style="width:26%">Autor</th><th>Descripci&oacute;n del cambio</th></tr></thead>
+  <tbody>
+    <tr><td class="c">1.0</td><td class="c"><span class="rellenar">[ Fecha ]</span></td><td>Dylan Alberto Su&aacute;rez Laverde</td><td>Versi&oacute;n inicial del documento de dise&ntilde;o.</td></tr>
+  </tbody>
+</table>
+
+<div class="firma">
+  <div>Dylan Alberto Su&aacute;rez Laverde<br><span style="color:#5a635c">Aprendiz</span></div>
+  <div><span class="rellenar">[ Nombre del instructor ]</span><br><span style="color:#5a635c">Instructor evaluador</span></div>
+</div>
+</section>
+
+</div><!-- /hoja -->
+
+</body>
+</html>

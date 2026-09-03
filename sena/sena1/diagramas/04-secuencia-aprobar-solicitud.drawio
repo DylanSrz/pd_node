@@ -1,0 +1,129 @@
+<mxfile host="app.diagrams.net" agent="RiwiMediCare Plus" version="24.7.17" type="device">
+  <diagram name="Secuencia - Aprobar solicitud" id="sec-aprobar-solicitud">
+    <mxGraphModel dx="1600" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="titulo" value="DIAGRAMA DE SECUENCIA&#10;CU-05  Cambiar estado de la solicitud  (pendiente  &#8594;  aprobada)" style="text;html=1;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;fontColor=#2d8400;" vertex="1" parent="1">
+          <mxGeometry x="330" y="10" width="640" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lf1" value=":Administrador" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#eaf6e3;strokeColor=#2d8400;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="lf2" value=":Router" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#e3f0fb;strokeColor=#0b5b8a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="200" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="lf3" value=":verificarTransicion&#10;Estado" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fdf0e0;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="lf4" value=":Solicitud&#10;Controller" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#f3e9fb;strokeColor=#6b34a8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="520" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="lf5" value=":Solicitud&#10;Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fbe6e5;strokeColor=#b3261e;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="680" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="lf6" value=":Transaction&#10;(Sequelize)" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fff8e0;strokeColor=#c9a227;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="840" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="lf7" value=":Inventario&#10;(Sequelize)" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fff8e0;strokeColor=#c9a227;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="lf8" value=":PostgreSQL" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#f6f8f5;strokeColor=#5a635c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="90" width="140" height="1000" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m1" value="PATCH /api/solicitudes/:id/estado&#10;{ estado: 'aprobada' }" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="110" y="150" as="sourcePoint" /><mxPoint x="270" y="150" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m2" value="verificarTransicionEstado()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="270" y="190" as="sourcePoint" /><mxPoint x="430" y="190" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="SELECT estado FROM solicitudes WHERE id AND is_active" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="430" y="230" as="sourcePoint" /><mxPoint x="1230" y="230" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m4" value="estado actual = 'pendiente'" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1230" y="270" as="sourcePoint" /><mxPoint x="430" y="270" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m5" value="esTransicionValida('pendiente', 'aprobada')" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;spacingLeft=6;endArrow=block;rounded=0;curved=0;fontSize=10;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="298" as="sourcePoint" />
+            <mxPoint x="430" y="334" as="targetPoint" />
+            <Array as="points"><mxPoint x="490" y="298" /><mxPoint x="490" y="334" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m6" value="transicion permitida" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="430" y="374" as="sourcePoint" /><mxPoint x="270" y="374" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="patchEstadoSolicitud()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="270" y="414" as="sourcePoint" /><mxPoint x="590" y="414" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m8" value="cambiarEstadoSolicitud(id, datos)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="590" y="454" as="sourcePoint" /><mxPoint x="750" y="454" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="marco" value="TRANSACCION  ATOMICA" style="shape=umlFrame;whiteSpace=wrap;html=1;width=190;height=26;fillColor=none;strokeColor=#b3261e;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#b3261e;verticalAlign=top;align=left;" vertex="1" parent="1">
+          <mxGeometry x="620" y="470" width="700" height="430" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m9" value="db.transaction()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="750" y="524" as="sourcePoint" /><mxPoint x="910" y="524" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m10" value="BEGIN" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="910" y="560" as="sourcePoint" /><mxPoint x="1230" y="560" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m11" value="Inventario.findOne({ lock: LOCK.UPDATE, transaction })" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;strokeColor=#b3261e;fontColor=#b3261e;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="750" y="600" as="sourcePoint" /><mxPoint x="1070" y="600" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m12" value="SELECT ... FOR UPDATE   &#8592; bloquea la fila" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;strokeColor=#b3261e;fontColor=#b3261e;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1070" y="640" as="sourcePoint" /><mxPoint x="1230" y="640" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m13" value="cantidad = 500 (fila bloqueada)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1230" y="676" as="sourcePoint" /><mxPoint x="750" y="676" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m14" value="revalidar  cantidad &gt;= cantidad_solicitada" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;spacingLeft=6;endArrow=block;rounded=0;curved=0;fontSize=10;verticalAlign=bottom;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="750" y="704" as="sourcePoint" />
+            <mxPoint x="750" y="740" as="targetPoint" />
+            <Array as="points"><mxPoint x="810" y="704" /><mxPoint x="810" y="740" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" value="update({ cantidad: 500 - 120 })" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="750" y="780" as="sourcePoint" /><mxPoint x="1070" y="780" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m16" value="UPDATE inventario SET cantidad = 380" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1070" y="816" as="sourcePoint" /><mxPoint x="1230" y="816" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m17" value="UPDATE solicitudes SET estado = 'aprobada', observaciones" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="750" y="856" as="sourcePoint" /><mxPoint x="1230" y="856" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="m18" value="commit()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="750" y="930" as="sourcePoint" /><mxPoint x="910" y="930" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m19" value="COMMIT   &#8592; libera el bloqueo de la fila" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;fontStyle=1;strokeColor=#2d8400;fontColor=#2d8400;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="910" y="966" as="sourcePoint" /><mxPoint x="1230" y="966" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m20" value="solicitud actualizada con sus relaciones" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="750" y="1006" as="sourcePoint" /><mxPoint x="590" y="1006" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m21" value="200 OK  { message, solicitud }" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=11;fontStyle=1;strokeColor=#2d8400;fontColor=#2d8400;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="590" y="1046" as="sourcePoint" /><mxPoint x="110" y="1046" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="notaLock" value="POR QUE EL BLOQUEO DE FILA&#10;&#10;Sin  FOR UPDATE,  dos aprobaciones&#10;simultaneas del mismo medicamento&#10;leerian ambas  cantidad = 500,  ambas&#10;la considerarian suficiente y ambas&#10;descontarian sobre el mismo valor:&#10;&#10;   T1 lee 500  ->  escribe 380&#10;   T2 lee 500  ->  escribe 380&#10;&#10;Resultado: se comprometen 240 unidades&#10;pero el inventario solo bajo 120.&#10;&#10;Con el bloqueo, T2 espera a que T1&#10;confirme y entonces lee 380, el valor&#10;real, y revalida sobre el.&#10;&#10;   T1 lee 500  ->  escribe 380  COMMIT&#10;   T2 espera... lee 380  ->  revalida" style="text;html=1;align=left;verticalAlign=top;fontSize=10;fillColor=#fbe6e5;strokeColor=#b3261e;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="150" width="280" height="330" as="geometry" />
+        </mxCell>
+
+        <mxCell id="notaRollback" value="MANEJO DEL ERROR&#10;&#10;Si cualquier paso dentro de la&#10;transaccion falla, el bloque catch&#10;ejecuta  rollback()  y relanza el&#10;error hacia el manejador central.&#10;&#10;Nunca queda el estado cambiado con&#10;el inventario sin ajustar, ni al&#10;reves: se aplican los dos cambios&#10;o no se aplica ninguno.&#10;&#10;Casos que provocan rollback:&#10;&#10;  400  el almacen ya no maneja&#10;       ese medicamento&#10;  400  inventario insuficiente&#10;       en el momento de aprobar&#10;  404  la solicitud fue dada de&#10;       baja entre tanto" style="text;html=1;align=left;verticalAlign=top;fontSize=10;fillColor=#fdf4ea;strokeColor=#c25e00;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="510" width="280" height="320" as="geometry" />
+        </mxCell>
+
+        <mxCell id="notaOtras" value="OTRAS TRANSICIONES&#10;&#10;aprobada -&gt; cancelada&#10;   reintegra:  cantidad + solicitada&#10;&#10;aprobada -&gt; entregada&#10;   sin efecto sobre el inventario&#10;&#10;pendiente -&gt; rechazada / cancelada&#10;   sin efecto: nunca se descontó" style="text;html=1;align=left;verticalAlign=top;fontSize=10;fillColor=#eaf6e3;strokeColor=#39A900;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="860" width="280" height="180" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

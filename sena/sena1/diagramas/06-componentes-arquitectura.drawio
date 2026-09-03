@@ -1,0 +1,182 @@
+<mxfile host="app.diagrams.net" agent="RiwiMediCare Plus" version="24.7.17" type="device">
+  <diagram name="Componentes y capas" id="comp-arquitectura">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="titulo" value="DIAGRAMA DE COMPONENTES&#10;Arquitectura por capas de la API RiwiMediCare Plus" style="text;html=1;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;fontColor=#2d8400;" vertex="1" parent="1">
+          <mxGeometry x="285" y="15" width="600" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cliente" value="CLIENTES" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f6f8f5;strokeColor=#5a635c;dashed=1;fontStyle=1;fontSize=12;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="90" width="1010" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cl1" value="Swagger UI&#10;/api-docs" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="120" y="120" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cl2" value="Postman&#10;Thunder Client" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cl3" value="Frontend web&#10;(propuesto)" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;dashed=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="600" y="120" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cl4" value="Aplicacion movil&#10;(futuro)" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;dashed=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="840" y="120" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="proto" value="HTTP / JSON" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=2;fontColor=#0b5b8a;" vertex="1" parent="1">
+          <mxGeometry x="500" y="188" width="170" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="capaPres" value="CAPA DE PRESENTACION" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#e3f0fb;strokeColor=#0b5b8a;strokeWidth=2;fontStyle=1;fontSize=12;fontColor=#0b5b8a;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="220" width="1010" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p1" value="app.ts&#10;punto de entrada" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#0b5b8a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="110" y="255" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="routes/&#10;auth . clinica . almacen&#10;medicamento . inventario&#10;solicitud" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#0b5b8a;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="320" y="255" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p3" value="config/swagger.ts&#10;especificacion OpenAPI" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#0b5b8a;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="590" y="255" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p4" value="error-handler.ts&#10;manejador central" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#b3261e;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="830" y="255" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="capaMw" value="CAPA DE MIDDLEWARES" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#fdf0e0;strokeColor=#c25e00;strokeWidth=2;fontStyle=1;fontSize=12;fontColor=#c25e00;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="370" width="1010" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="mw0" value="SEGURIDAD" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#c25e00;" vertex="1" parent="1">
+          <mxGeometry x="110" y="400" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mw1" value="verifyToken&#10;valida la firma del JWT" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="110" y="422" width="210" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="mw2" value="checkRole&#10;autoriza segun el rol" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="340" y="422" width="210" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="mw3" value="validateRequest&#10;validateParams" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="570" y="422" width="210" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="mw4" value="verificar-nit-unico&#10;NIT sin duplicar" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="800" y="422" width="230" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="mw5" value="NEGOCIO" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#c25e00;" vertex="1" parent="1">
+          <mxGeometry x="110" y="472" width="120" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="mw6" value="verificar-entidades-relacionadas&#10;clinica, medicamento y almacen existen" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="110" y="492" width="290" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="mw7" value="verificar-inventario&#10;stock suficiente en el almacen" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="492" width="290" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="mw8" value="verificar-transicion-estado&#10;el salto de estado esta permitido" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c25e00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="730" y="492" width="300" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="capaCtrl" value="CAPA DE CONTROLADORES     traduce entre HTTP y los servicios" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f3e9fb;strokeColor=#6b34a8;strokeWidth=2;fontStyle=1;fontSize=12;fontColor=#6b34a8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="580" width="1010" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ct1" value="auth&#10;controller" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#6b34a8;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="110" y="612" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ct2" value="clinica&#10;controller" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#6b34a8;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="612" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ct3" value="almacen&#10;controller" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#6b34a8;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="612" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ct4" value="medicamento&#10;controller" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#6b34a8;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="612" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ct5" value="inventario&#10;controller" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#6b34a8;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="612" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="ct6" value="solicitud&#10;controller" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#6b34a8;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="950" y="612" width="120" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="capaSvc" value="CAPA DE SERVICIOS     toda la logica de negocio" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#fbe6e5;strokeColor=#b3261e;strokeWidth=2;fontStyle=1;fontSize=12;fontColor=#b3261e;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="710" width="1010" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sv1" value="auth&#10;service" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#b3261e;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="110" y="742" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="sv2" value="clinica&#10;service" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#b3261e;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="742" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="sv3" value="almacen&#10;service" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#b3261e;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="742" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="sv4" value="medicamento&#10;service" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#b3261e;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="742" width="150" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="sv5" value="inventario&#10;service" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#b3261e;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="742" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="sv6" value="solicitud&#10;service" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#b3261e;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="950" y="742" width="120" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="capaDat" value="CAPA DE ACCESO A DATOS     Sequelize ORM" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#fff8e0;strokeColor=#c9a227;strokeWidth=2;fontStyle=1;fontSize=12;fontColor=#8a6d0b;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="840" width="1010" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="md1" value="models/index.ts&#10;asociaciones entre modelos" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c9a227;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="872" width="250" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="md2" value="User . Clinica . Almacen&#10;Medicamento . Inventario . Solicitud" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c9a227;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="380" y="872" width="320" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="md3" value="config/db.ts&#10;conexion Sequelize" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c9a227;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="720" y="872" width="180" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="md4" value="migrations/&#10;seeders/&#10;Umzug" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#c9a227;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="920" y="872" width="150" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="md5" value="Todas las consultas operativas filtran por  is_active = true   -   los identificadores son UUID" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="110" y="928" width="960" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bd" value="PostgreSQL 16" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f6f8f5;strokeColor=#5a635c;fontSize=13;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="415" y="1010" width="340" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="bdTxt" value="users  .  clinicas  .  almacenes&#10;medicamentos  .  inventario  .  solicitudes&#10;&#10;FK  .  UNIQUE  .  CHECK  .  ENUM" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="425" y="1055" width="320" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="trans" value="COMPONENTES TRANSVERSALES" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f6f8f5;strokeColor=#5a635c;dashed=1;fontStyle=1;fontSize=11;fontColor=#5a635c;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1180" width="1010" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="tr1" value="dto/&#10;esquemas Zod" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="110" y="1210" width="220" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="tr2" value="types/&#10;enums . payload-token" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="350" y="1210" width="220" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="tr3" value="utils/http-error&#10;HttpError" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="590" y="1210" width="220" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="tr4" value="utils/estado-solicitud&#10;maquina de estados" style="shape=component;jettyWidth=8;jettyHeight=4;html=1;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#5a635c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="830" y="1210" width="240" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fl1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="585" y="180" as="sourcePoint" /><mxPoint x="585" y="220" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="fl2" style="endArrow=block;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="585" y="340" as="sourcePoint" /><mxPoint x="585" y="370" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="fl3" style="endArrow=block;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="585" y="550" as="sourcePoint" /><mxPoint x="585" y="580" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="fl4" style="endArrow=block;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="585" y="680" as="sourcePoint" /><mxPoint x="585" y="710" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="fl5" style="endArrow=block;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="585" y="810" as="sourcePoint" /><mxPoint x="585" y="840" as="targetPoint" /></mxGeometry></mxCell>
+        <mxCell id="fl6" value="SQL" style="endArrow=block;html=1;rounded=0;strokeWidth=2;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="585" y="970" as="sourcePoint" /><mxPoint x="585" y="1010" as="targetPoint" /></mxGeometry></mxCell>
+
+        <mxCell id="notaFlujo" value="REGLA DE DEPENDENCIA&#10;&#10;Cada capa solo conoce a la&#10;inmediatamente inferior.&#10;&#10;Un controlador nunca consulta&#10;un modelo directamente, y un&#10;servicio nunca conoce el objeto&#10;request ni el response.&#10;&#10;Los componentes transversales&#10;pueden ser usados por cualquier&#10;capa, pero no dependen de&#10;ninguna de ellas." style="text;html=1;align=left;verticalAlign=top;fontSize=10;fillColor=#eaf6e3;strokeColor=#39A900;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1010" width="290" height="240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="notaErr" value="MANEJO DE ERRORES&#10;&#10;Los servicios lanzan HttpError&#10;con su codigo. Los controladores&#10;lo entregan con next(error).&#10;&#10;error-handler lo convierte en&#10;una respuesta JSON uniforme.&#10;&#10;Un error no previsto se registra&#10;en el servidor y al cliente solo&#10;se le devuelve 500 generico." style="text;html=1;align=left;verticalAlign=top;fontSize=10;fillColor=#fbe6e5;strokeColor=#b3261e;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="800" y="1010" width="290" height="210" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

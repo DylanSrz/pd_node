@@ -1,0 +1,42 @@
+CARPETA DE CAPTURAS DE PANTALLA
+================================
+
+Aqui van las 31 capturas del manual de usuario.
+
+Sigue las instrucciones de: ../03-guia-de-capturas.md
+
+Nombres esperados:
+
+  01-versiones-instaladas.png
+  02-repositorio-clonado.png
+  03-npm-install.png
+  04-archivo-env.png
+  05-npm-run-migrate.png
+  06-npm-run-seed.png
+  07-servidor-corriendo.png
+  08-docker-compose-up.png          (opcional)
+  09-api-funcionando.png
+  10-swagger-completo.png
+  11-register-201.png
+  12-login-token.png
+  13-authorize.png
+  14-get-clinicas.png
+  15-post-clinica-201.png
+  16-get-medicamentos.png
+  17-inventario-antes.png           CLAVE
+  18-post-solicitud-201.png
+  19-get-solicitudes.png
+  20-aprobar-solicitud.png          CLAVE
+  21-inventario-despues.png         CLAVE
+  22-historial-solicitudes.png
+  23-solicitudes-por-clinica.png
+  24-error-401-sin-token.png
+  25-error-403-rol.png              CLAVE
+  26-error-400-inventario.png       CLAVE
+  27-error-400-transicion.png       CLAVE
+  28-error-409-nit.png
+  29-error-400-cantidad.png
+  30-reintegro-inventario.png       CLAVE
+  31-base-de-datos.png
+
+Formato: PNG, minimo 1280 px de ancho.

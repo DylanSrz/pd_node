@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototipo de la Solucion - API RiwiMediCare Plus</title>
+<style>
+:root{
+  --verde:#39A900; --verde-osc:#2d8400; --verde-claro:#eaf6e3;
+  --tinta:#1a1f1c; --gris:#5a635c; --linea:#d8ddd6; --fondo-alt:#f6f8f5;
+  --naranja:#c25e00; --azul:#0b5b8a; --rojo:#b3261e;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--tinta); background:#fff; line-height:1.65; font-size:11pt;
+  margin:0; padding:0;
+}
+.hoja{max-width:19cm; margin:0 auto; padding:1.5cm 1.6cm 2cm;}
+
+/* ---------- PORTADA ---------- */
+.portada{
+  min-height:26cm; display:flex; flex-direction:column;
+  justify-content:space-between; text-align:center;
+  padding:2.5cm 1.6cm; page-break-after:always;
+}
+.portada .marca{font-size:9pt;letter-spacing:.22em;text-transform:uppercase;color:var(--verde-osc);font-weight:700;}
+.portada .logo{width:96px;height:96px;margin:0 auto 1.2rem;}
+.portada h1{font-size:26pt;line-height:1.2;margin:.6rem 0;color:var(--tinta);border:0;}
+.portada .sub{font-size:13pt;color:var(--gris);margin:0 0 1.4rem;font-weight:400;}
+.portada .norma{
+  display:inline-block;border:2px solid var(--verde);border-radius:8px;
+  padding:.7rem 1.4rem;font-size:10.5pt;color:var(--verde-osc);font-weight:600;
+  background:var(--verde-claro);
+}
+.portada .datos{
+  margin:2rem auto 0;text-align:left;max-width:13cm;
+  border-top:1px solid var(--linea);padding-top:1.2rem;
+}
+.portada .datos dl{display:grid;grid-template-columns:auto 1fr;gap:.45rem 1.2rem;margin:0;font-size:10.5pt;}
+.portada .datos dt{color:var(--gris);font-weight:600;}
+.portada .datos dd{margin:0;}
+.portada .pie{font-size:9.5pt;color:var(--gris);border-top:1px solid var(--linea);padding-top:1rem;}
+.rellenar{background:#fff6d9;border-bottom:1px dashed #c9a227;padding:0 .2rem;}
+
+/* ---------- TIPOGRAFÍA ---------- */
+h1{
+  font-size:19pt;color:var(--tinta);margin:0 0 1.2rem;padding-bottom:.5rem;
+  border-bottom:3px solid var(--verde);page-break-after:avoid;
+}
+h2{font-size:14pt;margin:2rem 0 .7rem;color:var(--verde-osc);page-break-after:avoid;}
+h3{font-size:12pt;margin:1.4rem 0 .5rem;color:var(--tinta);page-break-after:avoid;}
+h4{font-size:11pt;margin:1.1rem 0 .4rem;color:var(--gris);text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid;}
+p{margin:.7rem 0;text-align:justify;}
+ul,ol{margin:.6rem 0 .9rem;padding-left:1.4rem;}
+li{margin:.3rem 0;}
+a{color:var(--azul);}
+code{
+  font-family:Consolas,"Courier New",monospace;font-size:.9em;
+  background:var(--fondo-alt);border:1px solid var(--linea);
+  border-radius:3px;padding:.08em .35em;
+}
+pre{
+  background:#1e2420;color:#e8ede8;border-radius:6px;padding:.9rem 1.1rem;
+  overflow-x:auto;font-family:Consolas,"Courier New",monospace;
+  font-size:9pt;line-height:1.55;page-break-inside:avoid;
+}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit;}
+pre .c{color:#8fae86;}      /* comentario */
+pre .k{color:#7fc9ff;}      /* keyword   */
+pre .s{color:#f3c98b;}      /* string    */
+pre .f{color:#c6a0f6;}      /* función   */
+
+/* ---------- SECCIÓN ---------- */
+.seccion{page-break-before:always;}
+.seccion:first-of-type{page-break-before:avoid;}
+
+/* ---------- TABLAS ---------- */
+table{
+  width:100%;border-collapse:collapse;margin:1rem 0 1.4rem;
+  font-size:9.5pt;page-break-inside:avoid;
+}
+caption{
+  caption-side:bottom;text-align:left;font-size:9pt;color:var(--gris);
+  padding-top:.45rem;font-style:italic;
+}
+th{
+  background:var(--verde-claro);color:var(--verde-osc);text-align:left;
+  padding:.5rem .6rem;border:1px solid var(--linea);font-weight:700;
+}
+td{padding:.45rem .6rem;border:1px solid var(--linea);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--fondo-alt);}
+td.id,th.id{white-space:nowrap;font-family:Consolas,monospace;font-size:9pt;}
+td.c,th.c{text-align:center;}
+
+/* ---------- COMPONENTES ---------- */
+.nota,.aviso,.ok{
+  border-left:4px solid var(--azul);background:#f0f6fa;
+  padding:.8rem 1rem;margin:1rem 0;border-radius:0 6px 6px 0;
+  font-size:10pt;page-break-inside:avoid;
+}
+.aviso{border-color:var(--naranja);background:#fdf4ea;}
+.ok{border-color:var(--verde);background:var(--verde-claro);}
+.nota strong:first-child,.aviso strong:first-child,.ok strong:first-child{display:block;margin-bottom:.25rem;}
+
+.toc{background:var(--fondo-alt);border:1px solid var(--linea);border-radius:8px;padding:1.2rem 1.6rem;}
+.toc h2{margin-top:0;}
+.toc ol{list-style:none;padding-left:0;counter-reset:s;}
+.toc > ol > li{counter-increment:s;margin:.4rem 0;font-weight:600;}
+.toc > ol > li::before{content:counter(s) ". ";color:var(--verde-osc);}
+.toc ol ol{padding-left:1.6rem;counter-reset:ss;}
+.toc ol ol li{counter-increment:ss;font-weight:400;font-size:10pt;margin:.15rem 0;}
+.toc ol ol li::before{content:counter(s) "." counter(ss) " ";color:var(--gris);}
+.toc a{text-decoration:none;color:var(--tinta);}
+
+.badge{
+  display:inline-block;padding:.12em .55em;border-radius:99px;
+  font-size:8.5pt;font-weight:700;letter-spacing:.03em;
+}
+.b-get{background:#e3f0fb;color:#0b5b8a;}
+.b-post{background:#e4f5df;color:#2d8400;}
+.b-put{background:#fdf0e0;color:#c25e00;}
+.b-patch{background:#f3e9fb;color:#6b34a8;}
+.b-del{background:#fbe6e5;color:#b3261e;}
+.b-pub{background:#eceff0;color:#5a635c;}
+.b-adm{background:#fbe6e5;color:#b3261e;}
+.b-ges{background:#fdf0e0;color:#c25e00;}
+.b-aut{background:#e3f0fb;color:#0b5b8a;}
+
+.figura{
+  border:1px solid var(--linea);border-radius:8px;padding:1rem;
+  margin:1.2rem 0;background:#fff;text-align:center;page-break-inside:avoid;
+}
+.figura svg{max-width:100%;height:auto;}
+.figura figcaption{
+  font-size:9pt;color:var(--gris);margin-top:.6rem;
+  font-style:italic;text-align:center;
+}
+.ascii{
+  background:var(--fondo-alt);border:1px solid var(--linea);border-radius:6px;
+  padding:1rem;font-family:Consolas,"Courier New",monospace;font-size:9pt;
+  line-height:1.5;white-space:pre;overflow-x:auto;text-align:left;
+  page-break-inside:avoid;
+}
+.hueco-captura{
+  border:2px dashed var(--verde);border-radius:8px;background:var(--verde-claro);
+  padding:2.4rem 1rem;text-align:center;color:var(--verde-osc);
+  margin:1rem 0 .3rem;font-size:10pt;page-break-inside:avoid;
+}
+.hueco-captura strong{display:block;font-size:11pt;margin-bottom:.3rem;}
+.hueco-captura em{font-style:normal;color:var(--gris);font-size:9.5pt;}
+
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.tarjeta{
+  border:1px solid var(--linea);border-left:4px solid var(--verde);
+  border-radius:0 8px 8px 0;padding:.9rem 1.1rem;background:var(--fondo-alt);
+  page-break-inside:avoid;
+}
+.tarjeta h4{margin-top:0;color:var(--verde-osc);}
+.tarjeta p{margin:.3rem 0;font-size:10pt;text-align:left;}
+
+.firma{
+  margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;
+  page-break-inside:avoid;
+}
+.firma div{border-top:1px solid var(--tinta);padding-top:.5rem;text-align:center;font-size:9.5pt;}
+
+/* ---------- IMPRESIÓN ---------- */
+@page{size:A4;margin:1.6cm 1.5cm;}
+@media print{
+  body{font-size:10.5pt;}
+  .hoja{max-width:none;padding:0;margin:0;}
+  .portada{min-height:24cm;padding:1cm 0;}
+  .no-print{display:none !important;}
+  a{color:var(--tinta);text-decoration:none;}
+  pre{border:1px solid var(--linea);}
+}
+.barra-print{
+  position:sticky;top:0;z-index:9;background:var(--verde);color:#fff;
+  padding:.55rem 1rem;font-size:9.5pt;text-align:center;
+}
+.barra-print kbd{
+  background:#fff;color:var(--verde-osc);border-radius:4px;
+  padding:.05em .4em;font-family:inherit;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="barra-print no-print">Para generar el PDF: <kbd>Ctrl</kbd> + <kbd>P</kbd> &rarr; Destino: <kbd>Guardar como PDF</kbd> &rarr; Margenes: <kbd>Predeterminado</kbd> &rarr; activar <kbd>Graficos de fondo</kbd></div>
+<style>
+/* ---------- ESTILOS ESPECIFICOS DEL PROTOTIPO ---------- */
+.wf{border:1px solid #b9c0b6;border-radius:8px;overflow:hidden;background:#fff;margin:0;box-shadow:0 1px 3px rgba(0,0,0,.06);page-break-inside:avoid;}
+.wf-chrome{background:#e8ebe6;border-bottom:1px solid #b9c0b6;padding:.4rem .7rem;display:flex;align-items:center;gap:.5rem;}
+.wf-dots{display:flex;gap:.3rem;}
+.wf-dots i{width:9px;height:9px;border-radius:50%;background:#b9c0b6;display:block;}
+.wf-url{flex:1;background:#fff;border:1px solid #cdd3c9;border-radius:99px;padding:.15rem .7rem;font:600 8.5pt Consolas,monospace;color:#5a635c;}
+.wf-app{display:flex;min-height:280px;}
+.wf-side{width:140px;background:#f2f4f0;border-right:1px solid #dde2d9;padding:.7rem .5rem;flex-shrink:0;}
+.wf-logo{font:700 9pt/1.2 inherit;color:#2d8400;padding:.3rem .4rem .7rem;border-bottom:1px solid #dde2d9;margin-bottom:.5rem;}
+.wf-nav{list-style:none;padding:0;margin:0;}
+.wf-nav li{font-size:8.5pt;color:#5a635c;padding:.32rem .45rem;border-radius:4px;margin:.1rem 0;}
+.wf-nav li.on{background:#39A900;color:#fff;font-weight:600;}
+.wf-nav li.adm::after{content:" \25CF";color:#b3261e;font-size:7pt;}
+.wf-main{flex:1;padding:.8rem 1rem;min-width:0;}
+.wf-bar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #dde2d9;padding-bottom:.5rem;margin-bottom:.7rem;}
+.wf-h{font:700 11pt inherit;color:#1a1f1c;margin:0;}
+.wf-sub{font-size:8pt;color:#8b938a;margin:.1rem 0 0;}
+.wf-btn{display:inline-block;background:#39A900;color:#fff;border-radius:5px;padding:.28rem .8rem;font-size:8.5pt;font-weight:600;}
+.wf-btn.sec{background:#fff;color:#5a635c;border:1px solid #cdd3c9;}
+.wf-btn.dan{background:#fff;color:#b3261e;border:1px solid #e6b7b4;}
+.wf-input{border:1px solid #cdd3c9;border-radius:5px;background:#fbfcfa;padding:.35rem .6rem;font-size:8.5pt;color:#8b938a;}
+.wf-lbl{font-size:8pt;color:#5a635c;font-weight:600;display:block;margin-bottom:.15rem;}
+.wf-fld{margin-bottom:.55rem;}
+.wf-grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 .9rem;}
+.wf-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;}
+table.wft{width:100%;border-collapse:collapse;font-size:8pt;margin:0;}
+table.wft th{background:#f2f4f0;color:#5a635c;text-align:left;padding:.3rem .45rem;border-bottom:1px solid #dde2d9;font-weight:700;font-size:7.5pt;text-transform:uppercase;letter-spacing:.04em;}
+table.wft td{padding:.32rem .45rem;border-bottom:1px solid #eef1ec;color:#3d443e;}
+table.wft tbody tr:nth-child(even){background:none;}
+.pill{display:inline-block;border-radius:99px;padding:.05em .5em;font-size:7pt;font-weight:700;}
+.p-pen{background:#fdf0e0;color:#c25e00;}
+.p-apr{background:#e4f5df;color:#2d8400;}
+.p-ent{background:#e3f0fb;color:#0b5b8a;}
+.p-rec{background:#fbe6e5;color:#b3261e;}
+.p-can{background:#eceff0;color:#5a635c;}
+.wf-kpi{border:1px solid #dde2d9;border-radius:6px;padding:.55rem .7rem;background:#fbfcfa;}
+.wf-kpi b{display:block;font-size:16pt;color:#2d8400;line-height:1.1;}
+.wf-kpi span{font-size:7.5pt;color:#8b938a;text-transform:uppercase;letter-spacing:.05em;}
+.wf-empty{border:1px dashed #cdd3c9;border-radius:6px;padding:.9rem;text-align:center;color:#a8afa5;font-size:8.5pt;}
+.marca-n{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:#39A900;color:#fff;font-size:8pt;font-weight:700;flex-shrink:0;}
+.anot{list-style:none;padding:0;margin:.9rem 0 0;font-size:9.5pt;}
+.anot li{display:flex;gap:.5rem;margin:.35rem 0;align-items:flex-start;}
+.pantalla{margin:1.4rem 0 2rem;page-break-inside:avoid;}
+.pantalla > h3{border-left:4px solid #39A900;padding-left:.6rem;margin-bottom:.7rem;}
+.ep{font-family:Consolas,monospace;font-size:8.5pt;background:#f6f8f5;border:1px solid #dde2d9;border-radius:3px;padding:.05em .35em;}
+</style>
+
+<section class="portada">
+  <div>
+    <div class="logo">
+      <svg viewBox="0 0 96 96" role="img" aria-label="Espacio para el logo institucional">
+        <rect x="2" y="2" width="92" height="92" rx="10" fill="#eaf6e3" stroke="#39A900" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="48" y="44" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">LOGO</text>
+        <text x="48" y="60" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">SENA</text>
+      </svg>
+    </div>
+    <div class="marca">Servicio Nacional de Aprendizaje &middot; SENA</div>
+  </div>
+  <div>
+    <div class="norma">EVIDENCIA DE PRODUCTO &middot; NORMA 220501095</div>
+    <h1>Prototipo de la Soluci&oacute;n</h1>
+    <p class="sub">Wireframes de las pantallas principales y mapa de navegaci&oacute;n<br><strong>API RiwiMediCare Plus</strong></p>
+    <div class="datos">
+      <dl>
+        <dt>Aprendiz</dt><dd>Dylan Alberto Su&aacute;rez Laverde</dd>
+        <dt>Programa</dt><dd><span class="rellenar">[ Nombre del programa de formaci&oacute;n ]</span></dd>
+        <dt>Ficha</dt><dd><span class="rellenar">[ N&uacute;mero de ficha ]</span></dd>
+        <dt>Instructor</dt><dd><span class="rellenar">[ Nombre del instructor ]</span></dd>
+        <dt>Tipo</dt><dd>Prototipo de baja fidelidad (wireframe)</dd>
+        <dt>Pantallas</dt><dd>10</dd>
+        <dt>Fecha</dt><dd><span class="rellenar">[ Fecha de entrega ]</span></dd>
+      </dl>
+    </div>
+  </div>
+  <div class="pie">
+    Producto 3 de la evidencia: <strong>Prototipo de soluci&oacute;n de software</strong><br>
+    Dise&ntilde;o de interfaces &middot; Navegaci&oacute;n entre pantallas &middot; Experiencia del usuario
+  </div>
+</section>
+
+<div class="hoja">
+
+<section class="seccion">
+<h1>1. Alcance del prototipo</h1>
+
+<div class="aviso">
+<strong>Naturaleza del sistema construido</strong>
+La soluci&oacute;n implementada es una <strong>API REST</strong>, es decir, la capa de servidor del sistema. No incluye una interfaz gr&aacute;fica programada. Este documento presenta el <strong>prototipo de la capa de presentaci&oacute;n</strong>: c&oacute;mo se ver&iacute;a y c&oacute;mo se navegar&iacute;a la aplicaci&oacute;n web que consume esa API. Cada pantalla se relaciona expl&iacute;citamente con los endpoints que la alimentan, de modo que el prototipo es directamente implementable sobre el sistema ya construido.
+</div>
+
+<h2>1.1 Tipo de prototipo</h2>
+<p>Se trata de un <strong>prototipo de baja fidelidad</strong> o <em>wireframe</em>. Deliberadamente no define colores de marca, tipograf&iacute;as definitivas ni im&aacute;genes: se concentra en la disposici&oacute;n de los elementos, la jerarqu&iacute;a de la informaci&oacute;n y el flujo de navegaci&oacute;n. Esa es la etapa que corresponde al dise&ntilde;o de la soluci&oacute;n, antes de la definici&oacute;n visual.</p>
+
+<h2>1.2 Principios de dise&ntilde;o aplicados</h2>
+<table>
+  <caption>Tabla 1. Principios de experiencia de usuario que rigen el prototipo.</caption>
+  <thead><tr><th style="width:26%">Principio</th><th>Aplicaci&oacute;n concreta</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Estructura constante</strong></td><td>Todas las pantallas internas comparten la misma barra lateral y la misma cabecera. El usuario nunca pierde la referencia de d&oacute;nde est&aacute;.</td></tr>
+    <tr><td><strong>Visibilidad del rol</strong></td><td>Las opciones exclusivas del administrador se marcan con un indicador. Al gestor sencillamente no se le muestran, evitando que descubra el l&iacute;mite chocando con un error 403.</td></tr>
+    <tr><td><strong>Estado siempre visible</strong></td><td>El estado de cada solicitud se representa con una etiqueta de color constante en todas las pantallas donde aparece.</td></tr>
+    <tr><td><strong>Acciones seg&uacute;n contexto</strong></td><td>La pantalla de detalle solo ofrece las transiciones v&aacute;lidas desde el estado actual. Si la solicitud est&aacute; en un estado final, no se muestra ning&uacute;n bot&oacute;n de cambio.</td></tr>
+    <tr><td><strong>Confirmaci&oacute;n de lo irreversible</strong></td><td>Aprobar una solicitud descuenta inventario. La acci&oacute;n abre un cuadro de confirmaci&oacute;n que muestra el efecto exacto sobre el stock antes de ejecutarse.</td></tr>
+    <tr><td><strong>Errores en el punto de origen</strong></td><td>Los mensajes de validaci&oacute;n que devuelve la API se muestran junto al campo que los provoc&oacute;, no en un aviso general.</td></tr>
+  </tbody>
+</table>
+
+<h2>1.3 Inventario de pantallas</h2>
+<table>
+  <caption>Tabla 2. Pantallas del prototipo y endpoints que las alimentan.</caption>
+  <thead><tr><th class="c" style="width:8%">N&deg;</th><th style="width:26%">Pantalla</th><th class="c" style="width:14%">Acceso</th><th>Endpoints consumidos</th></tr></thead>
+  <tbody>
+    <tr><td class="c">P-01</td><td>Inicio de sesi&oacute;n</td><td class="c"><span class="badge b-pub">P&uacute;blico</span></td><td class="id">POST /api/auth/login</td></tr>
+    <tr><td class="c">P-02</td><td>Registro de usuario</td><td class="c"><span class="badge b-pub">P&uacute;blico</span></td><td class="id">POST /api/auth/register</td></tr>
+    <tr><td class="c">P-03</td><td>Panel principal</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td class="id">GET /api/solicitudes &middot; /api/inventario</td></tr>
+    <tr><td class="c">P-04</td><td>Listado de cl&iacute;nicas</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td class="id">GET /api/clinicas</td></tr>
+    <tr><td class="c">P-05</td><td>Formulario de cl&iacute;nica</td><td class="c"><span class="badge b-adm">Admin.</span></td><td class="id">POST &middot; PUT /api/clinicas</td></tr>
+    <tr><td class="c">P-06</td><td>Almacenes y medicamentos</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td class="id">GET /api/almacenes &middot; /api/medicamentos</td></tr>
+    <tr><td class="c">P-07</td><td>Control de inventario</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td class="id">GET &middot; POST &middot; PUT /api/inventario</td></tr>
+    <tr><td class="c">P-08</td><td>Listado de solicitudes</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td class="id">GET /api/solicitudes</td></tr>
+    <tr><td class="c">P-09</td><td>Nueva solicitud</td><td class="c"><span class="badge b-ges">Gestor / Admin.</span></td><td class="id">POST /api/solicitudes</td></tr>
+    <tr><td class="c">P-10</td><td>Detalle y cambio de estado</td><td class="c"><span class="badge b-ges">Gestor / Admin.</span></td><td class="id">GET &middot; PATCH /api/solicitudes/:id</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion">
+<h1>2. Mapa de navegaci&oacute;n</h1>
+<div class="figura">
+<div class="ascii">                        +---------------------------+
+                        |  P-01  INICIO DE SESION   |
+                        +-------------+-------------+
+                                      |
+                     no tiene cuenta  |  credenciales validas
+                        +-------------+-------------+
+                        |                           |
+                        v                           v
+              +-------------------+     +-----------------------+
+              | P-02  REGISTRO    |---->| P-03  PANEL PRINCIPAL |
+              +-------------------+     +-----------+-----------+
+                                                    |
+        +------------------+--------------+---------+--------+------------------+
+        |                  |              |                  |                  |
+        v                  v              v                  v                  v
++---------------+  +--------------+  +-----------+  +-----------------+  +-------------+
+| P-04 CLINICAS |  | P-06 ALMAC.  |  | P-07 INV. |  | P-08 SOLICITUDES|  |  HISTORIAL  |
+|               |  |   Y MEDIC.   |  |           |  |                 |  |             |
++-------+-------+  +--------------+  +-----------+  +--------+--------+  +-------------+
+        |                                                    |
+        | solo administrador                                 |
+        v                                       +------------+------------+
++-------------------+                           |                         |
+| P-05  FORMULARIO  |                           v                         v
+|    DE CLINICA     |                 +-------------------+   +---------------------+
+| crear / editar    |                 | P-09 NUEVA        |   | P-10 DETALLE Y      |
++-------------------+                 |      SOLICITUD    |   |    CAMBIO DE ESTADO |
+                                      +---------+---------+   +----------+----------+
+                                                |                        |
+                                                +------------+-----------+
+                                                             |
+                                                    vuelve a P-08 con
+                                                    el listado actualizado
+
+  Leyenda de acceso
+
+  P-01, P-02   publicas, no requieren token
+  P-03, P-04, P-06, P-07, P-08   cualquier usuario autenticado
+  P-09, P-10   gestor y administrador
+  P-05 y las acciones de crear, editar y dar de baja   solo administrador</div>
+<figcaption>Figura 1. Mapa de navegaci&oacute;n entre las pantallas del prototipo.</figcaption>
+</div>
+</section>
+
+<section class="seccion">
+<h1>3. Wireframes de las pantallas</h1>
+
+<div class="pantalla">
+<h3>P-01 &middot; Inicio de sesi&oacute;n</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/login</div></div>
+  <div style="padding:2.2rem 1rem;background:#f7f9f6;text-align:center;">
+    <div style="max-width:300px;margin:0 auto;background:#fff;border:1px solid #dde2d9;border-radius:8px;padding:1.4rem 1.5rem;text-align:left;">
+      <div style="text-align:center;margin-bottom:1.1rem;">
+        <div style="width:40px;height:40px;border-radius:8px;background:#eaf6e3;border:1px solid #39A900;margin:0 auto .5rem;"></div>
+        <div style="font:700 11pt inherit;color:#2d8400;">RiwiMediCare Plus</div>
+        <div style="font-size:8pt;color:#8b938a;">Gesti&oacute;n de abastecimiento</div>
+      </div>
+      <div class="wf-fld"><span class="wf-lbl">Correo electr&oacute;nico</span><div class="wf-input">usuario@riwimedicare.com</div></div>
+      <div class="wf-fld"><span class="wf-lbl">Contrase&ntilde;a</span><div class="wf-input">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div></div>
+      <div style="background:#fbe6e5;border:1px solid #e6b7b4;border-radius:5px;padding:.4rem .6rem;font-size:8pt;color:#b3261e;margin:.6rem 0;">Correo o contrase&ntilde;a incorrectos.</div>
+      <div class="wf-btn" style="display:block;text-align:center;">Iniciar sesi&oacute;n</div>
+      <div style="text-align:center;font-size:8pt;color:#8b938a;margin-top:.7rem;">&iquest;No tiene cuenta? <span style="color:#0b5b8a;">Reg&iacute;strese</span></div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>Los dos campos corresponden exactamente al cuerpo que espera <span class="ep">POST /api/auth/login</span>.</span></li>
+  <li><span class="marca-n">2</span><span>El mensaje de error es el mismo tanto si el correo no existe como si la contrase&ntilde;a es incorrecta. Esta ambig&uuml;edad es deliberada: revela la decisi&oacute;n de seguridad tomada en el dise&ntilde;o de no permitir enumerar cuentas.</span></li>
+  <li><span class="marca-n">3</span><span>Al recibir el token, la aplicaci&oacute;n lo almacena y lo env&iacute;a en la cabecera <span class="ep">Authorization: Bearer</span> de toda petici&oacute;n posterior. Al expirar, la API responde 401 y la aplicaci&oacute;n regresa a esta pantalla.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-02 &middot; Registro de usuario</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/registro</div></div>
+  <div style="padding:1.6rem 1rem;background:#f7f9f6;">
+    <div style="max-width:400px;margin:0 auto;background:#fff;border:1px solid #dde2d9;border-radius:8px;padding:1.2rem 1.4rem;">
+      <div style="font:700 11pt inherit;margin-bottom:.8rem;">Crear cuenta</div>
+      <div class="wf-grid2">
+        <div class="wf-fld"><span class="wf-lbl">Nombre</span><div class="wf-input">Dylan Alberto</div></div>
+        <div class="wf-fld"><span class="wf-lbl">Apellido</span><div class="wf-input">Su&aacute;rez Laverde</div></div>
+      </div>
+      <div class="wf-fld"><span class="wf-lbl">Correo electr&oacute;nico</span><div class="wf-input">dylan.suarez@riwimedicare.com</div></div>
+      <div class="wf-grid2">
+        <div class="wf-fld"><span class="wf-lbl">Contrase&ntilde;a</span><div class="wf-input">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+          <div style="font-size:7.5pt;color:#8b938a;margin-top:.15rem;">M&iacute;nimo 8 caracteres</div></div>
+        <div class="wf-fld"><span class="wf-lbl">Rol</span><div class="wf-input">administrador &nbsp; &#9662;</div>
+          <div style="font-size:7.5pt;color:#8b938a;margin-top:.15rem;">administrador o gestor</div></div>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-top:.6rem;"><div class="wf-btn">Crear cuenta</div><div class="wf-btn sec">Cancelar</div></div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>Los textos de ayuda bajo cada campo reproducen las reglas del esquema de validaci&oacute;n del servidor, de modo que el usuario las conoce antes de enviar el formulario.</span></li>
+  <li><span class="marca-n">2</span><span>El selector de rol se alimenta de los dos &uacute;nicos valores admitidos por el tipo enumerado <span class="ep">enum_users_role</span>.</span></li>
+  <li><span class="marca-n">3</span><span>Un correo ya registrado devuelve 409 y el mensaje se muestra bajo ese campo, no en un aviso general.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-03 &middot; Panel principal</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/panel</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li class="on">Panel principal</li>
+        <li>Solicitudes</li>
+        <li>Historial</li>
+        <li>Cl&iacute;nicas</li>
+        <li>Almacenes</li>
+        <li>Medicamentos</li>
+        <li>Inventario</li>
+      </ul>
+      <div style="border-top:1px solid #dde2d9;margin-top:.6rem;padding-top:.5rem;font-size:7.5pt;color:#8b938a;">
+        dylan.suarez<br><span style="color:#b3261e;font-weight:700;">administrador</span><br>
+        <span style="color:#0b5b8a;">Cerrar sesi&oacute;n</span>
+      </div>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar">
+        <div><div class="wf-h">Panel principal</div><div class="wf-sub">Resumen de la operaci&oacute;n</div></div>
+        <div class="wf-btn">+ Nueva solicitud</div>
+      </div>
+      <div class="wf-grid3" style="margin-bottom:.8rem;">
+        <div class="wf-kpi"><b>4</b><span>Pendientes</span></div>
+        <div class="wf-kpi"><b>2</b><span>Aprobadas</span></div>
+        <div class="wf-kpi"><b>3</b><span>Stock bajo</span></div>
+      </div>
+      <div style="font:700 9pt inherit;margin:.6rem 0 .35rem;">Solicitudes que requieren atenci&oacute;n</div>
+      <table class="wft">
+        <thead><tr><th>Cl&iacute;nica</th><th>Medicamento</th><th>Cant.</th><th>Estado</th><th>Fecha</th></tr></thead>
+        <tbody>
+          <tr><td>Cl&iacute;nica del Norte</td><td>Amoxicilina 500 mg</td><td>120</td><td><span class="pill p-pen">pendiente</span></td><td>03/09</td></tr>
+          <tr><td>Centro M&eacute;dico Sur</td><td>Ibuprofeno 400 mg</td><td>80</td><td><span class="pill p-pen">pendiente</span></td><td>03/09</td></tr>
+          <tr><td>Cl&iacute;nica del Norte</td><td>Suero fisiol&oacute;gico</td><td>50</td><td><span class="pill p-apr">aprobada</span></td><td>02/09</td></tr>
+        </tbody>
+      </table>
+      <div style="font:700 9pt inherit;margin:.8rem 0 .35rem;">Inventario con existencias bajas</div>
+      <table class="wft">
+        <thead><tr><th>Almac&eacute;n</th><th>Medicamento</th><th>Disponible</th></tr></thead>
+        <tbody>
+          <tr><td>Almac&eacute;n Central</td><td>Losart&aacute;n 50 mg</td><td style="color:#b3261e;font-weight:700;">18</td></tr>
+          <tr><td>Almac&eacute;n Norte</td><td>Omeprazol 20 mg</td><td style="color:#c25e00;font-weight:700;">35</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>La barra lateral es id&eacute;ntica en todas las pantallas internas y marca la secci&oacute;n activa. Es el ancla de orientaci&oacute;n del usuario.</span></li>
+  <li><span class="marca-n">2</span><span>El rol del usuario se muestra siempre bajo su nombre. Un gestor no ver&iacute;a las acciones de creaci&oacute;n ni de baja en las pantallas siguientes.</span></li>
+  <li><span class="marca-n">3</span><span>Los indicadores se calculan en el cliente a partir de <span class="ep">GET /api/solicitudes</span>, que ya devuelve solo las pendientes y aprobadas, y de <span class="ep">GET /api/inventario</span>.</span></li>
+  <li><span class="marca-n">4</span><span>Las existencias bajas se resaltan por umbral. Es una decisi&oacute;n de presentaci&oacute;n: la API no define el concepto de <em>stock m&iacute;nimo</em>.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-04 &middot; Listado de cl&iacute;nicas</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/clinicas</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li>Panel principal</li><li>Solicitudes</li><li>Historial</li>
+        <li class="on">Cl&iacute;nicas</li><li>Almacenes</li><li>Medicamentos</li><li>Inventario</li>
+      </ul>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar">
+        <div><div class="wf-h">Cl&iacute;nicas</div><div class="wf-sub">3 cl&iacute;nicas activas</div></div>
+        <div class="wf-btn">+ Nueva cl&iacute;nica</div>
+      </div>
+      <div style="margin-bottom:.6rem;"><div class="wf-input" style="width:210px;">Buscar por nombre o NIT...</div></div>
+      <table class="wft">
+        <thead><tr><th>Nombre</th><th>NIT</th><th>Responsable</th><th>Tel&eacute;fono</th><th style="text-align:right;">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Cl&iacute;nica del Norte</strong></td><td>900123456-1</td><td>Ana Restrepo</td><td>604 555 1010</td>
+            <td style="text-align:right;white-space:nowrap;"><span style="color:#0b5b8a;">Ver</span> &nbsp;<span style="color:#c25e00;">Editar</span> &nbsp;<span style="color:#b3261e;">Baja</span></td></tr>
+          <tr><td><strong>Centro M&eacute;dico Sur</strong></td><td>901234567-2</td><td>Carlos Mej&iacute;a</td><td>604 555 2020</td>
+            <td style="text-align:right;white-space:nowrap;"><span style="color:#0b5b8a;">Ver</span> &nbsp;<span style="color:#c25e00;">Editar</span> &nbsp;<span style="color:#b3261e;">Baja</span></td></tr>
+          <tr><td><strong>Hospital San Rafael</strong></td><td>902345678-3</td><td>Luisa Gómez</td><td>604 555 3030</td>
+            <td style="text-align:right;white-space:nowrap;"><span style="color:#0b5b8a;">Ver</span> &nbsp;<span style="color:#c25e00;">Editar</span> &nbsp;<span style="color:#b3261e;">Baja</span></td></tr>
+        </tbody>
+      </table>
+      <div style="border:1px solid #dde2d9;border-radius:6px;background:#fbfcfa;padding:.6rem .8rem;margin-top:.8rem;font-size:8.5pt;color:#5a635c;">
+        <strong style="color:#1a1f1c;">Al pulsar Ver</strong> se despliega el historial de solicitudes de esa cl&iacute;nica
+        <span class="ep">GET /api/clinicas/:id/solicitudes</span>
+      </div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>Los botones <em>Nueva cl&iacute;nica</em>, <em>Editar</em> y <em>Baja</em> solo se renderizan si el rol del usuario es administrador. El gestor ve la misma tabla, sin esa columna.</span></li>
+  <li><span class="marca-n">2</span><span>La b&uacute;squeda se resuelve en el cliente sobre el resultado de <span class="ep">GET /api/clinicas</span>, que ya devuelve &uacute;nicamente las cl&iacute;nicas activas.</span></li>
+  <li><span class="marca-n">3</span><span>La acci&oacute;n <em>Baja</em> abre una confirmaci&oacute;n y ejecuta un <span class="ep">DELETE</span>, que en el servidor es una baja l&oacute;gica: el registro desaparece del listado pero su historial se conserva.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-05 &middot; Formulario de cl&iacute;nica</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/clinicas/nueva</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li>Panel principal</li><li>Solicitudes</li><li>Historial</li>
+        <li class="on">Cl&iacute;nicas</li><li>Almacenes</li><li>Medicamentos</li><li>Inventario</li>
+      </ul>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar">
+        <div><div class="wf-h">Nueva cl&iacute;nica</div><div class="wf-sub">Cl&iacute;nicas &rsaquo; Nueva</div></div>
+      </div>
+      <div style="font:700 8.5pt inherit;color:#2d8400;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;">Datos de la cl&iacute;nica</div>
+      <div class="wf-grid2">
+        <div class="wf-fld"><span class="wf-lbl">Nombre *</span><div class="wf-input">Cl&iacute;nica del Norte</div></div>
+        <div class="wf-fld"><span class="wf-lbl">NIT *</span><div class="wf-input" style="border-color:#e6b7b4;">900123456-1</div>
+          <div style="font-size:7.5pt;color:#b3261e;margin-top:.15rem;">Ya existe una cl&iacute;nica registrada con el NIT 900123456-1.</div></div>
+      </div>
+      <div class="wf-fld"><span class="wf-lbl">Direcci&oacute;n *</span><div class="wf-input">Calle 45 N&deg; 30-12, Medell&iacute;n</div></div>
+      <div class="wf-grid2">
+        <div class="wf-fld"><span class="wf-lbl">Tel&eacute;fono *</span><div class="wf-input">604 555 1010</div></div>
+        <div class="wf-fld"><span class="wf-lbl">Correo *</span><div class="wf-input">contacto@clinicanorte.com</div></div>
+      </div>
+      <div style="font:700 8.5pt inherit;color:#2d8400;text-transform:uppercase;letter-spacing:.05em;margin:.9rem 0 .4rem;border-top:1px solid #dde2d9;padding-top:.7rem;">Persona responsable</div>
+      <div class="wf-fld"><span class="wf-lbl">Nombre del responsable *</span><div class="wf-input">Ana Restrepo</div></div>
+      <div class="wf-grid2">
+        <div class="wf-fld"><span class="wf-lbl">Correo del responsable *</span><div class="wf-input">ana.restrepo@clinicanorte.com</div></div>
+        <div class="wf-fld"><span class="wf-lbl">Tel&eacute;fono del responsable *</span><div class="wf-input">300 123 4567</div></div>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-top:.7rem;border-top:1px solid #dde2d9;padding-top:.8rem;">
+        <div class="wf-btn">Guardar cl&iacute;nica</div><div class="wf-btn sec">Cancelar</div>
+      </div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>El formulario se divide en dos bloques que reproducen la estructura de la tabla <span class="ep">clinicas</span>: datos de la entidad y datos de la persona responsable.</span></li>
+  <li><span class="marca-n">2</span><span>El error de NIT duplicado se muestra bajo el campo exacto que lo provoca. Corresponde al 409 que devuelve el middleware de verificaci&oacute;n de NIT &uacute;nico.</span></li>
+  <li><span class="marca-n">3</span><span>La misma pantalla sirve para crear y para editar. En modo edici&oacute;n los campos llegan precargados y el bot&oacute;n env&iacute;a un <span class="ep">PUT</span> en lugar de un <span class="ep">POST</span>.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-06 &middot; Almacenes y medicamentos</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/medicamentos</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li>Panel principal</li><li>Solicitudes</li><li>Historial</li><li>Cl&iacute;nicas</li>
+        <li>Almacenes</li><li class="on">Medicamentos</li><li>Inventario</li>
+      </ul>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar">
+        <div><div class="wf-h">Medicamentos</div><div class="wf-sub">6 productos en el cat&aacute;logo</div></div>
+        <div class="wf-btn">+ Nuevo medicamento</div>
+      </div>
+      <table class="wft">
+        <thead><tr><th>Nombre</th><th>Presentaci&oacute;n</th><th>Laboratorio</th><th>En almacenes</th><th style="text-align:right;">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Amoxicilina 500 mg</strong><div style="font-size:7.5pt;color:#8b938a;">Antibi&oacute;tico de amplio espectro</div></td><td>Caja x 30 c&aacute;psulas</td><td>Genfar</td><td>2</td><td style="text-align:right;"><span style="color:#c25e00;">Editar</span> &nbsp;<span style="color:#b3261e;">Baja</span></td></tr>
+          <tr><td><strong>Ibuprofeno 400 mg</strong><div style="font-size:7.5pt;color:#8b938a;">Antiinflamatorio y analg&eacute;sico</div></td><td>Caja x 20 tabletas</td><td>MK</td><td>2</td><td style="text-align:right;"><span style="color:#c25e00;">Editar</span> &nbsp;<span style="color:#b3261e;">Baja</span></td></tr>
+          <tr><td><strong>Suero fisiol&oacute;gico</strong><div style="font-size:7.5pt;color:#8b938a;">Soluci&oacute;n salina al 0,9%</div></td><td>Bolsa 500 ml</td><td>Baxter</td><td>1</td><td style="text-align:right;"><span style="color:#c25e00;">Editar</span> &nbsp;<span style="color:#b3261e;">Baja</span></td></tr>
+          <tr><td><strong>Losart&aacute;n 50 mg</strong><div style="font-size:7.5pt;color:#8b938a;">Antihipertensivo</div></td><td>Caja x 30 tabletas</td><td>La Sant&eacute;</td><td>2</td><td style="text-align:right;"><span style="color:#c25e00;">Editar</span> &nbsp;<span style="color:#b3261e;">Baja</span></td></tr>
+        </tbody>
+      </table>
+      <div style="border:1px solid #dde2d9;border-radius:6px;background:#fbfcfa;padding:.6rem .8rem;margin-top:.8rem;font-size:8.5pt;color:#5a635c;">
+        La pantalla de <strong>Almacenes</strong> replica esta misma estructura con las columnas nombre, direcci&oacute;n, tel&eacute;fono y cantidad de productos que maneja.
+      </div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>Almacenes, medicamentos e inventario comparten el mismo patr&oacute;n de listado, formulario y acciones, porque los tres exponen el mismo CRUD. Reutilizar el patr&oacute;n reduce el aprendizaje que exige la aplicaci&oacute;n.</span></li>
+  <li><span class="marca-n">2</span><span>La columna <em>En almacenes</em> se deriva en el cliente cruzando el cat&aacute;logo con <span class="ep">GET /api/inventario</span>; no es un campo de la tabla <span class="ep">medicamentos</span>.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-07 &middot; Control de inventario</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/inventario</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li>Panel principal</li><li>Solicitudes</li><li>Historial</li><li>Cl&iacute;nicas</li>
+        <li>Almacenes</li><li>Medicamentos</li><li class="on">Inventario</li>
+      </ul>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar">
+        <div><div class="wf-h">Inventario</div><div class="wf-sub">9 registros en 2 almacenes</div></div>
+        <div class="wf-btn">+ Registrar existencias</div>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.6rem;">
+        <div class="wf-input" style="width:150px;">Almac&eacute;n: todos &nbsp;&#9662;</div>
+        <div class="wf-input" style="width:170px;">Medicamento: todos &nbsp;&#9662;</div>
+      </div>
+      <table class="wft">
+        <thead><tr><th>Almac&eacute;n</th><th>Medicamento</th><th style="text-align:right;">Disponible</th><th style="text-align:right;">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td>Almac&eacute;n Central</td><td>Amoxicilina 500 mg</td><td style="text-align:right;font-weight:700;">500</td><td style="text-align:right;"><span style="color:#c25e00;">Ajustar</span></td></tr>
+          <tr><td>Almac&eacute;n Central</td><td>Ibuprofeno 400 mg</td><td style="text-align:right;font-weight:700;">320</td><td style="text-align:right;"><span style="color:#c25e00;">Ajustar</span></td></tr>
+          <tr><td>Almac&eacute;n Central</td><td>Losart&aacute;n 50 mg</td><td style="text-align:right;font-weight:700;color:#b3261e;">18</td><td style="text-align:right;"><span style="color:#c25e00;">Ajustar</span></td></tr>
+          <tr><td>Almac&eacute;n Norte</td><td>Amoxicilina 500 mg</td><td style="text-align:right;font-weight:700;">210</td><td style="text-align:right;"><span style="color:#c25e00;">Ajustar</span></td></tr>
+          <tr><td>Almac&eacute;n Norte</td><td>Omeprazol 20 mg</td><td style="text-align:right;font-weight:700;color:#c25e00;">35</td><td style="text-align:right;"><span style="color:#c25e00;">Ajustar</span></td></tr>
+        </tbody>
+      </table>
+      <div style="border:1px solid #fdd9b0;background:#fdf4ea;border-radius:6px;padding:.6rem .8rem;margin-top:.8rem;font-size:8.5pt;color:#c25e00;">
+        <strong>Nota de dise&ntilde;o.</strong> Esta pantalla ajusta existencias por entrada de mercanc&iacute;a o por conteo f&iacute;sico. El descuento por aprobaci&oacute;n de solicitudes lo ejecuta el sistema y no se hace desde aqu&iacute;.
+      </div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>La tabla es la representaci&oacute;n directa de la relaci&oacute;n muchos a muchos entre almacenes y medicamentos: cada fila es una combinaci&oacute;n &uacute;nica de ambos.</span></li>
+  <li><span class="marca-n">2</span><span>Registrar una combinaci&oacute;n que ya existe devuelve 409, porque la restricci&oacute;n de unicidad compuesta lo impide. El formulario debe advertirlo antes de enviar.</span></li>
+  <li><span class="marca-n">3</span><span>El ajuste no admite cantidades negativas: la restricci&oacute;n de verificaci&oacute;n de la base de datos lo rechazar&iacute;a.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-08 &middot; Listado de solicitudes</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/solicitudes</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li>Panel principal</li><li class="on">Solicitudes</li><li>Historial</li><li>Cl&iacute;nicas</li>
+        <li>Almacenes</li><li>Medicamentos</li><li>Inventario</li>
+      </ul>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar">
+        <div><div class="wf-h">Solicitudes en curso</div><div class="wf-sub">Pendientes y aprobadas</div></div>
+        <div class="wf-btn">+ Nueva solicitud</div>
+      </div>
+      <div style="display:flex;gap:.35rem;margin-bottom:.6rem;font-size:8pt;">
+        <span style="background:#39A900;color:#fff;border-radius:99px;padding:.15em .7em;font-weight:600;">Todas</span>
+        <span style="background:#f2f4f0;color:#5a635c;border-radius:99px;padding:.15em .7em;">Pendientes</span>
+        <span style="background:#f2f4f0;color:#5a635c;border-radius:99px;padding:.15em .7em;">Aprobadas</span>
+      </div>
+      <table class="wft">
+        <thead><tr><th>Cl&iacute;nica</th><th>Medicamento</th><th>Almac&eacute;n</th><th style="text-align:right;">Cant.</th><th>Estado</th><th>Registr&oacute;</th><th>Fecha</th></tr></thead>
+        <tbody>
+          <tr><td>Cl&iacute;nica del Norte</td><td>Amoxicilina 500 mg</td><td>Central</td><td style="text-align:right;">120</td><td><span class="pill p-pen">pendiente</span></td><td>abrahan.villa</td><td>03/09</td></tr>
+          <tr><td>Centro M&eacute;dico Sur</td><td>Ibuprofeno 400 mg</td><td>Norte</td><td style="text-align:right;">80</td><td><span class="pill p-pen">pendiente</span></td><td>laura.restrepo</td><td>03/09</td></tr>
+          <tr><td>Hospital San Rafael</td><td>Losart&aacute;n 50 mg</td><td>Central</td><td style="text-align:right;">40</td><td><span class="pill p-pen">pendiente</span></td><td>abrahan.villa</td><td>02/09</td></tr>
+          <tr><td>Cl&iacute;nica del Norte</td><td>Suero fisiol&oacute;gico</td><td>Central</td><td style="text-align:right;">50</td><td><span class="pill p-apr">aprobada</span></td><td>laura.restrepo</td><td>02/09</td></tr>
+          <tr><td>Centro M&eacute;dico Sur</td><td>Omeprazol 20 mg</td><td>Norte</td><td style="text-align:right;">25</td><td><span class="pill p-apr">aprobada</span></td><td>abrahan.villa</td><td>01/09</td></tr>
+        </tbody>
+      </table>
+      <div style="border:1px solid #dde2d9;border-radius:6px;background:#fbfcfa;padding:.6rem .8rem;margin-top:.8rem;font-size:8.5pt;color:#5a635c;">
+        Las solicitudes <span class="pill p-rec">rechazada</span> <span class="pill p-ent">entregada</span> <span class="pill p-can">cancelada</span> ya cerraron su ciclo y se consultan en <strong>Historial</strong>.
+      </div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>Esta pantalla consume <span class="ep">GET /api/solicitudes</span>, que en el servidor ya filtra por estados pendiente y aprobada. La separaci&oacute;n entre <em>en curso</em> e <em>historial</em> no es una decisi&oacute;n visual: est&aacute; implementada en la capa de servicios.</span></li>
+  <li><span class="marca-n">2</span><span>La columna <em>Registr&oacute;</em> proviene de la relaci&oacute;n con la tabla de usuarios que la consulta incluye, y aporta la trazabilidad de qui&eacute;n radic&oacute; cada solicitud.</span></li>
+  <li><span class="marca-n">3</span><span>La pantalla <strong>Historial</strong> reutiliza esta misma tabla contra <span class="ep">GET /api/solicitudes/historial</span>, mostrando todos los estados e incluyendo las solicitudes dadas de baja.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-09 &middot; Nueva solicitud</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/solicitudes/nueva</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li>Panel principal</li><li class="on">Solicitudes</li><li>Historial</li><li>Cl&iacute;nicas</li>
+        <li>Almacenes</li><li>Medicamentos</li><li>Inventario</li>
+      </ul>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar"><div><div class="wf-h">Nueva solicitud de abastecimiento</div><div class="wf-sub">Solicitudes &rsaquo; Nueva</div></div></div>
+      <div class="wf-fld"><span class="wf-lbl">Cl&iacute;nica solicitante *</span><div class="wf-input">Cl&iacute;nica del Norte &mdash; NIT 900123456-1 &nbsp;&#9662;</div></div>
+      <div class="wf-grid2">
+        <div class="wf-fld"><span class="wf-lbl">Medicamento *</span><div class="wf-input">Amoxicilina 500 mg &nbsp;&#9662;</div></div>
+        <div class="wf-fld"><span class="wf-lbl">Almac&eacute;n de despacho *</span><div class="wf-input">Almac&eacute;n Central &nbsp;&#9662;</div></div>
+      </div>
+      <div style="background:#eaf6e3;border:1px solid #a8d894;border-radius:6px;padding:.5rem .8rem;font-size:8.5pt;color:#2d8400;margin:.3rem 0 .7rem;">
+        <strong>Disponible en Almac&eacute;n Central: 500 unidades</strong>
+      </div>
+      <div class="wf-grid2">
+        <div class="wf-fld"><span class="wf-lbl">Cantidad solicitada *</span><div class="wf-input">120</div>
+          <div style="font-size:7.5pt;color:#8b938a;margin-top:.15rem;">N&uacute;mero entero mayor que cero</div></div>
+        <div></div>
+      </div>
+      <div class="wf-fld"><span class="wf-lbl">Observaciones</span>
+        <div class="wf-input" style="min-height:42px;">Reposici&oacute;n mensual del servicio de urgencias.</div>
+        <div style="font-size:7.5pt;color:#8b938a;margin-top:.15rem;">Opcional. M&aacute;ximo 500 caracteres</div></div>
+      <div style="border:1px solid #dde2d9;border-radius:6px;background:#fbfcfa;padding:.55rem .8rem;font-size:8pt;color:#5a635c;margin:.4rem 0 .7rem;">
+        La solicitud se crear&aacute; en estado <span class="pill p-pen">pendiente</span> y quedar&aacute; a nombre de <strong>abrahan.villa</strong>. El inventario a&uacute;n no se descuenta.
+      </div>
+      <div style="display:flex;gap:.5rem;"><div class="wf-btn">Registrar solicitud</div><div class="wf-btn sec">Cancelar</div></div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>Los tres selectores se alimentan de los listados de cl&iacute;nicas, medicamentos y almacenes activos, de modo que es imposible elegir una entidad dada de baja y provocar un 404.</span></li>
+  <li><span class="marca-n">2</span><span>Al elegir medicamento y almac&eacute;n, la pantalla consulta el inventario y muestra la cantidad disponible <em>antes</em> de que el usuario escriba la cantidad. Es la traducci&oacute;n a la interfaz de la validaci&oacute;n que el servidor har&aacute; de todos modos.</span></li>
+  <li><span class="marca-n">3</span><span>El aviso final hace expl&iacute;cita una regla de negocio que de otro modo ser&iacute;a invisible: crear no descuenta inventario, aprobar s&iacute;.</span></li>
+  <li><span class="marca-n">4</span><span>El autor de la solicitud se muestra pero no se puede editar: el servidor lo toma del token, no del formulario.</span></li>
+</ul>
+</div>
+
+<div class="pantalla">
+<h3>P-10 &middot; Detalle de solicitud y cambio de estado</h3>
+<div class="wf">
+  <div class="wf-chrome"><div class="wf-dots"><i></i><i></i><i></i></div><div class="wf-url">riwimedicare.com/solicitudes/a3f2...c9</div></div>
+  <div class="wf-app">
+    <div class="wf-side">
+      <div class="wf-logo">RiwiMediCare<br>Plus</div>
+      <ul class="wf-nav">
+        <li>Panel principal</li><li class="on">Solicitudes</li><li>Historial</li><li>Cl&iacute;nicas</li>
+        <li>Almacenes</li><li>Medicamentos</li><li>Inventario</li>
+      </ul>
+    </div>
+    <div class="wf-main">
+      <div class="wf-bar">
+        <div><div class="wf-h">Solicitud a3f2&hellip;c9</div><div class="wf-sub">Radicada el 03/09/2026 por abrahan.villa</div></div>
+        <div><span class="pill p-pen" style="font-size:8.5pt;padding:.25em .8em;">pendiente</span></div>
+      </div>
+      <div class="wf-grid2" style="gap:.6rem 1.2rem;">
+        <div style="border:1px solid #dde2d9;border-radius:6px;padding:.6rem .8rem;">
+          <div style="font-size:7.5pt;color:#8b938a;text-transform:uppercase;letter-spacing:.05em;">Cl&iacute;nica</div>
+          <div style="font-weight:700;font-size:9.5pt;">Cl&iacute;nica del Norte</div>
+          <div style="font-size:8pt;color:#5a635c;">NIT 900123456-1 &middot; Ana Restrepo</div>
+        </div>
+        <div style="border:1px solid #dde2d9;border-radius:6px;padding:.6rem .8rem;">
+          <div style="font-size:7.5pt;color:#8b938a;text-transform:uppercase;letter-spacing:.05em;">Medicamento</div>
+          <div style="font-weight:700;font-size:9.5pt;">Amoxicilina 500 mg</div>
+          <div style="font-size:8pt;color:#5a635c;">Caja x 30 c&aacute;psulas</div>
+        </div>
+        <div style="border:1px solid #dde2d9;border-radius:6px;padding:.6rem .8rem;">
+          <div style="font-size:7.5pt;color:#8b938a;text-transform:uppercase;letter-spacing:.05em;">Almac&eacute;n de despacho</div>
+          <div style="font-weight:700;font-size:9.5pt;">Almac&eacute;n Central</div>
+          <div style="font-size:8pt;color:#5a635c;">Disponible actualmente: 500</div>
+        </div>
+        <div style="border:1px solid #dde2d9;border-radius:6px;padding:.6rem .8rem;">
+          <div style="font-size:7.5pt;color:#8b938a;text-transform:uppercase;letter-spacing:.05em;">Cantidad solicitada</div>
+          <div style="font-weight:700;font-size:14pt;color:#2d8400;">120</div>
+          <div style="font-size:8pt;color:#5a635c;">unidades</div>
+        </div>
+      </div>
+      <div style="border:1px solid #dde2d9;border-radius:6px;padding:.55rem .8rem;margin-top:.6rem;">
+        <div style="font-size:7.5pt;color:#8b938a;text-transform:uppercase;letter-spacing:.05em;">Observaciones</div>
+        <div style="font-size:9pt;">Reposici&oacute;n mensual del servicio de urgencias.</div>
+      </div>
+
+      <div style="border-top:1px solid #dde2d9;margin-top:.9rem;padding-top:.7rem;">
+        <div style="font:700 9pt inherit;margin-bottom:.3rem;">Cambiar el estado</div>
+        <div style="font-size:8pt;color:#8b938a;margin-bottom:.5rem;">Desde <strong>pendiente</strong> son posibles: aprobada, rechazada, cancelada</div>
+        <div class="wf-fld"><span class="wf-lbl">Observaciones del cambio</span><div class="wf-input" style="min-height:34px;">Aprobado seg&uacute;n disponibilidad verificada.</div></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <div class="wf-btn">Aprobar</div>
+          <div class="wf-btn dan">Rechazar</div>
+          <div class="wf-btn sec">Cancelar solicitud</div>
+        </div>
+      </div>
+
+      <div style="border:2px solid #39A900;border-radius:8px;background:#fff;padding:.8rem 1rem;margin-top:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+        <div style="font:700 10pt inherit;color:#2d8400;margin-bottom:.35rem;">Confirmar aprobaci&oacute;n</div>
+        <div style="font-size:8.5pt;color:#3d443e;margin-bottom:.5rem;">Esta acci&oacute;n descontar&aacute; el inventario del almac&eacute;n y no se puede deshacer sin cancelar la solicitud.</div>
+        <table class="wft" style="margin-bottom:.5rem;">
+          <tbody>
+            <tr><td>Disponible ahora en Almac&eacute;n Central</td><td style="text-align:right;font-weight:700;">500</td></tr>
+            <tr><td>Se descontar&aacute;n</td><td style="text-align:right;font-weight:700;color:#b3261e;">&minus; 120</td></tr>
+            <tr style="background:#eaf6e3;"><td><strong>Quedar&aacute; disponible</strong></td><td style="text-align:right;font-weight:700;color:#2d8400;">380</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:.5rem;"><div class="wf-btn">S&iacute;, aprobar</div><div class="wf-btn sec">Volver</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<ul class="anot">
+  <li><span class="marca-n">1</span><span>La l&iacute;nea <em>Desde pendiente son posibles&hellip;</em> y los botones visibles se generan a partir del estado actual. Si la solicitud estuviera en un estado final, esta secci&oacute;n completa desaparecer&iacute;a. La interfaz reproduce as&iacute; la m&aacute;quina de estados del servidor y el usuario nunca puede intentar una transici&oacute;n inv&aacute;lida.</span></li>
+  <li><span class="marca-n">2</span><span>El cuadro de confirmaci&oacute;n muestra el c&aacute;lculo exacto del efecto sobre el inventario antes de ejecutarlo, porque aprobar es la &uacute;nica acci&oacute;n de la aplicaci&oacute;n que modifica el stock de forma indirecta.</span></li>
+  <li><span class="marca-n">3</span><span>Las observaciones del cambio viajan en el mismo <span class="ep">PATCH</span> que el nuevo estado y quedan registradas en la solicitud.</span></li>
+  <li><span class="marca-n">4</span><span>Si entre la apertura de la pantalla y la confirmaci&oacute;n otra persona consumi&oacute; el inventario, el servidor responde 400 y la aplicaci&oacute;n muestra el error con la cantidad realmente disponible. La interfaz no asume que su lectura siga siendo v&aacute;lida.</span></li>
+</ul>
+</div>
+</section>
+
+<section class="seccion">
+<h1>4. Correspondencia entre pantallas y requisitos</h1>
+<table>
+  <caption>Tabla 3. Trazabilidad entre los requisitos funcionales del documento de dise&ntilde;o y las pantallas del prototipo.</caption>
+  <thead><tr><th class="id" style="width:14%">Requisito</th><th style="width:36%">Descripci&oacute;n</th><th>Pantalla que lo materializa</th></tr></thead>
+  <tbody>
+    <tr><td class="id">RF-01</td><td>Registro de usuario</td><td>P-02</td></tr>
+    <tr><td class="id">RF-02</td><td>Inicio de sesi&oacute;n</td><td>P-01</td></tr>
+    <tr><td class="id">RF-04</td><td>Autorizaci&oacute;n por rol</td><td>Transversal: la barra lateral y las acciones se adaptan al rol en P-03 a P-10</td></tr>
+    <tr><td class="id">RF-05</td><td>Gesti&oacute;n de cl&iacute;nicas</td><td>P-04 y P-05</td></tr>
+    <tr><td class="id">RF-06</td><td>Historial por cl&iacute;nica</td><td>P-04, acci&oacute;n <em>Ver</em></td></tr>
+    <tr><td class="id">RF-07 / RF-08</td><td>Gesti&oacute;n de almacenes y medicamentos</td><td>P-06</td></tr>
+    <tr><td class="id">RF-09</td><td>Gesti&oacute;n de inventario</td><td>P-07</td></tr>
+    <tr><td class="id">RF-10</td><td>Registro de solicitud</td><td>P-09</td></tr>
+    <tr><td class="id">RF-12</td><td>Validaci&oacute;n de disponibilidad</td><td>P-09, aviso de cantidad disponible</td></tr>
+    <tr><td class="id">RF-13</td><td>Listado de solicitudes en curso</td><td>P-08</td></tr>
+    <tr><td class="id">RF-14</td><td>Historial general</td><td>Pantalla <em>Historial</em>, misma estructura que P-08</td></tr>
+    <tr><td class="id">RF-15</td><td>Consulta individual</td><td>P-10</td></tr>
+    <tr><td class="id">RF-16</td><td>Cambio de estado</td><td>P-10</td></tr>
+    <tr><td class="id">RF-17</td><td>Descuento de inventario</td><td>P-10, cuadro de confirmaci&oacute;n</td></tr>
+    <tr><td class="id">RF-20</td><td>Baja l&oacute;gica</td><td>Acci&oacute;n <em>Baja</em> en P-04, P-06 y P-07</td></tr>
+  </tbody>
+</table>
+
+<h2>4.1 Herramientas sugeridas para llevar el prototipo a alta fidelidad</h2>
+<p>Estos wireframes son la base para la etapa de dise&ntilde;o visual. Pueden reconstruirse o refinarse en Figma, Balsamiq, draw.io o Canva, incorporando la paleta institucional, la tipograf&iacute;a definitiva y los estados de interacci&oacute;n de cada componente.</p>
+
+<div class="firma">
+  <div>Dylan Alberto Su&aacute;rez Laverde<br><span style="color:#5a635c">Aprendiz</span></div>
+  <div><span class="rellenar">[ Nombre del instructor ]</span><br><span style="color:#5a635c">Instructor evaluador</span></div>
+</div>
+</section>
+
+</div>
+
+</body>
+</html>

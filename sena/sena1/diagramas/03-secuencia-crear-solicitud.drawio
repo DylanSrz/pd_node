@@ -1,0 +1,132 @@
+<mxfile host="app.diagrams.net" agent="RiwiMediCare Plus" version="24.7.17" type="device">
+  <diagram name="Secuencia - Crear solicitud" id="sec-crear-solicitud">
+    <mxGraphModel dx="1600" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="titulo" value="DIAGRAMA DE SECUENCIA&#10;CU-04  Registrar solicitud de abastecimiento" style="text;html=1;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;fontColor=#2d8400;" vertex="1" parent="1">
+          <mxGeometry x="380" y="10" width="500" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lf1" value=":Gestor" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#eaf6e3;strokeColor=#2d8400;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="lf2" value=":Router&#10;solicitud.routes" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#e3f0fb;strokeColor=#0b5b8a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="190" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="lf3" value=":Middlewares&#10;seguridad" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fdf0e0;strokeColor=#c25e00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="lf4" value=":Middlewares&#10;de negocio" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fdf0e0;strokeColor=#c25e00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="490" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="lf5" value=":Solicitud&#10;Controller" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#f3e9fb;strokeColor=#6b34a8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="lf6" value=":Solicitud&#10;Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fbe6e5;strokeColor=#b3261e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="lf7" value=":Solicitud&#10;(Sequelize)" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#fff8e0;strokeColor=#c9a227;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="lf8" value=":PostgreSQL" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#f6f8f5;strokeColor=#5a635c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="90" width="130" height="1040" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m1" value="POST /api/solicitudes&#10;Bearer &lt;token&gt; + body" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="105" y="150" as="sourcePoint" /><mxPoint x="255" y="150" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m2" value="verifyToken(req)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="255" y="186" as="sourcePoint" /><mxPoint x="405" y="186" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="req.user = {id, email, role}" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="405" y="222" as="sourcePoint" /><mxPoint x="255" y="222" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m4" value="checkRole(gestor, administrador)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="255" y="258" as="sourcePoint" /><mxPoint x="405" y="258" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m5" value="rol autorizado" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="405" y="294" as="sourcePoint" /><mxPoint x="255" y="294" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m6" value="validateRequest(crearSolicitudSchema)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="255" y="330" as="sourcePoint" /><mxPoint x="405" y="330" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="req.body validado y tipado" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="405" y="366" as="sourcePoint" /><mxPoint x="255" y="366" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="m8" value="verificarEntidadesRelacionadas()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="255" y="402" as="sourcePoint" /><mxPoint x="555" y="402" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m9" value="SELECT clinicas, medicamentos, almacenes WHERE is_active" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="555" y="438" as="sourcePoint" /><mxPoint x="1155" y="438" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m10" value="registros encontrados" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1155" y="474" as="sourcePoint" /><mxPoint x="555" y="474" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m11" value="las tres entidades existen" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="555" y="510" as="sourcePoint" /><mxPoint x="255" y="510" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="m12" value="verificarInventarioDisponible()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="255" y="546" as="sourcePoint" /><mxPoint x="555" y="546" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m13" value="SELECT cantidad FROM inventario WHERE almacen_id AND medicamento_id" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="555" y="582" as="sourcePoint" /><mxPoint x="1155" y="582" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m14" value="cantidad disponible" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1155" y="618" as="sourcePoint" /><mxPoint x="555" y="618" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m15" value="cantidad suficiente" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="555" y="654" as="sourcePoint" /><mxPoint x="255" y="654" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="m16" value="postSolicitud(req, res)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="255" y="690" as="sourcePoint" /><mxPoint x="705" y="690" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m17" value="crearSolicitud(datos, req.user.id)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="705" y="726" as="sourcePoint" /><mxPoint x="855" y="726" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m18" value="Solicitud.create({... estado: 'pendiente'})" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="855" y="762" as="sourcePoint" /><mxPoint x="1005" y="762" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m19" value="INSERT INTO solicitudes" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1005" y="798" as="sourcePoint" /><mxPoint x="1155" y="798" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m20" value="fila creada (verifica FK y CHECK)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1155" y="834" as="sourcePoint" /><mxPoint x="1005" y="834" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m21" value="instancia creada" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1005" y="870" as="sourcePoint" /><mxPoint x="855" y="870" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m22" value="obtenerSolicitudPorId(id) con include" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="855" y="906" as="sourcePoint" /><mxPoint x="1005" y="906" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m23" value="SELECT ... JOIN clinicas, medicamentos, almacenes, users" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1005" y="942" as="sourcePoint" /><mxPoint x="1155" y="942" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m24" value="solicitud con relaciones" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1155" y="978" as="sourcePoint" /><mxPoint x="1005" y="978" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m25" value="solicitud completa" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1005" y="1014" as="sourcePoint" /><mxPoint x="855" y="1014" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m26" value="solicitud" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="855" y="1050" as="sourcePoint" /><mxPoint x="705" y="1050" as="targetPoint" /></mxGeometry>
+        </mxCell>
+        <mxCell id="m27" value="201 Created  { message, solicitud }" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;fontSize=11;fontStyle=1;strokeColor=#2d8400;fontColor=#2d8400;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="705" y="1086" as="sourcePoint" /><mxPoint x="105" y="1086" as="targetPoint" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="notaErr" value="FLUJOS ALTERNATIVOS&#10;&#10;A1  Token ausente o invalido&#10;    verifyToken responde  401&#10;&#10;A2  Rol no autorizado&#10;    checkRole responde  403&#10;&#10;A3  Datos mal formados o&#10;    cantidad menor o igual a cero&#10;    validateRequest responde  400&#10;&#10;A4  Clinica, medicamento o almacen&#10;    inexistente o dado de baja&#10;    responde  404  indicando cual&#10;&#10;A5  El almacen no maneja&#10;    ese medicamento&#10;    responde  400&#10;&#10;A6  Inventario insuficiente&#10;    responde  400  con la cantidad&#10;    solicitada y la disponible&#10;&#10;En todos los casos la peticion se&#10;corta en el middleware: no se llega&#10;a crear ningun registro." style="text;html=1;align=left;verticalAlign=top;fontSize=10;fillColor=#fdf4ea;strokeColor=#c25e00;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="150" width="300" height="470" as="geometry" />
+        </mxCell>
+
+        <mxCell id="notaClave" value="OBSERVACION CLAVE&#10;&#10;El identificador del usuario que&#10;registra la solicitud se toma de&#10;req.user (extraido del token) y&#10;NO del cuerpo de la peticion.&#10;&#10;De este modo nadie puede radicar&#10;una solicitud a nombre de otra&#10;persona.&#10;&#10;El inventario se verifica pero&#10;NO se descuenta en este flujo.&#10;El descuento ocurre al aprobar&#10;(ver diagrama 04)." style="text;html=1;align=left;verticalAlign=top;fontSize=10;fillColor=#eaf6e3;strokeColor=#39A900;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="650" width="300" height="290" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

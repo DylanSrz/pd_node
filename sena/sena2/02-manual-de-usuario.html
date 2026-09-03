@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de Usuario - API RiwiMediCare Plus</title>
+<style>
+:root{
+  --verde:#39A900; --verde-osc:#2d8400; --verde-claro:#eaf6e3;
+  --tinta:#1a1f1c; --gris:#5a635c; --linea:#d8ddd6; --fondo-alt:#f6f8f5;
+  --naranja:#c25e00; --azul:#0b5b8a; --rojo:#b3261e;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:"Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--tinta); background:#fff; line-height:1.65; font-size:11pt;
+  margin:0; padding:0;
+}
+.hoja{max-width:19cm; margin:0 auto; padding:1.5cm 1.6cm 2cm;}
+
+/* ---------- PORTADA ---------- */
+.portada{
+  min-height:26cm; display:flex; flex-direction:column;
+  justify-content:space-between; text-align:center;
+  padding:2.5cm 1.6cm; page-break-after:always;
+}
+.portada .marca{font-size:9pt;letter-spacing:.22em;text-transform:uppercase;color:var(--verde-osc);font-weight:700;}
+.portada .logo{width:96px;height:96px;margin:0 auto 1.2rem;}
+.portada h1{font-size:26pt;line-height:1.2;margin:.6rem 0;color:var(--tinta);border:0;}
+.portada .sub{font-size:13pt;color:var(--gris);margin:0 0 1.4rem;font-weight:400;}
+.portada .norma{
+  display:inline-block;border:2px solid var(--verde);border-radius:8px;
+  padding:.7rem 1.4rem;font-size:10.5pt;color:var(--verde-osc);font-weight:600;
+  background:var(--verde-claro);
+}
+.portada .datos{
+  margin:2rem auto 0;text-align:left;max-width:13cm;
+  border-top:1px solid var(--linea);padding-top:1.2rem;
+}
+.portada .datos dl{display:grid;grid-template-columns:auto 1fr;gap:.45rem 1.2rem;margin:0;font-size:10.5pt;}
+.portada .datos dt{color:var(--gris);font-weight:600;}
+.portada .datos dd{margin:0;}
+.portada .pie{font-size:9.5pt;color:var(--gris);border-top:1px solid var(--linea);padding-top:1rem;}
+.rellenar{background:#fff6d9;border-bottom:1px dashed #c9a227;padding:0 .2rem;}
+
+/* ---------- TIPOGRAFÍA ---------- */
+h1{
+  font-size:19pt;color:var(--tinta);margin:0 0 1.2rem;padding-bottom:.5rem;
+  border-bottom:3px solid var(--verde);page-break-after:avoid;
+}
+h2{font-size:14pt;margin:2rem 0 .7rem;color:var(--verde-osc);page-break-after:avoid;}
+h3{font-size:12pt;margin:1.4rem 0 .5rem;color:var(--tinta);page-break-after:avoid;}
+h4{font-size:11pt;margin:1.1rem 0 .4rem;color:var(--gris);text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid;}
+p{margin:.7rem 0;text-align:justify;}
+ul,ol{margin:.6rem 0 .9rem;padding-left:1.4rem;}
+li{margin:.3rem 0;}
+a{color:var(--azul);}
+code{
+  font-family:Consolas,"Courier New",monospace;font-size:.9em;
+  background:var(--fondo-alt);border:1px solid var(--linea);
+  border-radius:3px;padding:.08em .35em;
+}
+pre{
+  background:#1e2420;color:#e8ede8;border-radius:6px;padding:.9rem 1.1rem;
+  overflow-x:auto;font-family:Consolas,"Courier New",monospace;
+  font-size:9pt;line-height:1.55;page-break-inside:avoid;
+}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit;}
+pre .c{color:#8fae86;}      /* comentario */
+pre .k{color:#7fc9ff;}      /* keyword   */
+pre .s{color:#f3c98b;}      /* string    */
+pre .f{color:#c6a0f6;}      /* función   */
+
+/* ---------- SECCIÓN ---------- */
+.seccion{page-break-before:always;}
+.seccion:first-of-type{page-break-before:avoid;}
+
+/* ---------- TABLAS ---------- */
+table{
+  width:100%;border-collapse:collapse;margin:1rem 0 1.4rem;
+  font-size:9.5pt;page-break-inside:avoid;
+}
+caption{
+  caption-side:bottom;text-align:left;font-size:9pt;color:var(--gris);
+  padding-top:.45rem;font-style:italic;
+}
+th{
+  background:var(--verde-claro);color:var(--verde-osc);text-align:left;
+  padding:.5rem .6rem;border:1px solid var(--linea);font-weight:700;
+}
+td{padding:.45rem .6rem;border:1px solid var(--linea);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--fondo-alt);}
+td.id,th.id{white-space:nowrap;font-family:Consolas,monospace;font-size:9pt;}
+td.c,th.c{text-align:center;}
+
+/* ---------- COMPONENTES ---------- */
+.nota,.aviso,.ok{
+  border-left:4px solid var(--azul);background:#f0f6fa;
+  padding:.8rem 1rem;margin:1rem 0;border-radius:0 6px 6px 0;
+  font-size:10pt;page-break-inside:avoid;
+}
+.aviso{border-color:var(--naranja);background:#fdf4ea;}
+.ok{border-color:var(--verde);background:var(--verde-claro);}
+.nota strong:first-child,.aviso strong:first-child,.ok strong:first-child{display:block;margin-bottom:.25rem;}
+
+.toc{background:var(--fondo-alt);border:1px solid var(--linea);border-radius:8px;padding:1.2rem 1.6rem;}
+.toc h2{margin-top:0;}
+.toc ol{list-style:none;padding-left:0;counter-reset:s;}
+.toc > ol > li{counter-increment:s;margin:.4rem 0;font-weight:600;}
+.toc > ol > li::before{content:counter(s) ". ";color:var(--verde-osc);}
+.toc ol ol{padding-left:1.6rem;counter-reset:ss;}
+.toc ol ol li{counter-increment:ss;font-weight:400;font-size:10pt;margin:.15rem 0;}
+.toc ol ol li::before{content:counter(s) "." counter(ss) " ";color:var(--gris);}
+.toc a{text-decoration:none;color:var(--tinta);}
+
+.badge{
+  display:inline-block;padding:.12em .55em;border-radius:99px;
+  font-size:8.5pt;font-weight:700;letter-spacing:.03em;
+}
+.b-get{background:#e3f0fb;color:#0b5b8a;}
+.b-post{background:#e4f5df;color:#2d8400;}
+.b-put{background:#fdf0e0;color:#c25e00;}
+.b-patch{background:#f3e9fb;color:#6b34a8;}
+.b-del{background:#fbe6e5;color:#b3261e;}
+.b-pub{background:#eceff0;color:#5a635c;}
+.b-adm{background:#fbe6e5;color:#b3261e;}
+.b-ges{background:#fdf0e0;color:#c25e00;}
+.b-aut{background:#e3f0fb;color:#0b5b8a;}
+
+.figura{
+  border:1px solid var(--linea);border-radius:8px;padding:1rem;
+  margin:1.2rem 0;background:#fff;text-align:center;page-break-inside:avoid;
+}
+.figura svg{max-width:100%;height:auto;}
+.figura figcaption{
+  font-size:9pt;color:var(--gris);margin-top:.6rem;
+  font-style:italic;text-align:center;
+}
+.ascii{
+  background:var(--fondo-alt);border:1px solid var(--linea);border-radius:6px;
+  padding:1rem;font-family:Consolas,"Courier New",monospace;font-size:9pt;
+  line-height:1.5;white-space:pre;overflow-x:auto;text-align:left;
+  page-break-inside:avoid;
+}
+.hueco-captura{
+  border:2px dashed var(--verde);border-radius:8px;background:var(--verde-claro);
+  padding:2.4rem 1rem;text-align:center;color:var(--verde-osc);
+  margin:1rem 0 .3rem;font-size:10pt;page-break-inside:avoid;
+}
+.hueco-captura strong{display:block;font-size:11pt;margin-bottom:.3rem;}
+.hueco-captura em{font-style:normal;color:var(--gris);font-size:9.5pt;}
+
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.tarjeta{
+  border:1px solid var(--linea);border-left:4px solid var(--verde);
+  border-radius:0 8px 8px 0;padding:.9rem 1.1rem;background:var(--fondo-alt);
+  page-break-inside:avoid;
+}
+.tarjeta h4{margin-top:0;color:var(--verde-osc);}
+.tarjeta p{margin:.3rem 0;font-size:10pt;text-align:left;}
+
+.firma{
+  margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;
+  page-break-inside:avoid;
+}
+.firma div{border-top:1px solid var(--tinta);padding-top:.5rem;text-align:center;font-size:9.5pt;}
+
+/* ---------- IMPRESIÓN ---------- */
+@page{size:A4;margin:1.6cm 1.5cm;}
+@media print{
+  body{font-size:10.5pt;}
+  .hoja{max-width:none;padding:0;margin:0;}
+  .portada{min-height:24cm;padding:1cm 0;}
+  .no-print{display:none !important;}
+  a{color:var(--tinta);text-decoration:none;}
+  pre{border:1px solid var(--linea);}
+}
+.barra-print{
+  position:sticky;top:0;z-index:9;background:var(--verde);color:#fff;
+  padding:.55rem 1rem;font-size:9.5pt;text-align:center;
+}
+.barra-print kbd{
+  background:#fff;color:var(--verde-osc);border-radius:4px;
+  padding:.05em .4em;font-family:inherit;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="barra-print no-print">Para generar el PDF: <kbd>Ctrl</kbd> + <kbd>P</kbd> &rarr; Destino: <kbd>Guardar como PDF</kbd> &rarr; Margenes: <kbd>Predeterminado</kbd> &rarr; activar <kbd>Graficos de fondo</kbd></div>
+<section class="portada">
+  <div>
+    <div class="logo">
+      <svg viewBox="0 0 96 96" role="img" aria-label="Espacio para el logo institucional">
+        <rect x="2" y="2" width="92" height="92" rx="10" fill="#eaf6e3" stroke="#39A900" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="48" y="44" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">LOGO</text>
+        <text x="48" y="60" text-anchor="middle" font-size="11" fill="#2d8400" font-family="Segoe UI,sans-serif" font-weight="700">SENA</text>
+      </svg>
+    </div>
+    <div class="marca">Servicio Nacional de Aprendizaje &middot; SENA</div>
+  </div>
+  <div>
+    <div class="norma">EVIDENCIA DE PRODUCTO &middot; NORMA 220501096</div>
+    <h1>Manual de Usuario</h1>
+    <p class="sub">Instructivo de instalaci&oacute;n, ejecuci&oacute;n y uso del sistema<br><strong>API RiwiMediCare Plus</strong></p>
+    <div class="datos">
+      <dl>
+        <dt>Aprendiz</dt><dd>Dylan Alberto Su&aacute;rez Laverde</dd>
+        <dt>Programa</dt><dd><span class="rellenar">[ Nombre del programa de formaci&oacute;n ]</span></dd>
+        <dt>Ficha</dt><dd><span class="rellenar">[ N&uacute;mero de ficha ]</span></dd>
+        <dt>Instructor</dt><dd><span class="rellenar">[ Nombre del instructor ]</span></dd>
+        <dt>Centro</dt><dd><span class="rellenar">[ Centro de formaci&oacute;n ]</span></dd>
+        <dt>Competencia</dt><dd>220501096 &mdash; Desarrollar soluci&oacute;n de software de acuerdo con especificaciones de dise&ntilde;o y marcos de referencia</dd>
+        <dt>Repositorio</dt><dd>https://github.com/DylanSrz/pd_node</dd>
+        <dt>Versi&oacute;n</dt><dd>1.0</dd>
+        <dt>Fecha</dt><dd><span class="rellenar">[ Fecha de entrega ]</span></dd>
+      </dl>
+    </div>
+  </div>
+  <div class="pie">
+    Producto 2 de la evidencia: <strong>Instructivo de uso de la soluci&oacute;n de software</strong><br>
+    Requisitos &middot; Instalaci&oacute;n &middot; Funcionalidades &middot; Ejemplos de uso
+  </div>
+</section>
+
+<div class="hoja">
+
+<section class="toc seccion">
+  <h2>Tabla de contenido</h2>
+  <ol>
+    <li><a href="#m1">Presentaci&oacute;n del sistema</a>
+      <ol><li>Qu&eacute; hace</li><li>A qui&eacute;n est&aacute; dirigido</li><li>C&oacute;mo se usa una API</li></ol></li>
+    <li><a href="#m2">Requisitos t&eacute;cnicos</a>
+      <ol><li>Programas necesarios</li><li>Comprobar que est&aacute;n instalados</li></ol></li>
+    <li><a href="#m3">Instalaci&oacute;n paso a paso</a>
+      <ol><li>Opci&oacute;n A: instalaci&oacute;n local</li><li>Opci&oacute;n B: con Docker</li><li>Restaurar desde el respaldo</li></ol></li>
+    <li><a href="#m4">Primer arranque</a></li>
+    <li><a href="#m5">Autenticaci&oacute;n</a>
+      <ol><li>Usuarios de prueba</li><li>Registro</li><li>Inicio de sesi&oacute;n</li><li>Autorizar en Swagger</li></ol></li>
+    <li><a href="#m6">Uso de las funcionalidades</a>
+      <ol><li>Cl&iacute;nicas</li><li>Almacenes y medicamentos</li><li>Inventario</li><li>Solicitudes</li><li>Cambio de estado</li><li>Historial</li></ol></li>
+    <li><a href="#m7">Comprobaci&oacute;n de las validaciones</a></li>
+    <li><a href="#m8">Referencia de endpoints</a></li>
+    <li><a href="#m9">Soluci&oacute;n de problemas frecuentes</a></li>
+  </ol>
+</section>
+
+<section class="seccion" id="m1">
+<h1>1. Presentaci&oacute;n del sistema</h1>
+
+<h2>1.1 Qu&eacute; hace el sistema</h2>
+<p><strong>API RiwiMediCare Plus</strong> administra el ciclo completo de las solicitudes de abastecimiento de medicamentos e insumos m&eacute;dicos de una empresa distribuidora. Permite:</p>
+<ul>
+  <li>Registrar las cl&iacute;nicas atendidas y a sus responsables.</li>
+  <li>Administrar el cat&aacute;logo de medicamentos y los almacenes de despacho.</li>
+  <li>Llevar el control de cu&aacute;ntas unidades hay de cada medicamento en cada almac&eacute;n.</li>
+  <li>Radicar solicitudes de abastecimiento verificando que haya existencias.</li>
+  <li>Aprobar, rechazar, entregar o cancelar cada solicitud, descontando y reintegrando el inventario de forma autom&aacute;tica.</li>
+  <li>Consultar el historial completo de solicitudes, general o por cl&iacute;nica.</li>
+</ul>
+
+<h2>1.2 A qui&eacute;n est&aacute; dirigido</h2>
+<table>
+  <caption>Tabla 1. Perfiles de usuario del sistema.</caption>
+  <thead><tr><th style="width:22%">Perfil</th><th>Qu&eacute; puede hacer</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Administrador</strong></td><td>Todas las operaciones. Es el &uacute;nico que puede crear, modificar y dar de baja cl&iacute;nicas, almacenes, medicamentos e inventario, y el &uacute;nico que puede corregir o dar de baja solicitudes.</td></tr>
+    <tr><td><strong>Gestor</strong></td><td>Consultar toda la informaci&oacute;n, radicar solicitudes y cambiarles el estado. No puede modificar datos maestros ni dar de baja registros.</td></tr>
+  </tbody>
+</table>
+
+<h2>1.3 C&oacute;mo se usa una API</h2>
+<div class="nota">
+<strong>Antes de empezar</strong>
+Este sistema es una <strong>API REST</strong>: la capa de servidor de la aplicaci&oacute;n. No tiene ventanas ni botones propios. Se opera enviando peticiones HTTP, y este manual utiliza <strong>Swagger UI</strong>, la interfaz web que el propio sistema publica para consultar y ejecutar cada operaci&oacute;n directamente desde el navegador, sin instalar nada adicional.
+</div>
+<p>Toda operaci&oacute;n del sistema se identifica por la combinaci&oacute;n de un <strong>verbo</strong> y una <strong>ruta</strong>:</p>
+<table>
+  <caption>Tabla 2. Verbos HTTP empleados y su significado.</caption>
+  <thead><tr><th class="c" style="width:14%">Verbo</th><th style="width:22%">Significado</th><th>Ejemplo en el sistema</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td>Consultar</td><td><code>GET /api/clinicas</code> devuelve las cl&iacute;nicas</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td>Crear</td><td><code>POST /api/solicitudes</code> radica una solicitud</td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td>Actualizar por completo</td><td><code>PUT /api/clinicas/:id</code> actualiza una cl&iacute;nica</td></tr>
+    <tr><td class="c"><span class="badge b-patch">PATCH</span></td><td>Actualizar en parte</td><td><code>PATCH /api/solicitudes/:id/estado</code> cambia el estado</td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td>Dar de baja</td><td><code>DELETE /api/clinicas/:id</code> desactiva una cl&iacute;nica</td></tr>
+  </tbody>
+</table>
+<p>El sistema responde siempre en formato JSON y acompa&ntilde;a cada respuesta con un c&oacute;digo num&eacute;rico:</p>
+<table>
+  <caption>Tabla 3. C&oacute;digos de respuesta que devuelve el sistema.</caption>
+  <thead><tr><th class="c" style="width:10%">C&oacute;digo</th><th style="width:22%">Significado</th><th>Cu&aacute;ndo aparece</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><strong>200</strong></td><td>Correcto</td><td>La consulta o la actualizaci&oacute;n se realiz&oacute;.</td></tr>
+    <tr><td class="c"><strong>201</strong></td><td>Creado</td><td>El registro se cre&oacute; correctamente.</td></tr>
+    <tr><td class="c"><strong>400</strong></td><td>Datos incorrectos</td><td>Faltan campos, la cantidad es inv&aacute;lida, no hay inventario suficiente o la transici&oacute;n de estado no es v&aacute;lida.</td></tr>
+    <tr><td class="c"><strong>401</strong></td><td>Sin autenticar</td><td>No se envi&oacute; token, o est&aacute; vencido o alterado.</td></tr>
+    <tr><td class="c"><strong>403</strong></td><td>Sin permisos</td><td>El usuario est&aacute; autenticado pero su rol no autoriza esa operaci&oacute;n.</td></tr>
+    <tr><td class="c"><strong>404</strong></td><td>No encontrado</td><td>El registro solicitado no existe o fue dado de baja.</td></tr>
+    <tr><td class="c"><strong>409</strong></td><td>Conflicto</td><td>Ya existe un registro con esos datos, o la operaci&oacute;n contradice el estado actual.</td></tr>
+    <tr><td class="c"><strong>500</strong></td><td>Error del servidor</td><td>Fallo interno no previsto.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion" id="m2">
+<h1>2. Requisitos t&eacute;cnicos</h1>
+
+<h2>2.1 Programas necesarios</h2>
+<table>
+  <caption>Tabla 4. Software requerido seg&uacute;n la forma de instalaci&oacute;n elegida.</caption>
+  <thead><tr><th style="width:22%">Programa</th><th class="c" style="width:14%">Versi&oacute;n</th><th class="c" style="width:14%">Obligatorio</th><th>Para qu&eacute; sirve</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Node.js</strong></td><td class="c">18 o superior<br>(recomendado 24)</td><td class="c">S&iacute;, en instalaci&oacute;n local</td><td>Ejecuta el servidor. Incluye <code>npm</code>, que instala las dependencias.</td></tr>
+    <tr><td><strong>PostgreSQL</strong></td><td class="c">16</td><td class="c">S&iacute;, en instalaci&oacute;n local</td><td>Base de datos donde se guarda toda la informaci&oacute;n.</td></tr>
+    <tr><td><strong>Git</strong></td><td class="c">2.x</td><td class="c">S&iacute;</td><td>Descargar el c&oacute;digo desde el repositorio.</td></tr>
+    <tr><td><strong>Docker Desktop</strong></td><td class="c">4.x</td><td class="c">Solo opci&oacute;n B</td><td>Levantar la API y la base de datos en contenedores, sin instalar Node ni PostgreSQL.</td></tr>
+    <tr><td><strong>Navegador web</strong></td><td class="c">Cualquiera actual</td><td class="c">S&iacute;</td><td>Usar la interfaz de Swagger.</td></tr>
+    <tr><td>Editor de c&oacute;digo</td><td class="c">&mdash;</td><td class="c">Opcional</td><td>Editar el archivo de configuraci&oacute;n. Se recomienda Visual Studio Code.</td></tr>
+  </tbody>
+</table>
+
+<h4>Requisitos m&iacute;nimos del equipo</h4>
+<table>
+  <thead><tr><th style="width:24%">Recurso</th><th style="width:20%">M&iacute;nimo</th><th>Recomendado</th></tr></thead>
+  <tbody>
+    <tr><td>Sistema operativo</td><td>Windows 10, macOS 11 o Linux</td><td>Windows 11, macOS 13 o Ubuntu 22.04</td></tr>
+    <tr><td>Memoria RAM</td><td>4 GB</td><td>8 GB o m&aacute;s, sobre todo con Docker</td></tr>
+    <tr><td>Espacio en disco</td><td>1 GB</td><td>3 GB con Docker</td></tr>
+    <tr><td>Conexi&oacute;n a internet</td><td colspan="2">Necesaria solo para descargar el c&oacute;digo y las dependencias</td></tr>
+  </tbody>
+</table>
+
+<h2>2.2 Comprobar que est&aacute;n instalados</h2>
+<p>Abra una terminal y ejecute estos comandos. Cada uno debe devolver un n&uacute;mero de versi&oacute;n.</p>
+<pre><code>node --version      <span class="c"># debe mostrar v18.0.0 o superior</span>
+npm --version       <span class="c"># debe mostrar 9.0.0 o superior</span>
+psql --version      <span class="c"># debe mostrar 16.x</span>
+git --version       <span class="c"># debe mostrar 2.x</span>
+docker --version    <span class="c"># solo si va a usar la opcion B</span></code></pre>
+
+<div class="hueco-captura">
+  <strong>FIGURA 1</strong>
+  <em>Terminal mostrando las versiones instaladas de Node.js, npm, PostgreSQL y Git</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 1. Comprobaci&oacute;n de los programas requeridos.</p>
+
+<div class="aviso">
+<strong>Si alg&uacute;n comando no se reconoce</strong>
+Significa que ese programa no est&aacute; instalado o no fue agregado a la variable de entorno PATH. Desc&aacute;rguelo desde su sitio oficial y, durante la instalaci&oacute;n, marque la opci&oacute;n de agregarlo al PATH. Cierre y vuelva a abrir la terminal para que el cambio surta efecto.
+</div>
+</section>
+
+<section class="seccion" id="m3">
+<h1>3. Instalaci&oacute;n paso a paso</h1>
+<p>Existen dos formas de poner el sistema en funcionamiento. Elija <strong>una</strong>.</p>
+
+<div class="rejilla">
+  <div class="tarjeta">
+    <h4>Opci&oacute;n A &middot; Instalaci&oacute;n local</h4>
+    <p>Requiere Node.js y PostgreSQL instalados en el equipo. Es la m&aacute;s adecuada para desarrollar y depurar.</p>
+  </div>
+  <div class="tarjeta">
+    <h4>Opci&oacute;n B &middot; Con Docker</h4>
+    <p>Solo requiere Docker Desktop. Levanta la API y la base de datos en contenedores con un &uacute;nico comando.</p>
+  </div>
+</div>
+
+<h2>3.1 Opci&oacute;n A: instalaci&oacute;n local</h2>
+
+<h3>Paso 1. Descargar el c&oacute;digo</h3>
+<pre><code>git clone https://github.com/DylanSrz/pd_node.git
+cd pd_node</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 2</strong>
+  <em>Terminal tras clonar el repositorio, mostrando la carpeta del proyecto</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 2. Descarga del c&oacute;digo fuente.</p>
+
+<h3>Paso 2. Instalar las dependencias</h3>
+<pre><code>npm install</code></pre>
+<p>Descarga todas las bibliotecas declaradas en <code>package.json</code> y las guarda en la carpeta <code>node_modules</code>. Puede tardar entre uno y tres minutos.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 3</strong>
+  <em>Resultado de <code>npm install</code> con el total de paquetes instalados</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 3. Instalaci&oacute;n de las dependencias del proyecto.</p>
+
+<h3>Paso 3. Crear la base de datos</h3>
+<p>Conectado a PostgreSQL, cree la base de datos vac&iacute;a:</p>
+<pre><code>createdb -h localhost -U admin db_nodejs
+
+<span class="c"># O desde psql:</span>
+psql -U postgres
+CREATE DATABASE db_nodejs;
+\q</code></pre>
+
+<h3>Paso 4. Configurar las variables de entorno</h3>
+<p>Copie la plantilla y edite el archivo resultante con sus datos reales:</p>
+<pre><code><span class="c"># Linux o macOS</span>
+cp .env.example .env
+
+<span class="c"># Windows PowerShell</span>
+Copy-Item .env.example .env</code></pre>
+<p>Abra el archivo <code>.env</code> y ajuste los valores:</p>
+<pre><code><span class="c"># Puerto en el que se levanta la API</span>
+PORT=3000
+
+<span class="c"># Datos de conexion a PostgreSQL</span>
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=admin
+DATABASE_PASSWORD=admin1234
+DATABASE_NAME=db_nodejs
+
+<span class="c"># Clave secreta para firmar los JSON Web Token</span>
+JWT_SECRET=a3sd21m16uio87ft62mp4i0ok6j8b24sdfc6sd
+
+<span class="c"># Tiempo de vida del token (ejemplos: 1h, 8h, 7d)</span>
+JWT_EXPIRES_IN=8h</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 4</strong>
+  <em>Archivo <code>.env</code> abierto en el editor con los valores configurados</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 4. Configuraci&oacute;n de las variables de entorno.</p>
+
+<div class="aviso">
+<strong>Sobre las variables de entorno</strong>
+<code>DATABASE_USER</code> y <code>DATABASE_PASSWORD</code> deben coincidir con las credenciales reales de su instalaci&oacute;n de PostgreSQL. <code>JWT_SECRET</code> puede ser cualquier texto largo y aleatorio: es la clave con la que se firman los tokens. El archivo <code>.env</code> <strong>nunca</strong> debe subirse a un repositorio p&uacute;blico.
+</div>
+
+<h3>Paso 5. Crear las tablas</h3>
+<pre><code>npm run migrate</code></pre>
+<p>Ejecuta las seis migraciones en orden y crea toda la estructura de la base de datos.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 5</strong>
+  <em>Salida de <code>npm run migrate</code> con las seis migraciones aplicadas</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 5. Creaci&oacute;n de la estructura de la base de datos.</p>
+
+<h3>Paso 6. Cargar los datos de prueba</h3>
+<pre><code>npm run seed</code></pre>
+<p>Salida esperada:</p>
+<pre><code>{ event: 'migrating', name: '010-users.seed.ts' }
+{ event: 'migrated',  name: '010-users.seed.ts' }
+...
+Seeders executed successfully</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 6</strong>
+  <em>Salida de <code>npm run seed</code> con los seis seeders ejecutados</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 6. Carga de los datos de prueba.</p>
+
+<h3>Paso 7. Levantar el servidor</h3>
+<pre><code>npm run dev</code></pre>
+<p>Salida esperada:</p>
+<pre><code>Conexion con la base de datos establecida.
+Servidor corriendo en el puerto: 3000
+Documentacion disponible en: http://localhost:3000/api-docs</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 7</strong>
+  <em>Terminal con el servidor en ejecuci&oacute;n y los tres mensajes de arranque</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 7. Servidor en funcionamiento.</p>
+
+<h2>3.2 Opci&oacute;n B: instalaci&oacute;n con Docker</h2>
+<p>Levanta dos contenedores conectados por una red interna: la API y PostgreSQL. No requiere instalar Node ni PostgreSQL en el equipo.</p>
+<pre><code><span class="c"># 1. Descargar el codigo</span>
+git clone https://github.com/DylanSrz/pd_node.git
+cd pd_node
+
+<span class="c"># 2. Crear el archivo de variables</span>
+cp .env.example .env
+
+<span class="c"># 3. Levantar los dos contenedores</span>
+docker compose up -d
+
+<span class="c"># 4. Ver los registros de la API</span>
+docker compose logs -f api
+
+<span class="c"># 5. Crear las tablas dentro del contenedor</span>
+docker compose exec api npm run migrate
+
+<span class="c"># 6. Cargar los datos de prueba</span>
+docker compose exec api npm run seed</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 8</strong>
+  <em>Salida de <code>docker compose up -d</code> con los dos contenedores iniciados</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 8. Contenedores de la API y la base de datos en ejecuci&oacute;n.</p>
+
+<h4>Otros comandos &uacute;tiles de Docker</h4>
+<table>
+  <thead><tr><th style="width:38%">Comando</th><th>Qu&eacute; hace</th></tr></thead>
+  <tbody>
+    <tr><td class="id">docker compose ps</td><td>Muestra el estado de los contenedores.</td></tr>
+    <tr><td class="id">docker compose down</td><td>Detiene y elimina los contenedores. Los datos se conservan en el volumen.</td></tr>
+    <tr><td class="id">docker compose down -v</td><td>Elimina tambi&eacute;n el volumen. <strong>Se pierden todos los datos.</strong></td></tr>
+    <tr><td class="id">docker compose restart api</td><td>Reinicia solo el contenedor de la API.</td></tr>
+  </tbody>
+</table>
+
+<h2>3.3 Restaurar desde el respaldo</h2>
+<p>Como alternativa a ejecutar migraciones y seeders, el repositorio incluye <code>backup.sql</code>, un respaldo completo con estructura y datos ya cargados.</p>
+<pre><code>createdb -h localhost -U admin db_nodejs
+psql -h localhost -U admin -d db_nodejs -f backup.sql</code></pre>
+</section>
+
+<section class="seccion" id="m4">
+<h1>4. Primer arranque</h1>
+
+<h2>4.1 Comprobar que la API responde</h2>
+<p>Con el servidor en ejecuci&oacute;n, abra en el navegador:</p>
+<pre><code>http://localhost:3000</code></pre>
+<p>Debe aparecer:</p>
+<pre><code>{
+  "message": "API RiwiMediCare Plus funcionando.",
+  "documentacion": "/api-docs"
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 9</strong>
+  <em>Navegador mostrando la respuesta JSON de la ruta ra&iacute;z</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 9. Comprobaci&oacute;n de que la API responde.</p>
+
+<h2>4.2 Abrir la documentaci&oacute;n interactiva</h2>
+<pre><code>http://localhost:3000/api-docs</code></pre>
+<p>Swagger UI muestra los treinta endpoints agrupados por m&oacute;dulo. Desde aqu&iacute; se puede ejecutar cualquier operaci&oacute;n sin instalar programas adicionales.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 10</strong>
+  <em>Swagger UI con todos los grupos de endpoints visibles: Auth, Cl&iacute;nicas, Almacenes, Medicamentos, Inventario y Solicitudes</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 10. Documentaci&oacute;n interactiva del sistema.</p>
+
+<h4>Partes de la interfaz de Swagger</h4>
+<table>
+  <thead><tr><th style="width:24%">Elemento</th><th>Funci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Authorize</strong></td><td>Bot&oacute;n con un candado. Aqu&iacute; se pega el token para poder ejecutar los endpoints protegidos.</td></tr>
+    <tr><td><strong>Try it out</strong></td><td>Habilita los campos del endpoint para poder escribir los datos.</td></tr>
+    <tr><td><strong>Execute</strong></td><td>Env&iacute;a la petici&oacute;n al servidor.</td></tr>
+    <tr><td><strong>Response body</strong></td><td>Muestra lo que respondi&oacute; el sistema.</td></tr>
+    <tr><td><strong>Code</strong></td><td>Muestra el c&oacute;digo HTTP de la respuesta.</td></tr>
+  </tbody>
+</table>
+</section>
+<section class="seccion" id="m5">
+<h1>5. Autenticaci&oacute;n</h1>
+<p>Salvo el registro y el inicio de sesi&oacute;n, <strong>todas</strong> las operaciones exigen un token. Sin &eacute;l, el sistema responde 401.</p>
+
+<h2>5.1 Usuarios de prueba</h2>
+<p>Los seeders cargan cuatro usuarios listos para usar.</p>
+<table>
+  <caption>Tabla 5. Usuarios de prueba cargados por los seeders.</caption>
+  <thead><tr><th style="width:38%">Correo</th><th style="width:20%">Contrase&ntilde;a</th><th>Rol</th></tr></thead>
+  <tbody>
+    <tr><td class="id">dylan.suarez@riwimedicare.com</td><td class="id">admin1234</td><td><span class="badge b-adm">administrador</span></td></tr>
+    <tr><td class="id">camilo.delvalle@riwimedicare.com</td><td class="id">admin1234</td><td><span class="badge b-adm">administrador</span></td></tr>
+    <tr><td class="id">abrahan.villa@riwimedicare.com</td><td class="id">gestor1234</td><td><span class="badge b-ges">gestor</span></td></tr>
+    <tr><td class="id">laura.restrepo@riwimedicare.com</td><td class="id">gestor1234</td><td><span class="badge b-ges">gestor</span></td></tr>
+  </tbody>
+</table>
+
+<h2>5.2 Registrar un usuario nuevo</h2>
+<p>En Swagger, despliegue <span class="badge b-post">POST</span> <code>/api/auth/register</code>, pulse <strong>Try it out</strong> y escriba:</p>
+<pre><code>{
+  "first_name": "Dylan Alberto",
+  "last_name": "Suarez Laverde",
+  "email": "nuevo.usuario@riwimedicare.com",
+  "password": "clave1234",
+  "role": "administrador"
+}</code></pre>
+<table>
+  <caption>Tabla 6. Reglas de validaci&oacute;n del registro.</caption>
+  <thead><tr><th style="width:22%">Campo</th><th style="width:14%">Obligatorio</th><th>Regla</th></tr></thead>
+  <tbody>
+    <tr><td class="id">first_name</td><td class="c">S&iacute;</td><td>Entre 3 y 100 caracteres.</td></tr>
+    <tr><td class="id">last_name</td><td class="c">S&iacute;</td><td>Entre 3 y 100 caracteres.</td></tr>
+    <tr><td class="id">email</td><td class="c">S&iacute;</td><td>Formato de correo v&aacute;lido y no registrado previamente.</td></tr>
+    <tr><td class="id">password</td><td class="c">S&iacute;</td><td>Entre 8 y 64 caracteres.</td></tr>
+    <tr><td class="id">role</td><td class="c">S&iacute;</td><td>Solo <code>administrador</code> o <code>gestor</code>.</td></tr>
+  </tbody>
+</table>
+<p>Respuesta esperada: <strong>201</strong>. La contrase&ntilde;a nunca aparece en la respuesta.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 11</strong>
+  <em>Swagger: <code>POST /api/auth/register</code> con respuesta 201 y los datos del usuario creado</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 11. Registro de un usuario nuevo.</p>
+
+<h2>5.3 Iniciar sesi&oacute;n</h2>
+<p>Despliegue <span class="badge b-post">POST</span> <code>/api/auth/login</code> y env&iacute;e:</p>
+<pre><code>{
+  "email": "dylan.suarez@riwimedicare.com",
+  "password": "admin1234"
+}</code></pre>
+<p>Respuesta <strong>200</strong> con el token y los datos p&uacute;blicos del usuario:</p>
+<pre><code>{
+  "message": "Inicio de sesion exitoso.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "usuario": {
+    "id": "a3f2...",
+    "first_name": "dylan alberto",
+    "email": "dylan.suarez@riwimedicare.com",
+    "role": "administrador",
+    "is_active": true
+  }
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 12</strong>
+  <em>Swagger: <code>POST /api/auth/login</code> con respuesta 200 y el token visible</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 12. Inicio de sesi&oacute;n y obtenci&oacute;n del token.</p>
+
+<h2>5.4 Autorizar la sesi&oacute;n en Swagger</h2>
+<div class="ok">
+<strong>Los cuatro pasos para autorizar</strong>
+<ol style="margin:.4rem 0 0;">
+<li>Copie el valor completo del campo <code>token</code>, <strong>sin</strong> las comillas.</li>
+<li>Pulse el bot&oacute;n <strong>Authorize</strong> en la parte superior derecha de Swagger.</li>
+<li>Pegue el token en el campo. <strong>No escriba la palabra <code>Bearer</code></strong>: Swagger la agrega por su cuenta.</li>
+<li>Pulse <strong>Authorize</strong> y despu&eacute;s <strong>Close</strong>. El candado se cierra y ya puede ejecutar el resto de endpoints.</li>
+</ol>
+</div>
+<div class="hueco-captura">
+  <strong>FIGURA 13</strong>
+  <em>Cuadro de di&aacute;logo <strong>Authorize</strong> de Swagger con el token pegado</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 13. Autorizaci&oacute;n de la sesi&oacute;n en Swagger.</p>
+
+<div class="aviso">
+<strong>Vigencia del token</strong>
+El token expira a las 8 horas, seg&uacute;n el valor de <code>JWT_EXPIRES_IN</code>. Al expirar, todas las peticiones responden 401 con el mensaje <em>Token inv&aacute;lido o expirado</em>. La soluci&oacute;n es repetir el inicio de sesi&oacute;n y volver a autorizar con el token nuevo.
+</div>
+</section>
+
+<section class="seccion" id="m6">
+<h1>6. Uso de las funcionalidades</h1>
+
+<h2>6.1 Gesti&oacute;n de cl&iacute;nicas</h2>
+
+<h3>Consultar las cl&iacute;nicas registradas</h3>
+<p><span class="badge b-get">GET</span> <code>/api/clinicas</code> &mdash; disponible para cualquier usuario autenticado. Devuelve solo las cl&iacute;nicas activas.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 14</strong>
+  <em>Swagger: <code>GET /api/clinicas</code> con respuesta 200 y el listado de cl&iacute;nicas</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 14. Consulta del listado de cl&iacute;nicas.</p>
+
+<h3>Registrar una cl&iacute;nica</h3>
+<p><span class="badge b-post">POST</span> <code>/api/clinicas</code> &mdash; <span class="badge b-adm">solo administrador</span></p>
+<pre><code>{
+  "nombre": "Clinica del Norte",
+  "nit": "900123456-1",
+  "direccion": "Calle 45 N 30-12, Medellin",
+  "telefono": "6045551010",
+  "email": "contacto@clinicanorte.com",
+  "responsable_nombre": "Ana Restrepo",
+  "responsable_email": "ana.restrepo@clinicanorte.com",
+  "responsable_telefono": "3001234567"
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 15</strong>
+  <em>Swagger: <code>POST /api/clinicas</code> con respuesta 201 y la cl&iacute;nica creada</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 15. Registro de una cl&iacute;nica nueva.</p>
+
+<h3>Otras operaciones sobre cl&iacute;nicas</h3>
+<table>
+  <thead><tr><th class="c" style="width:10%">Verbo</th><th style="width:30%">Ruta</th><th style="width:16%">Acceso</th><th>Resultado</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas/:id</td><td><span class="badge b-aut">Autenticado</span></td><td>Devuelve una cl&iacute;nica con los datos de su responsable.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas/:id/solicitudes</td><td><span class="badge b-aut">Autenticado</span></td><td>Historial completo de solicitudes de esa cl&iacute;nica.</td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/clinicas/:id</td><td><span class="badge b-adm">Admin.</span></td><td>Actualiza los campos enviados.</td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/clinicas/:id</td><td><span class="badge b-adm">Admin.</span></td><td>Baja l&oacute;gica: desaparece del listado pero conserva su historial.</td></tr>
+  </tbody>
+</table>
+
+<h2>6.2 Almacenes y medicamentos</h2>
+<p>Ambos m&oacute;dulos funcionan igual: consultar est&aacute; disponible para todos los autenticados; crear, actualizar y dar de baja est&aacute;n reservados al administrador.</p>
+<pre><code><span class="c">// POST /api/almacenes</span>
+{
+  "nombre": "Almacen Central",
+  "direccion": "Carrera 50 N 20-30, Medellin",
+  "telefono": "6045559000"
+}
+
+<span class="c">// POST /api/medicamentos</span>
+{
+  "nombre": "Amoxicilina 500 mg",
+  "descripcion": "Antibiotico de amplio espectro",
+  "presentacion": "Caja x 30 capsulas",
+  "laboratorio": "Genfar"
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 16</strong>
+  <em>Swagger: <code>GET /api/medicamentos</code> con el cat&aacute;logo de medicamentos</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 16. Cat&aacute;logo de medicamentos.</p>
+
+<h2>6.3 Control de inventario</h2>
+<p>El inventario relaciona un almac&eacute;n con un medicamento y una cantidad. Un mismo medicamento puede estar en varios almacenes con cantidades distintas.</p>
+<pre><code><span class="c">// POST /api/inventario</span>
+{
+  "almacen_id": "uuid-del-almacen",
+  "medicamento_id": "uuid-del-medicamento",
+  "cantidad": 500
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 17</strong>
+  <em>Swagger: <code>GET /api/inventario</code> mostrando las cantidades por almac&eacute;n y medicamento</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 17. Estado del inventario antes de aprobar solicitudes.</p>
+
+<div class="nota">
+<strong>C&oacute;mo obtener los identificadores</strong>
+Los campos que terminan en <code>_id</code> esperan el UUID del registro. Ejecute primero <code>GET /api/almacenes</code> y <code>GET /api/medicamentos</code>, y copie de la respuesta el valor del campo <code>id</code> del registro que necesita.
+</div>
+
+<h2>6.4 Radicar una solicitud de abastecimiento</h2>
+<p><span class="badge b-post">POST</span> <code>/api/solicitudes</code> &mdash; <span class="badge b-ges">gestor y administrador</span></p>
+<pre><code>{
+  "clinica_id": "uuid-de-la-clinica",
+  "medicamento_id": "uuid-del-medicamento",
+  "almacen_id": "uuid-del-almacen",
+  "cantidad_solicitada": 120,
+  "observaciones": "Reposicion mensual del servicio de urgencias"
+}</code></pre>
+
+<div class="ok">
+<strong>Qu&eacute; comprueba el sistema antes de aceptarla</strong>
+<ol style="margin:.4rem 0 0;">
+<li>Que el token sea v&aacute;lido y el rol est&eacute; autorizado.</li>
+<li>Que los cuatro campos tengan formato correcto y la cantidad sea un entero mayor que cero.</li>
+<li>Que la cl&iacute;nica, el medicamento y el almac&eacute;n existan y est&eacute;n activos.</li>
+<li>Que el almac&eacute;n maneje ese medicamento y tenga unidades suficientes.</li>
+</ol>
+<p style="margin:.5rem 0 0">Si todo se cumple, la solicitud se crea en estado <strong>pendiente</strong>. El inventario <strong>a&uacute;n no se descuenta</strong>.</p>
+</div>
+
+<p>No se env&iacute;a <code>usuario_id</code>: el sistema lo toma del token, de modo que nadie puede radicar una solicitud a nombre de otra persona. Tampoco se env&iacute;a <code>estado</code>: toda solicitud nace pendiente.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 18</strong>
+  <em>Swagger: <code>POST /api/solicitudes</code> con respuesta 201, estado <em>pendiente</em> y las relaciones resueltas</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 18. Radicaci&oacute;n de una solicitud de abastecimiento.</p>
+
+<h2>6.5 Consultar solicitudes</h2>
+<table>
+  <thead><tr><th class="c" style="width:10%">Verbo</th><th style="width:30%">Ruta</th><th>Qu&eacute; devuelve</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes</td><td>Solo las solicitudes en curso: pendientes y aprobadas.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes/historial</td><td>Todas, en cualquier estado, incluidas las dadas de baja.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes/:id</td><td>Una solicitud con sus relaciones resueltas.</td></tr>
+  </tbody>
+</table>
+<div class="hueco-captura">
+  <strong>FIGURA 19</strong>
+  <em>Swagger: <code>GET /api/solicitudes</code> con el listado de solicitudes en curso</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 19. Listado de solicitudes en curso.</p>
+
+<h2>6.6 Cambiar el estado de una solicitud</h2>
+<p><span class="badge b-patch">PATCH</span> <code>/api/solicitudes/:id/estado</code> &mdash; <span class="badge b-ges">gestor y administrador</span></p>
+<pre><code>{
+  "estado": "aprobada",
+  "observaciones": "Aprobada segun disponibilidad verificada"
+}</code></pre>
+
+<h3>Transiciones permitidas</h3>
+<div class="ascii" style="margin:.8rem 0;">pendiente ──> aprobada ──> entregada   (final)
+    │             └──────> cancelada   (final)
+    ├──────> rechazada                 (final)
+    └──────> cancelada                 (final)</div>
+<table>
+  <caption>Tabla 7. Estados de la solicitud y transiciones posibles desde cada uno.</caption>
+  <thead><tr><th style="width:20%">Estado actual</th><th style="width:34%">Puede pasar a</th><th>Efecto sobre el inventario</th></tr></thead>
+  <tbody>
+    <tr><td><strong>pendiente</strong></td><td>aprobada, rechazada, cancelada</td><td>Ninguno todav&iacute;a.</td></tr>
+    <tr><td><strong>aprobada</strong></td><td>entregada, cancelada</td><td>Al aprobar se descontaron las unidades.</td></tr>
+    <tr><td><strong>rechazada</strong></td><td colspan="2">Estado final. No admite ning&uacute;n cambio posterior.</td></tr>
+    <tr><td><strong>entregada</strong></td><td colspan="2">Estado final. No admite ning&uacute;n cambio posterior.</td></tr>
+    <tr><td><strong>cancelada</strong></td><td colspan="2">Estado final. Si ven&iacute;a de aprobada, las unidades se reintegraron.</td></tr>
+  </tbody>
+</table>
+<div class="hueco-captura">
+  <strong>FIGURA 20</strong>
+  <em>Swagger: <code>PATCH /api/solicitudes/:id/estado</code> cambiando a <em>aprobada</em>, respuesta 200</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 20. Aprobaci&oacute;n de una solicitud.</p>
+
+<h3>Comprobar que el inventario se descont&oacute;</h3>
+<p>Ejecute de nuevo <span class="badge b-get">GET</span> <code>/api/inventario</code> y compare con la Figura 17. La cantidad del medicamento en ese almac&eacute;n debe haber disminuido exactamente en las unidades solicitadas.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 21</strong>
+  <em>Swagger: <code>GET /api/inventario</code> despu&eacute;s de aprobar, con la cantidad ya descontada</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 21. Inventario descontado tras la aprobaci&oacute;n.</p>
+
+<h2>6.7 Historial de solicitudes</h2>
+<p>El historial conserva todas las solicitudes, incluidas las que est&aacute;n en estado final y las dadas de baja. Es la evidencia de todo lo ocurrido en el sistema.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 22</strong>
+  <em>Swagger: <code>GET /api/solicitudes/historial</code> mostrando solicitudes en los cinco estados</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 22. Historial completo de solicitudes.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 23</strong>
+  <em>Swagger: <code>GET /api/clinicas/:id/solicitudes</code> con el historial de una cl&iacute;nica</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 23. Historial de solicitudes de una cl&iacute;nica.</p>
+</section>
+
+<section class="seccion" id="m7">
+<h1>7. Comprobaci&oacute;n de las validaciones</h1>
+<p>Los siguientes ejemplos provocan errores <strong>a prop&oacute;sito</strong>, para verificar que las reglas de negocio funcionan. Constituyen la evidencia de que el sistema no solo opera en condiciones normales.</p>
+
+<h2>7.1 Petici&oacute;n sin token</h2>
+<p>Pulse <strong>Authorize</strong> y luego <strong>Logout</strong> para retirar el token. Ejecute cualquier <span class="badge b-get">GET</span>.</p>
+<pre><code>401 Unauthorized
+{ "message": "Token no proporcionado." }</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 24</strong>
+  <em>Swagger: respuesta 401 al ejecutar un endpoint sin token</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 24. Protecci&oacute;n de las rutas por autenticaci&oacute;n.</p>
+
+<h2>7.2 Rol sin permisos</h2>
+<p>Inicie sesi&oacute;n con un usuario <strong>gestor</strong> e intente <span class="badge b-post">POST</span> <code>/api/clinicas</code>.</p>
+<pre><code>403 Forbidden
+{ "message": "No tiene permisos para realizar esta accion." }</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 25</strong>
+  <em>Swagger: respuesta 403 al intentar crear una cl&iacute;nica con rol gestor</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 25. Control de acceso por rol.</p>
+
+<h2>7.3 Inventario insuficiente</h2>
+<p>Radique una solicitud con una cantidad mayor a la disponible en el almac&eacute;n.</p>
+<pre><code>400 Bad Request
+{
+  "message": "El almacen no tiene inventario suficiente de ese medicamento.",
+  "cantidad_solicitada": 99999,
+  "cantidad_disponible": 500
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 26</strong>
+  <em>Swagger: respuesta 400 indicando la cantidad solicitada y la disponible</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 26. Validaci&oacute;n de disponibilidad de inventario.</p>
+
+<h2>7.4 Transici&oacute;n de estado no permitida</h2>
+<p>Intente pasar una solicitud <strong>pendiente</strong> directamente a <strong>entregada</strong>, sin aprobarla antes.</p>
+<pre><code>400 Bad Request
+{
+  "message": "No se puede pasar de 'pendiente' a 'entregada'.",
+  "estado_actual": "pendiente",
+  "estados_permitidos": "aprobada, rechazada, cancelada"
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 27</strong>
+  <em>Swagger: respuesta 400 con el estado actual y los estados a los que s&iacute; se puede pasar</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 27. Control de la m&aacute;quina de estados.</p>
+
+<h2>7.5 NIT duplicado</h2>
+<p>Registre una cl&iacute;nica con un NIT que ya exista.</p>
+<pre><code>409 Conflict
+{ "message": "Ya existe una clinica registrada con el NIT 900123456-1." }</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 28</strong>
+  <em>Swagger: respuesta 409 por NIT duplicado</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 28. Restricci&oacute;n de unicidad del NIT.</p>
+
+<h2>7.6 Cantidad inv&aacute;lida</h2>
+<p>Radique una solicitud con <code>"cantidad_solicitada": 0</code> o con un valor negativo.</p>
+<pre><code>400 Bad Request
+{
+  "message": "Datos invalidos o incompletos.",
+  "errors": [
+    { "campo": "cantidad_solicitada",
+      "detalle": "La cantidad solicitada debe ser mayor que cero." }
+  ]
+}</code></pre>
+<div class="hueco-captura">
+  <strong>FIGURA 29</strong>
+  <em>Swagger: respuesta 400 se&ntilde;alando el campo exacto que fall&oacute;</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 29. Validaci&oacute;n de los datos de entrada.</p>
+
+<h2>7.7 Reintegro del inventario al cancelar</h2>
+<p>Cancele una solicitud que se encuentre <strong>aprobada</strong> y consulte de nuevo el inventario: las unidades deben haber vuelto al almac&eacute;n.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 30</strong>
+  <em>Swagger: inventario tras cancelar una solicitud aprobada, con las unidades reintegradas</em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 30. Reintegro autom&aacute;tico del inventario.</p>
+
+<h2>7.8 Estado de la base de datos</h2>
+<p>Con un cliente de base de datos como pgAdmin o DBeaver, conecte a <code>db_nodejs</code> y verifique las seis tablas del dominio con sus datos.</p>
+<div class="hueco-captura">
+  <strong>FIGURA 31</strong>
+  <em>Cliente de base de datos mostrando las tablas de <code>db_nodejs</code> y el contenido de <code>solicitudes</code></em>
+</div>
+<p style="text-align:center;font-size:9pt;color:#5a635c;font-style:italic;">Figura 31. Base de datos con la estructura y los datos cargados.</p>
+</section>
+
+<section class="seccion" id="m8">
+<h1>8. Referencia completa de endpoints</h1>
+<p>Todas las rutas exigen token, salvo el registro y el inicio de sesi&oacute;n.</p>
+
+<table>
+  <caption>Tabla 8. Los 30 endpoints del sistema.</caption>
+  <thead><tr><th class="c" style="width:9%">Verbo</th><th style="width:34%">Ruta</th><th class="c" style="width:18%">Acceso</th><th>Descripci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td class="c" colspan="4" style="background:#eaf6e3;font-weight:700;color:#2d8400;">Autenticaci&oacute;n</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/auth/register</td><td class="c"><span class="badge b-pub">P&uacute;blico</span></td><td>Crea un usuario.</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/auth/login</td><td class="c"><span class="badge b-pub">P&uacute;blico</span></td><td>Devuelve el token de sesi&oacute;n.</td></tr>
+
+    <tr><td class="c" colspan="4" style="background:#eaf6e3;font-weight:700;color:#2d8400;">Cl&iacute;nicas</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Lista las cl&iacute;nicas activas.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas/:id</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Consulta una cl&iacute;nica.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/clinicas/:id/solicitudes</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Historial de la cl&iacute;nica.</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/clinicas</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Registra una cl&iacute;nica.</td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/clinicas/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Actualiza una cl&iacute;nica.</td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/clinicas/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Baja l&oacute;gica.</td></tr>
+
+    <tr><td class="c" colspan="4" style="background:#eaf6e3;font-weight:700;color:#2d8400;">Almacenes</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/almacenes</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Lista los almacenes activos.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/almacenes/:id</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Consulta un almac&eacute;n.</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/almacenes</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Registra un almac&eacute;n.</td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/almacenes/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Actualiza un almac&eacute;n.</td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/almacenes/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Baja l&oacute;gica.</td></tr>
+
+    <tr><td class="c" colspan="4" style="background:#eaf6e3;font-weight:700;color:#2d8400;">Medicamentos</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/medicamentos</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Lista el cat&aacute;logo activo.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/medicamentos/:id</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Consulta un medicamento.</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/medicamentos</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Registra un medicamento.</td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/medicamentos/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Actualiza un medicamento.</td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/medicamentos/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Baja l&oacute;gica.</td></tr>
+
+    <tr><td class="c" colspan="4" style="background:#eaf6e3;font-weight:700;color:#2d8400;">Inventario</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/inventario</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Lista las existencias por almac&eacute;n.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/inventario/:id</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Consulta un registro.</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/inventario</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Registra existencias.</td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/inventario/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Ajusta la cantidad.</td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/inventario/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Baja l&oacute;gica.</td></tr>
+
+    <tr><td class="c" colspan="4" style="background:#eaf6e3;font-weight:700;color:#2d8400;">Solicitudes</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Lista las pendientes y aprobadas.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes/historial</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Historial completo.</td></tr>
+    <tr><td class="c"><span class="badge b-get">GET</span></td><td class="id">/api/solicitudes/:id</td><td class="c"><span class="badge b-aut">Autenticado</span></td><td>Consulta una solicitud.</td></tr>
+    <tr><td class="c"><span class="badge b-post">POST</span></td><td class="id">/api/solicitudes</td><td class="c"><span class="badge b-ges">Gestor / Admin.</span></td><td>Radica una solicitud.</td></tr>
+    <tr><td class="c"><span class="badge b-patch">PATCH</span></td><td class="id">/api/solicitudes/:id/estado</td><td class="c"><span class="badge b-ges">Gestor / Admin.</span></td><td>Cambia el estado y ajusta el inventario.</td></tr>
+    <tr><td class="c"><span class="badge b-put">PUT</span></td><td class="id">/api/solicitudes/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Corrige una solicitud pendiente.</td></tr>
+    <tr><td class="c"><span class="badge b-del">DELETE</span></td><td class="id">/api/solicitudes/:id</td><td class="c"><span class="badge b-adm">Admin.</span></td><td>Baja l&oacute;gica con reintegro si estaba aprobada.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section class="seccion" id="m9">
+<h1>9. Soluci&oacute;n de problemas frecuentes</h1>
+
+<table>
+  <caption>Tabla 9. Problemas comunes, causa probable y soluci&oacute;n.</caption>
+  <thead><tr><th style="width:26%">Problema</th><th style="width:30%">Causa probable</th><th>Soluci&oacute;n</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Error al iniciar la aplicaci&oacute;n</strong><br><code>ECONNREFUSED</code></td><td>PostgreSQL no est&aacute; en ejecuci&oacute;n, o los datos del <code>.env</code> no son correctos.</td><td>Verifique que el servicio de PostgreSQL est&eacute; iniciado y que el host, el puerto, el usuario y la contrase&ntilde;a del <code>.env</code> coincidan con su instalaci&oacute;n.</td></tr>
+    <tr><td><code>database "db_nodejs" does not exist</code></td><td>No se cre&oacute; la base de datos antes de ejecutar las migraciones.</td><td>Ejecute <code>createdb -U admin db_nodejs</code> y repita <code>npm run migrate</code>.</td></tr>
+    <tr><td><code>relation "users" does not exist</code></td><td>No se ejecutaron las migraciones.</td><td>Ejecute <code>npm run migrate</code>.</td></tr>
+    <tr><td><strong><code>npm run seed</code> no carga nada</strong></td><td>La tabla <code>SequelizeData</code> conserva el registro de seeders ya ejecutados, aunque las tablas se hayan borrado.</td><td>Ejecute en este orden: <code>seed:reset</code>, <code>migrate:reset</code>, <code>migrate</code>, <code>seed</code>.</td></tr>
+    <tr><td><strong>401 en todos los endpoints</strong></td><td>No se pulsó <strong>Authorize</strong>, o el token expir&oacute;.</td><td>Repita el inicio de sesi&oacute;n y pegue el token nuevo. Recuerde <strong>no</strong> escribir la palabra <code>Bearer</code>.</td></tr>
+    <tr><td><strong>403 en operaciones de creaci&oacute;n</strong></td><td>Inici&oacute; sesi&oacute;n con un usuario de rol gestor.</td><td>Inicie sesi&oacute;n con un usuario administrador.</td></tr>
+    <tr><td><code>Falta configurar JWT_SECRET</code></td><td>La variable no est&aacute; definida en el <code>.env</code>.</td><td>Agr&eacute;guela con cualquier texto largo y reinicie el servidor.</td></tr>
+    <tr><td><strong>El puerto 3000 est&aacute; ocupado</strong></td><td>Otro programa lo est&aacute; usando.</td><td>Cambie <code>PORT</code> en el <code>.env</code> a otro valor, por ejemplo 3001.</td></tr>
+    <tr><td><strong>El contenedor de la API se reinicia</strong></td><td>PostgreSQL a&uacute;n no estaba listo, o el <code>.env</code> falta.</td><td>Revise <code>docker compose logs api</code>. Confirme que el archivo <code>.env</code> existe en la ra&iacute;z antes de levantar los contenedores.</td></tr>
+    <tr><td><strong>Cambios en el c&oacute;digo sin efecto</strong></td><td>Est&aacute; ejecutando la versi&oacute;n compilada con <code>npm start</code>.</td><td>Use <code>npm run dev</code>, que recarga autom&aacute;ticamente, o vuelva a compilar con <code>npm run build</code>.</td></tr>
+  </tbody>
+</table>
+
+<h2>9.1 Reiniciar todo desde cero</h2>
+<pre><code>npm run seed:reset      <span class="c"># 1. limpia el registro de los seeders</span>
+npm run migrate:reset   <span class="c"># 2. borra las tablas</span>
+npm run migrate         <span class="c"># 3. las vuelve a crear</span>
+npm run seed            <span class="c"># 4. carga los datos otra vez</span></code></pre>
+
+<div class="ok">
+<strong>Recursos del proyecto</strong>
+<p style="margin:.3rem 0 0"><strong>Repositorio:</strong> https://github.com/DylanSrz/pd_node<br>
+<strong>Documentaci&oacute;n interactiva:</strong> http://localhost:3000/api-docs (con el servidor en ejecuci&oacute;n)<br>
+<strong>Respaldo de la base de datos:</strong> <code>backup.sql</code> en la ra&iacute;z del repositorio</p>
+</div>
+
+<div class="firma">
+  <div>Dylan Alberto Su&aacute;rez Laverde<br><span style="color:#5a635c">Aprendiz</span></div>
+  <div><span class="rellenar">[ Nombre del instructor ]</span><br><span style="color:#5a635c">Instructor evaluador</span></div>
+</div>
+</section>
+
+</div>
+
+</body>
+</html>
